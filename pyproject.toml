@@ -1,0 +1,39 @@
+[project]
+name = "cuadro-mandos-dircom"
+version = "0.1.0"
+description = "Cuadro de mandos interno de la DIRCOM: análisis de competencia en la Comunitat Valenciana"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "django==6.1.3",
+    "django-environ==0.14.0",
+    "django-htmx==1.29.0",
+    "psycopg[binary]==3.3.8",
+]
+
+[dependency-groups]
+dev = [
+    "pytest-django==4.14.0",
+    "pytest-cov",
+    "ruff==0.17.3",
+    "pre-commit",
+]
+
+[tool.uv]
+package = false
+
+[tool.ruff]
+line-length = 100
+target-version = "py312"
+extend-exclude = ["**/migrations/*.py"]
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "UP", "B", "DJ", "SIM"]
+
+[tool.pytest.ini_options]
+DJANGO_SETTINGS_MODULE = "config.settings.local"
+python_files = ["test_*.py"]
+testpaths = ["tests"]
+markers = [
+    "externo: llama a un servicio externo real (PLACSP, TED, Claude); no se ejecuta en CI",
+]

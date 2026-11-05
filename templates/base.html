@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block titulo %}Cuadro de mandos DIRCOM{% endblock %}</title>
+  <style>
+    body { font-family: system-ui, sans-serif; max-width: 40rem; margin: 2rem auto; padding: 0 1rem; color: #1a1a1a; }
+    label { display: block; margin-top: 1rem; }
+    input { padding: .5rem; width: 100%; box-sizing: border-box; }
+    button { margin-top: 1rem; padding: .5rem 1rem; }
+    .error { color: #a40000; }
+  </style>
+</head>
+<body>
+  <header>
+    <strong>Cuadro de mandos DIRCOM</strong>
+    {% if user.is_authenticated %}
+      · {{ user.email }}
+      <form method="post" action="{% url 'logout' %}" style="display:inline">{% csrf_token %}<button type="submit">Salir</button></form>
+    {% endif %}
+  </header>
+  <main>{% block contenido %}{% endblock %}</main>
+</body>
+</html>

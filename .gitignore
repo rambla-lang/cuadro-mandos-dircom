@@ -1,0 +1,35 @@
+# Secretos y entorno
+.env
+.env.*
+!.env.example
+
+# Archivos subidos y material de muestra (confidencial, nunca al repositorio)
+media/
+muestras*/
+**/muestras-dircom/
+tmp/
+descargas/
+
+# Datos externos descargados (solo extractos pequeños en tests/fixtures/)
+*.zip
+*.atom
+!tests/fixtures/**/*.atom
+
+# Python / uv
+.venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+staticfiles/
+
+# Sistema y editores
+.DS_Store
+.idea/
+.vscode/
+
+# Configuración local de herramientas (no forma parte del paquete .claude/ del proyecto)
+.claude/launch.json
+.claude/settings.local.json
