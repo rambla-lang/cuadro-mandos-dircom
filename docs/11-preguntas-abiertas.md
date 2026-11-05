@@ -29,6 +29,7 @@ El reparto de quién decide está explicado en `ENTREGA.md`. José Luis es el pr
 | P-01 | Stack | Fase 0 | ADR-001: Django + HTMX + ECharts |
 | P-02 | Alojamiento y base de datos del piloto (requisito de José Luis: gratuito durante el piloto) | Fase 8 | ADR-002: Render Free + Neon Free |
 | P-03 | Almacenamiento de los archivos originales (PDF y Word) | Fase 4 | ADR-003: tres opciones |
+| P-15 | Dónde se ejecuta la carga histórica de PLACSP | Fase 3 | ADR-008 (aceptada): solo por comando local; desde la web, solo el mes en curso si cabe en Render Free |
 | P-04 | Correo (SMTP) para invitaciones y recuperación de contraseñas | Fase 1 (no bloquea: hay alternativa manual) | Correo corporativo, servicio transaccional o enlace manual |
 
 Si una decisión técnica afecta a lo que ve o hace el usuario (por ejemplo, arranques en frío lentos o no poder reabrir los PDF originales), se comenta con José Luis antes de cerrarla.

@@ -41,4 +41,4 @@ PLACSP y Hacienda publican datos abiertos oficiales en formato ATOM/XML con la i
 - La clasificación por servicio y la vinculación con el municipio se hacen sobre campos estructurados (CPV y órgano), mucho más fiables que el título.
 - El adjudicatario viene en los datos de resolución del ATOM (estructura exacta **por verificar** en la especificación), sin abrir fichas una a una.
 - Hay que guardar de qué fichero y entrada procede cada expediente, porque un expediente cambia de estado a lo largo del tiempo y aparece varias veces. Prevalece la entrada con `updated` más reciente; ver `04`.
-- El tamaño de los ZIP está **por verificar** en la Fase 0 antes de decidir si la ingesta cabe en la instancia gratuita.
+- Tamaño de los ZIP medido en la Fase 0 (`docs/04` §1): 194 MB el mensual y 2,17 GB el anual. Dónde se ejecuta cada carga: ADR-008.

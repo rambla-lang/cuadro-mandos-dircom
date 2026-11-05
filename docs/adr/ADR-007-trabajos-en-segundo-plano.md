@@ -13,6 +13,8 @@ La actualización es bajo demanda. Las ingestas y la generación de informes pue
 - Los mismos servicios tienen comando `manage.py`, para ejecutarlos en local apuntando a la base de datos de Neon si un trabajo no cabe en la instancia gratuita.
 - **Verificado el 05/11/2026** (https://docs.djangoproject.com/en/6.0/topics/tasks/): Django 6 incluye el marco `django.tasks`, pero "no proporciona un mecanismo de trabajador". Solo trae `ImmediateBackend` y `DummyBackend`, pensados para desarrollo y tests, no para producción. Un trabajador real (por ejemplo, el paquete `django-tasks`, 0.12.0 en PyPI) exige un proceso aparte, que la instancia gratuita de Render no ofrece. Se mantiene el ejecutor propio de esta ADR. Si en producción hay trabajador dedicado, valorar migrar a `django.tasks` con una ADR nueva.
 
+Para PLACSP, ADR-008 concreta que la carga histórica se hace solo por comando local y que desde la web solo se actualiza el ZIP mensual, si se confirma que cabe.
+
 ## Alternativas
 | Opción | Por qué no ahora |
 |---|---|

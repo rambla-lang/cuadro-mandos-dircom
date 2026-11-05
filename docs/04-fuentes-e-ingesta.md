@@ -126,7 +126,7 @@ Estimación, no medición de la base de datos: el tamaño real se medirá con `p
 
 **Conclusión:** un año cabe en Neon Free y queda por debajo del umbral de 300 MB, siempre que no se guarde el XML completo y que **no** se incluyan contratos menores (P-07, sin medir; añadirían mucho volumen). Para dos años habría que volver a medir.
 
-**Consecuencia para la ingesta (a decidir en una ADR):** el ZIP mensual (194 MB, unos 20 min de descarga a la velocidad observada, 39 MB de memoria) es viable bajo demanda. El anual (2,17 GB) no es razonable en Render Free: la carga histórica inicial debería hacerse con `manage.py ingest_placsp` en local contra Neon.
+**Consecuencia para la ingesta (ADR-008, aceptada):** el ZIP mensual (194 MB, unos 20 min de descarga a la velocidad observada, 39 MB de memoria) es viable bajo demanda. El anual (2,17 GB) no es razonable en Render Free: la carga histórica inicial debería hacerse con `manage.py ingest_placsp` en local contra Neon.
 
 ## 3. BOE: sección V.A (después del MVP)
 
