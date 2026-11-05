@@ -74,14 +74,14 @@ Campos mínimos. Todos los modelos tienen además `creado`, `modificado` y, si p
 
 ### territorio
 - **Provincia**: `codigo_ine` (2 dígitos, único), `nombre`, `comunidad`.
-- **Municipio**: `codigo_ine` (5 dígitos, único), `nombre_oficial`, `nombres_alternativos` (lista, incluye castellano y valenciano y formas con o sin artículo), `provincia`.
+- **Municipio**: `codigo_ine` (5 dígitos, único), `nombre_oficial`, `nombres_alternativos` (lista, incluye castellano y valenciano y formas con o sin artículo), `provincia`. Además, `nombres_normalizados` (derivado al guardar, sin tildes ni mayúsculas, con índice GIN) para resolver nombres, y `lote_importacion`. Carga y reglas de nombres en `04` §10.
 - **EntidadSupramunicipal**: `nombre`, `tipo` (consorcio, mancomunidad, diputación, otro) y municipios miembros. Hace falta porque el tratamiento de residuos suele ser consorcial.
 
 ### entidades
 - **GrupoEmpresarial**: `nombre`.
 - **Empresa**: `nombre`, `grupo`, `nif` (opcional, único si existe), `es_propia` (excluida del benchmarking), `es_competidor_seguido`, `notas`.
 - **AliasEmpresa**: `empresa`, `texto`, `tipo` (marca, razón social, abreviatura, marca local), `requiere_contexto` (para alias ambiguos, como "Cox", que también es un municipio).
-- **AcotacionCompetidor**: `empresa`, `servicios_incluidos`, `ambito_geografico`, `nota` (por ejemplo, "STV: solo jardines y zonas verdes de Elche").
+- **AcotacionCompetidor**: `empresa`, `servicios_incluidos`, `ambito_geografico`, `nota` (por ejemplo, "STV: solo jardines y zonas verdes de Elche"), `fuente` (documento o decisión de la que sale). `servicios_incluidos` vacío significa que la acotación no limita por servicio; la nota explica el límite (caso de STV, cuyo servicio no está en el catálogo).
 
 ### evidencias
 - **Fuente**: `tipo`, `nombre`, `dominio` o `url_base`.
@@ -114,12 +114,14 @@ Campos mínimos. Todos los modelos tienen además `creado`, `modificado` y, si p
 ### ia, sistema e informes
 - **LlamadaIA**: `tarea`, `modelo`, `version_prompt`, `tokens_entrada`, `tokens_salida`, `coste_estimado`, `estado`, `error`, `usuario`, `objeto_relacionado` (genérico).
 - **PropuestaIA**: `llamada`, `tipo_objetivo`, `id_objetivo`, `propuesta` (JSON validado con su esquema), `estado_revision`, `revisado_por`, `comentario`.
-- **LoteImportacion**: `tipo`, `parametros`, `archivo_sha256`, `usuario`, `inicio`, `fin`, `leidos`, `nuevos`, `actualizados`, `descartados`, `errores`, `log`.
+- **LoteImportacion**: `tipo`, `parametros`, `archivo_sha256`, `usuario`, `inicio`, `fin`, `leidos`, `nuevos`, `actualizados`, `descartados`, `errores`, `log`. Vive en la app `nucleo` porque la usan todos los importadores.
 - **TrabajoIngesta**: ver ADR-007.
 - **RegistroAuditoria**: `usuario`, `accion`, `objeto`, `antes`, `despues`, `fecha`.
 - **InformeGenerado**: `tipo` (docx, pptx), `parametros`, `archivo`, `evidencias_usadas`, `llamadas_ia`, `generado_por`.
 
 ## Reglas de integridad
+- Las relaciones `Evidencia`–`Empresa` y `Evidencia`–`Municipio` usan tablas intermedias explícitas con `PROTECT`, para que la restricción de borrado se aplique también a través de la relación muchos a muchos.
+- Restricciones de base de datos en `Evidencia`: el nivel `oficial` exige `url_origen`; con `origen = ia`, los niveles `oficial`, `prensa` y `empresa` exigen `validado_por`; el estado `validada` exige `validado_por` y `validado_en`; el alcance debe pertenecer al servicio. `PrestacionServicio` es única también cuando `empresa` es nula (`NULLS NOT DISTINCT`).
 - Borrar una empresa con evidencias está prohibido (`PROTECT`); se desactiva.
 - Una evidencia validada solo se modifica dejando registro de auditoría.
 - Las claves naturales de importación tienen restricción `UNIQUE` en la base de datos, no solo en código.

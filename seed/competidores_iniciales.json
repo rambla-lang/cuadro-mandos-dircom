@@ -1,0 +1,30 @@
+{
+  "fuente": "Documento maestro del análisis de competencia (apartado «Alcance, fuentes y método») y docs/00-vision-y-alcance.md",
+  "nota": "Datos iniciales. Tras la carga se editan en la administración; el comando no sobrescribe lo editado. Sin NIF: ninguno figura en las fuentes citadas.",
+  "grupos": ["Nealis"],
+  "empresas": [
+    {"nombre": "FACSA", "grupo": "Nealis", "competidor": true,
+     "alias": [{"texto": "Nealis", "tipo": "marca"}]},
+    {"nombre": "Aqualia", "competidor": true,
+     "acotaciones": [{"servicios": [], "nota": "Se analiza separada de FCC: su actividad no se cuenta en la ficha de FCC."}]},
+    {"nombre": "Hozono Global", "competidor": true,
+     "acotaciones": [{"servicios": [], "nota": "Las actividades multiservicio solo se consideran evidencia de agua cuando existe un vínculo explícito."}]},
+    {"nombre": "Global Omnium", "competidor": true},
+    {"nombre": "Cox", "competidor": true, "alias_requiere_contexto": true},
+    {"nombre": "STV", "competidor": true,
+     "alias": [{"texto": "STV Gestión", "tipo": "marca"}],
+     "acotaciones": [{"servicios": [], "ambito": "Elche", "nota": "Limitada a jardines y zonas verdes de Elche (servicio fuera del catálogo agua, residuos y energía de docs/03)."}]},
+    {"nombre": "Urbaser", "competidor": true},
+    {"nombre": "PreZero", "competidor": true},
+    {"nombre": "Valoriza", "competidor": true},
+    {"nombre": "FCC", "competidor": true,
+     "acotaciones": [{"servicios": ["residuos", "energia"], "nota": "Se distinguen residuos y energía. La actividad de Aqualia no se cuenta en esta ficha."}]},
+    {"nombre": "ENGIE", "competidor": true},
+    {"nombre": "ACCIONA Energía", "competidor": true,
+     "alias": [{"texto": "ACCIONA", "tipo": "marca", "requiere_contexto": true}],
+     "acotaciones": [{"servicios": ["energia"], "nota": "ACCIONA se analiza solo en energía."}]},
+    {"nombre": "Naturgy", "competidor": true},
+    {"nombre": "Veolia", "propia": true},
+    {"nombre": "Hidraqua", "propia": true}
+  ]
+}

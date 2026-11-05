@@ -1,5 +1,6 @@
 """Settings comunes. Todo lo que cambia entre entornos se lee de variables de entorno (RNF-11)."""
 
+from datetime import timedelta
 from pathlib import Path
 
 import environ
@@ -21,7 +22,9 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    "django.contrib.postgres",
     "django_htmx",
+    "axes",
     "apps.nucleo",
     "apps.territorio",
     "apps.entidades",
@@ -46,6 +49,8 @@ MIDDLEWARE = [
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
     "django_htmx.middleware.HtmxMiddleware",
+    # ADR-009: bloqueo temporal tras intentos fallidos. Debe ir el último.
+    "axes.middleware.AxesMiddleware",
 ]
 
 ROOT_URLCONF = "config.urls"
@@ -61,6 +66,7 @@ TEMPLATES = [
                 "django.template.context_processors.request",
                 "django.contrib.auth.context_processors.auth",
                 "django.contrib.messages.context_processors.messages",
+                "apps.nucleo.context_processors.roles",
             ],
         },
     },
@@ -73,6 +79,25 @@ AUTH_USER_MODEL = "nucleo.Usuario"
 LOGIN_URL = "login"
 LOGIN_REDIRECT_URL = "portada"
 LOGOUT_REDIRECT_URL = "login"
+
+AUTHENTICATION_BACKENDS = [
+    "axes.backends.AxesStandaloneBackend",  # ADR-009; debe ir el primero
+    "django.contrib.auth.backends.ModelBackend",
+]
+
+# Enlaces de invitación y de nueva contraseña (docs/08, P-04 sin SMTP): 72 horas.
+PASSWORD_RESET_TIMEOUT = 72 * 3600
+
+# ADR-009: bloqueo temporal por usuario tras 5 fallos seguidos, 15 minutos.
+AXES_FAILURE_LIMIT = 5
+AXES_COOLOFF_TIME = timedelta(minutes=15)
+AXES_LOCKOUT_PARAMETERS = ["username"]
+AXES_USERNAME_CALLABLE = "apps.nucleo.acceso.usuario_para_axes"
+AXES_RESET_ON_SUCCESS = True
+AXES_LOCKOUT_TEMPLATE = "registration/bloqueado.html"
+# ADR-009: se bloquea por usuario, no por IP (detrás del proxy de Render la IP no es fiable
+# hasta verificar sus cabeceras en la Fase 8). El aviso W006 se silencia a sabiendas.
+SILENCED_SYSTEM_CHECKS = ["axes.W006"]
 
 AUTH_PASSWORD_VALIDATORS = [
     {"NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator"},

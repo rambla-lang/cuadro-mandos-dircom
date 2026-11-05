@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% block titulo %}Usuarios{% endblock %}
+{% block contenido %}
+<h1>Usuarios</h1>
+<p><a href="{% url 'invitar' %}">Invitar a un usuario</a></p>
+<table>
+  <thead><tr><th>Email</th><th>Nombre</th><th>Rol</th><th>Estado</th><th>Última conexión</th><th></th></tr></thead>
+  <tbody>
+  {% for fila in usuarios %}
+    <tr>
+      <td>{{ fila.u.email }}</td>
+      <td>{{ fila.u.nombre }}</td>
+      <td>{{ fila.rol }}</td>
+      <td>{% if not fila.u.is_active %}Desactivado{% elif fila.pendiente %}Invitación pendiente{% else %}Activo{% endif %}</td>
+      <td>{{ fila.u.last_login|default:"Nunca" }}</td>
+      <td>{% if fila.u.is_active %}
+        <form method="post" action="{% url 'generar_enlace' fila.u.pk %}">{% csrf_token %}
+          <button type="submit" style="margin:0">{% if fila.pendiente %}Nuevo enlace de invitación{% else %}Enlace para nueva contraseña{% endif %}</button>
+        </form>{% endif %}
+      </td>
+    </tr>
+  {% endfor %}
+  </tbody>
+</table>
+{% endblock %}

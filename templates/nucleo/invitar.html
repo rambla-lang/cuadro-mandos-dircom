@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% block titulo %}Invitar usuario{% endblock %}
+{% block contenido %}
+<h1>Invitar a un usuario</h1>
+<p>Se crea el usuario sin contraseña y se muestra un enlace de un solo uso, válido 72 horas, para que la fije. Compártelo por un canal seguro: la aplicación todavía no envía correos.</p>
+<form method="post">{% csrf_token %}
+  {{ form.non_field_errors }}
+  {% for campo in form %}
+    <label for="{{ campo.id_for_label }}">{{ campo.label }}</label>
+    {{ campo }}{{ campo.errors }}
+  {% endfor %}
+  <button type="submit">Crear e invitar</button>
+</form>
+<p><a href="{% url 'usuarios' %}">Volver</a></p>
+{% endblock %}

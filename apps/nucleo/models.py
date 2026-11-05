@@ -1,4 +1,6 @@
+from django.conf import settings
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
+from django.contrib.contenttypes.models import ContentType
 from django.db import models
 from django.utils import timezone
 
@@ -64,3 +66,84 @@ class Usuario(AbstractBaseUser, PermissionsMixin):
     def save(self, *args, **kwargs):
         self.email = normalizar_email(self.email)
         super().save(*args, **kwargs)
+
+
+class ModeloConFechas(models.Model):
+    """Campos comunes de docs/03: creado y modificado."""
+
+    creado = models.DateTimeField("creado", auto_now_add=True)
+    modificado = models.DateTimeField("modificado", auto_now=True)
+
+    class Meta:
+        abstract = True
+
+
+class LoteImportacion(models.Model):
+    """Una ejecución de un importador (docs/03). Todo registro importado apunta a su lote."""
+
+    tipo = models.CharField("tipo", max_length=50)
+    parametros = models.JSONField("parámetros", default=dict, blank=True)
+    archivo_sha256 = models.CharField("SHA-256 del archivo", max_length=64, blank=True)
+    usuario = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        verbose_name="usuario",
+        null=True,
+        blank=True,
+        on_delete=models.PROTECT,
+        related_name="lotes_importacion",
+    )
+    inicio = models.DateTimeField("inicio", default=timezone.now)
+    fin = models.DateTimeField("fin", null=True, blank=True)
+    leidos = models.PositiveIntegerField("leídos", default=0)
+    nuevos = models.PositiveIntegerField("nuevos", default=0)
+    actualizados = models.PositiveIntegerField("actualizados", default=0)
+    descartados = models.PositiveIntegerField("descartados", default=0)
+    errores = models.PositiveIntegerField("errores", default=0)
+    log = models.TextField("registro", blank=True)
+
+    class Meta:
+        verbose_name = "lote de importación"
+        verbose_name_plural = "lotes de importación"
+        ordering = ["-inicio"]
+        permissions = [("importar_datos", "Puede importar datos")]
+
+    def __str__(self):
+        return f"{self.tipo} · {self.inicio:%d/%m/%Y %H:%M}"
+
+    def anotar(self, linea: str):
+        self.log = f"{self.log}{linea}\n"
+
+
+class RegistroAuditoria(models.Model):
+    """RF-04: importaciones, validaciones, ediciones de evidencias, informes y altas de usuario."""
+
+    usuario = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        verbose_name="usuario",
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        related_name="+",
+    )
+    usuario_email = models.CharField("email del usuario", max_length=254, blank=True)
+    accion = models.CharField("acción", max_length=60)
+    objeto_tipo = models.ForeignKey(
+        ContentType,
+        verbose_name="tipo de objeto",
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+    )
+    objeto_id = models.CharField("id del objeto", max_length=64, blank=True)
+    objeto_repr = models.CharField("objeto", max_length=300, blank=True)
+    antes = models.JSONField("antes", null=True, blank=True)
+    despues = models.JSONField("después", null=True, blank=True)
+    fecha = models.DateTimeField("fecha", auto_now_add=True)
+
+    class Meta:
+        verbose_name = "registro de auditoría"
+        verbose_name_plural = "registro de auditoría"
+        ordering = ["-fecha"]
+
+    def __str__(self):
+        return f"{self.fecha:%d/%m/%Y %H:%M} · {self.usuario_email} · {self.accion}"

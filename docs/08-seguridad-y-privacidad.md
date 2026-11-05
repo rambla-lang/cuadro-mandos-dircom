@@ -4,13 +4,13 @@
 - Sistema de usuarios de Django. Inicio de sesión con email (modelo de usuario propio con `email` como identificador, creado **en la primera migración**, porque cambiarlo después es costoso).
 - Sin registro público. El administrador invita y el usuario fija su contraseña con un enlace de un solo uso.
 - Validadores de contraseña de Django activos (longitud mínima 12).
-- Bloqueo temporal tras intentos fallidos repetidos. Librería o implementación a decidir en la Fase 1; documentarlo en un ADR.
+- Bloqueo temporal tras intentos fallidos repetidos: django-axes, 5 fallos seguidos por usuario → 15 minutos (ADR-009, propuesta en la Fase 1).
 - Roles con grupos de Django:
   - **Administrador**: todo.
   - **Analista**: importar, revisar, validar, editar evidencias y generar informes.
   - **Lector**: ver y descargar.
 - Los permisos se comprueban en el servidor (decorador o mixin), no solo ocultando botones.
-- El envío de correo de invitación y recuperación necesita un servicio SMTP (pregunta P-04). Mientras no exista, el administrador genera el enlace y lo comparte por otro canal.
+- El envío de correo de invitación y recuperación necesita un servicio SMTP (pregunta P-04). Mientras no exista, el administrador genera el enlace y lo comparte por otro canal. Implementado en la Fase 1: pantalla «Usuarios» → «Invitar» o «Enlace para nueva contraseña»; el enlace es de un solo uso (deja de valer al fijar la contraseña) y caduca a las 72 horas (`PASSWORD_RESET_TIMEOUT`).
 
 ## Aplicación
 - `DEBUG=False`, `SECURE_*` activos (HSTS, cookies seguras, `SECURE_PROXY_SSL_HEADER` en Render), `ALLOWED_HOSTS` y `CSRF_TRUSTED_ORIGINS` por variable de entorno.

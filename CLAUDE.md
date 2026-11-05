@@ -26,6 +26,8 @@ Lee `docs/` antes de cambiar algo que afecte a datos, métricas o arquitectura. 
 cp .env.example .env                      # y rellena DATABASE_URL con tu Postgres local
 uv sync                                   # instalar dependencias
 uv run python manage.py migrate
+uv run python manage.py cargar_municipios --provincias 03 12 46 --comunidad "Comunitat Valenciana"
+uv run python manage.py cargar_competidores_iniciales
 uv run python manage.py runserver
 uv run pytest                             # todos los tests
 uv run pytest -m "not externo"            # sin llamadas a servicios externos (por defecto en CI)

@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% block titulo %}Fijar contraseña{% endblock %}
+{% block contenido %}
+{% if validlink %}
+  <h1>Fija tu contraseña</h1>
+  <p>Mínimo 12 caracteres.</p>
+  <form method="post">{% csrf_token %}
+    {{ form.non_field_errors }}
+    {% for campo in form %}
+      <label for="{{ campo.id_for_label }}">{{ campo.label }}</label>
+      {{ campo }}{{ campo.errors }}
+    {% endfor %}
+    <button type="submit">Guardar contraseña</button>
+  </form>
+{% else %}
+  <h1>Enlace no válido</h1>
+  <p class="error">El enlace ya se ha usado o ha caducado. Pide uno nuevo al administrador.</p>
+{% endif %}
+{% endblock %}

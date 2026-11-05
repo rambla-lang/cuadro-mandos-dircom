@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% block titulo %}Municipios{% endblock %}
+{% block contenido %}
+<h1>Municipios</h1>
+<form method="get" class="filtros">
+  <div><label for="q">Nombre</label><input id="q" name="q" value="{{ q }}"></div>
+  <div><label for="provincia">Provincia</label>
+    <select id="provincia" name="provincia">
+      <option value="">Todas</option>
+      {% for p in provincias %}<option value="{{ p.codigo_ine }}" {% if p.codigo_ine == provincia %}selected{% endif %}>{{ p.nombre }}</option>{% endfor %}
+    </select></div>
+  <div><button type="submit">Filtrar</button></div>
+</form>
+<p>{{ municipios|length }} municipios.</p>
+<table>
+  <thead><tr><th>Código INE</th><th>Nombre oficial</th><th>Nombres alternativos</th><th>Provincia</th></tr></thead>
+  <tbody>
+  {% for m in municipios %}
+    <tr><td>{{ m.codigo_ine }}</td><td>{{ m.nombre_oficial }}</td><td>{{ m.nombres_alternativos|join:" · " }}</td><td>{{ m.provincia.nombre }}</td></tr>
+  {% empty %}
+    <tr><td colspan="4">Sin municipios cargados.</td></tr>
+  {% endfor %}
+  </tbody>
+</table>
+<p><small>Fuente: Sitio web del INE: www.ine.es. Relación de municipios y sus códigos por provincias a 1 de enero de 2026.</small></p>
+{% endblock %}

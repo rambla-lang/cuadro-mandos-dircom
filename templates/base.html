@@ -5,21 +5,36 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>{% block titulo %}Cuadro de mandos DIRCOM{% endblock %}</title>
   <style>
-    body { font-family: system-ui, sans-serif; max-width: 40rem; margin: 2rem auto; padding: 0 1rem; color: #1a1a1a; }
+    body { font-family: system-ui, sans-serif; max-width: 64rem; margin: 1.5rem auto; padding: 0 1rem; color: #1a1a1a; }
+    header { display: flex; flex-wrap: wrap; gap: .75rem; align-items: center; border-bottom: 1px solid #ccc; padding-bottom: .75rem; }
+    nav a { margin-right: .75rem; color: #0b4f8a; }
     label { display: block; margin-top: 1rem; }
-    input { padding: .5rem; width: 100%; box-sizing: border-box; }
+    input, select { padding: .5rem; width: 100%; box-sizing: border-box; }
     button { margin-top: 1rem; padding: .5rem 1rem; }
-    .error { color: #a40000; }
+    table { border-collapse: collapse; width: 100%; margin-top: 1rem; }
+    th, td { border-bottom: 1px solid #ddd; padding: .4rem .5rem; text-align: left; vertical-align: top; }
+    .error, .errorlist { color: #a40000; }
+    .aviso { background: #fff6d6; border: 1px solid #e0c060; padding: .75rem; }
+    .enlace { word-break: break-all; font-family: ui-monospace, monospace; background: #f3f3f3; padding: .75rem; }
+    .filtros { display: flex; gap: .5rem; flex-wrap: wrap; align-items: end; }
+    .filtros > * { flex: 1 1 12rem; }
   </style>
 </head>
 <body>
   <header>
     <strong>Cuadro de mandos DIRCOM</strong>
     {% if user.is_authenticated %}
-      · {{ user.email }}
-      <form method="post" action="{% url 'logout' %}" style="display:inline">{% csrf_token %}<button type="submit">Salir</button></form>
+      <nav>
+        <a href="{% url 'portada' %}">Portada</a>
+        <a href="{% url 'municipios' %}">Municipios</a>
+        {% if es_administrador %}<a href="{% url 'usuarios' %}">Usuarios</a>{% endif %}
+        {% if user.is_staff %}<a href="{% url 'admin:index' %}">Administración</a>{% endif %}
+      </nav>
+      <span style="margin-left:auto">{{ user.email }}</span>
+      <form method="post" action="{% url 'logout' %}" style="display:inline">{% csrf_token %}<button type="submit" style="margin:0">Salir</button></form>
     {% endif %}
   </header>
+  {% if messages %}{% for m in messages %}<p class="aviso">{{ m }}</p>{% endfor %}{% endif %}
   <main>{% block contenido %}{% endblock %}</main>
 </body>
 </html>

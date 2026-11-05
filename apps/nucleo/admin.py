@@ -2,7 +2,7 @@ from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 from django.contrib.auth.forms import AdminUserCreationForm, UserChangeForm
 
-from .models import Usuario
+from .models import LoteImportacion, RegistroAuditoria, Usuario
 
 
 class UsuarioCreationForm(AdminUserCreationForm):
@@ -33,3 +33,30 @@ class UsuarioAdmin(UserAdmin):
     )
     add_fieldsets = ((None, {"classes": ("wide",), "fields": ("email", "password1", "password2")}),)
     filter_horizontal = ("groups",)
+
+
+@admin.register(LoteImportacion)
+class LoteImportacionAdmin(admin.ModelAdmin):
+    list_display = ("tipo", "inicio", "fin", "leidos", "nuevos", "actualizados", "errores")
+    list_filter = ("tipo",)
+    readonly_fields = [f.name for f in LoteImportacion._meta.fields]
+
+    def has_add_permission(self, request):
+        return False
+
+
+@admin.register(RegistroAuditoria)
+class RegistroAuditoriaAdmin(admin.ModelAdmin):
+    list_display = ("fecha", "usuario_email", "accion", "objeto_repr")
+    list_filter = ("accion",)
+    search_fields = ("usuario_email", "accion", "objeto_repr")
+    readonly_fields = [f.name for f in RegistroAuditoria._meta.fields]
+
+    def has_add_permission(self, request):
+        return False
+
+    def has_change_permission(self, request, obj=None):
+        return False
+
+    def has_delete_permission(self, request, obj=None):
+        return False
