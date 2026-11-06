@@ -12,6 +12,7 @@ from apps.ia import views as ia_views
 from apps.informes import views as informes_views
 from apps.medios import views as medios_views
 from apps.nucleo import views as nucleo_views
+from apps.nucleo.salud import salud
 from apps.territorio import views as territorio_views
 
 urlpatterns = [
@@ -101,5 +102,6 @@ urlpatterns = [
     ),
     path("revision/", views_revision.bandeja, name="revision"),
     path("revision/<int:pk>/", views_revision.elemento, name="revision_elemento"),
+    path("salud/", salud, name="salud"),
     path("admin/", admin.site.urls),
 ]

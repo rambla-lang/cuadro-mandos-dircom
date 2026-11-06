@@ -45,3 +45,6 @@ Lo gratuito obliga a aceptar arranques en frío y límites de memoria y almacena
 1. [ ] Verificar en render.com los límites vigentes de la instancia Free y si permite disco persistente.
 2. [ ] Crear el proyecto en Neon en la región europea disponible (**por verificar** qué regiones ofrece).
 3. [ ] Medir el tamaño de la base de datos tras la carga inicial (Fase 0).
+
+## Verificación y preparación (Fase 8, 06/11/2026)
+En https://render.com/docs/free y https://render.com/docs/blueprint-spec: el servicio web gratuito se duerme a los 15 minutos sin tráfico entrante y tarda alrededor de un minuto en despertar (Render muestra su propia página de carga, que cubre el aviso de arranque en frío de docs/07); 750 horas de instancia gratuitas al mes por espacio de trabajo; disco efímero y sin disco persistente; `preDeployCommand` solo en planes de pago. Python con `.python-version` o `PYTHON_VERSION`; uv se usa si hay `uv.lock`. Preparado: `render.yaml`, WhiteNoise, gunicorn (1 proceso, 4 hilos, para que el ejecutor de ADR-007 sea único), `/salud/` y `preparar_piloto` en el arranque. Procedimiento en docs/12. **Por verificar:** RAM y CPU de la instancia gratuita (la página consultada no las da) y la restauración en Neon Free.

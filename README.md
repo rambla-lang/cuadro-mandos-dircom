@@ -27,6 +27,7 @@ Este paquete contiene la documentación que Claude Code necesita para construir 
 | `docs/00-vision-y-alcance.md` | Objetivo, usuarios, decisiones tomadas, alcance del MVP y lo que queda fuera |
 | `docs/01-requisitos.md` | Requisitos funcionales (RF) y no funcionales (RNF) con identificador y criterio de aceptación |
 | `docs/02-arquitectura.md` | Componentes, flujos de datos, despliegue piloto y límites conocidos |
+| `docs/12-operacion.md` | Despliegue en Render y Neon, carga de datos, copias de seguridad y qué hacer si algo falla |
 | `docs/adr/` | Decisiones de arquitectura (ADR-001 a ADR-009) con alternativas y consecuencias |
 | `docs/03-modelo-de-datos.md` | Entidades, campos, relaciones y niveles de evidencia |
 | `docs/04-fuentes-e-ingesta.md` | Cada fuente: acceso, formato real observado, reglas de importación y lecciones aprendidas |

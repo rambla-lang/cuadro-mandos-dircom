@@ -26,7 +26,12 @@ def generar_docx(informe) -> bytes:
     doc.add_paragraph(
         f"Periodo: {_fecha(d['desde'])} a {_fecha(d['hasta'])}. Ámbito: Comunitat Valenciana."
     )
-    doc.add_paragraph(f"Fecha de revisión: {timezone.localdate():%d/%m/%Y}.")
+    revision = (
+        timezone.localtime(informe.publicado_en).date()
+        if informe.publicado_en
+        else timezone.localdate()
+    )
+    doc.add_paragraph(f"Fecha de revisión: {revision:%d/%m/%Y}.")
     base = (
         ", ".join(f"{k}: {v}" for k, v in sorted(d["base_documental"].items())) or "sin evidencias"
     )

@@ -1,3 +1,4 @@
+import io
 from datetime import date, timedelta
 
 from django import forms
@@ -14,6 +15,7 @@ from apps.nucleo.roles import Rol, rol_requerido, tiene_rol
 
 from . import services
 from .models import InformeGenerado
+from .salida import generar_docx, generar_pptx
 
 ROLES = (Rol.ADMINISTRADOR, Rol.ANALISTA)
 
@@ -103,8 +105,13 @@ def detalle(request, pk):
 
 def descargar(request, pk, formato):
     informe = get_object_or_404(InformeGenerado, pk=pk, estado=InformeGenerado.Estado.PUBLICADO)
-    ruta = {"docx": informe.archivo_docx, "pptx": informe.archivo_pptx}.get(formato)
-    if not ruta or not default_storage.exists(ruta):
+    if formato not in ("docx", "pptx"):
         raise Http404
+    ruta = {"docx": informe.archivo_docx, "pptx": informe.archivo_pptx}[formato]
     nombre = f"informe-competencia-{informe.pk}.{formato}"
-    return FileResponse(default_storage.open(ruta, "rb"), as_attachment=True, filename=nombre)
+    if ruta and default_storage.exists(ruta):
+        return FileResponse(default_storage.open(ruta, "rb"), as_attachment=True, filename=nombre)
+    # En Render Free el disco es efímero: el informe se regenera desde lo guardado en la base de
+    # datos (secciones y métricas publicadas), con el mismo contenido.
+    contenido = generar_docx(informe) if formato == "docx" else generar_pptx(informe)
+    return FileResponse(io.BytesIO(contenido), as_attachment=True, filename=nombre)

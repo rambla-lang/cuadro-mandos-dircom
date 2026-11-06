@@ -33,6 +33,8 @@ uv run python manage.py importar_tabla_municipal --fichero seed/municipios_veoli
 uv run scripts/geo/preparar_municipios.py au_03.geojson au_12.geojson au_46.geojson \
   --salida static/geo/municipios_cv.json --fecha-descarga AAAA-MM-DD   # docs/04 §11
 python3 scripts/validar_paleta.py "#hex,#hex" --mode light [--pairs all] [--ordinal]
+uv run python manage.py preparar_piloto         # municipios, competidores y reglas (idempotente)
+uv run python manage.py preparar_eval_menciones # plantilla del juego de evaluación de T1
 uv run python manage.py runserver
 uv run pytest                             # todos los tests
 uv run pytest -m "not externo"            # sin llamadas a servicios externos (por defecto en CI)
@@ -40,7 +42,7 @@ uv run ruff check . && uv run ruff format --check .
 uv run python manage.py cargar_reglas_clasificacion
 uv run python manage.py ingest_ted --desde 2026-10-01 --hasta 2026-10-31
 uv run python manage.py ingest_placsp --fichero ruta.zip      # o --mes AAAAMM (descarga ~200 MB)
-uv run python manage.py import_brandwatch ruta.csv
+DATABASE_URL='postgres://…' scripts/copia_seguridad.sh   # copia semanal (docs/12)
 ```
 
 Si cambias un comando, actualiza esta sección.

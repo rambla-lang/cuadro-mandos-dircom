@@ -1,0 +1,40 @@
+# Despliegue del piloto en Render (ADR-002). Formato verificado el 06/11/2026 en
+# https://render.com/docs/blueprint-spec: «runtime» sustituye a «env»; el plan gratuito no admite
+# «preDeployCommand», así que las migraciones y los datos de partida se ejecutan al arrancar.
+services:
+  - type: web
+    name: cuadro-mandos-dircom
+    runtime: python
+    plan: free
+    region: frankfurt
+    buildCommand: uv sync --locked --no-dev && uv run --no-sync python manage.py collectstatic --noinput
+    startCommand: >-
+      uv run --no-sync python manage.py migrate --noinput &&
+      uv run --no-sync python manage.py preparar_piloto &&
+      uv run --no-sync gunicorn config.wsgi --workers 1 --threads 4 --timeout 120
+    healthCheckPath: /salud/
+    envVars:
+      - key: DJANGO_SETTINGS_MODULE
+        value: config.settings.produccion
+      - key: SECRET_KEY
+        generateValue: true
+      - key: DATABASE_URL
+        sync: false
+      - key: ALLOWED_HOSTS
+        sync: false
+      - key: CSRF_TRUSTED_ORIGINS
+        sync: false
+      - key: ANTHROPIC_API_KEY
+        sync: false
+      - key: IA_MODELO_CLASIFICAR
+        value: claude-haiku-5-5
+      - key: IA_MODELO_EXTRAER
+        value: claude-sonnet-5-5
+      - key: IA_MODELO_REDACTAR
+        value: claude-opus-5-5
+      - key: IA_LIMITE_MENSUAL_EUR
+        value: "0"
+      - key: IA_PRECIOS_JSON
+        sync: false
+      - key: GUARDAR_ORIGINALES
+        value: "true"
