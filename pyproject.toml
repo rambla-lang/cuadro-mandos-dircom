@@ -38,6 +38,11 @@ extend-exclude = ["**/migrations/*.py", "scripts/validar_paleta.py"]
 [tool.ruff.lint]
 select = ["E", "F", "W", "I", "UP", "B", "DJ", "SIM"]
 
+[tool.ruff.lint.per-file-ignores]
+# Textos fijos del informe y maquetación del Word y la presentación: líneas largas por legibilidad.
+"apps/informes/redaccion.py" = ["E501"]
+"apps/informes/salida.py" = ["E501"]
+
 [tool.pytest.ini_options]
 DJANGO_SETTINGS_MODULE = "config.settings.local"
 python_files = ["test_*.py"]

@@ -9,6 +9,7 @@ from apps.documentos import views as documentos_views
 from apps.evidencias import views as evidencias_views
 from apps.evidencias import views_importacion, views_revision
 from apps.ia import views as ia_views
+from apps.informes import views as informes_views
 from apps.medios import views as medios_views
 from apps.nucleo import views as nucleo_views
 from apps.territorio import views as territorio_views
@@ -90,6 +91,14 @@ urlpatterns = [
     path("digital/", digital_views.panel, name="digital"),
     path("digital/nuevo/", digital_views.nuevo, name="digital_nuevo"),
     path("importar/word/", documentos_views.importar_word, name="importar_word"),
+    path("informes/", informes_views.lista, name="informes"),
+    path("informes/nuevo/", informes_views.nuevo, name="informe_nuevo"),
+    path("informes/<int:pk>/", informes_views.detalle, name="informe"),
+    path(
+        "informes/<int:pk>/descargar.<str:formato>",
+        informes_views.descargar,
+        name="informe_descargar",
+    ),
     path("revision/", views_revision.bandeja, name="revision"),
     path("revision/<int:pk>/", views_revision.elemento, name="revision_elemento"),
     path("admin/", admin.site.urls),

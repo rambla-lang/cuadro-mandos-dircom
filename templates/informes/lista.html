@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+{% block titulo %}Informes{% endblock %}
+{% block contenido %}
+<h1>Informes</h1>
+{% if puede %}<p><a href="{% url 'informe_nuevo' %}">Generar un informe</a></p>{% endif %}
+<table><thead><tr><th>Fecha</th><th>Título</th><th>Estado</th><th>Generado por</th><th>Descargas</th></tr></thead><tbody>
+{% for i in informes %}<tr><td>{{ i.creado|date:"d/m/Y H:i" }}</td><td><a href="{% url 'informe' i.pk %}">{{ i.titulo }}</a></td><td>{{ i.get_estado_display }}{% if i.secciones_con_problemas %} <span class="etiqueta">{{ i.secciones_con_problemas }} secciones por revisar</span>{% endif %}</td><td>{{ i.generado_por.email|default:"—" }}</td><td>{% if i.estado == "publicado" %}<a href="{% url 'informe_descargar' i.pk 'docx' %}">Word</a> · <a href="{% url 'informe_descargar' i.pk 'pptx' %}">PowerPoint</a>{% else %}—{% endif %}</td></tr>{% empty %}<tr><td colspan="5">Sin informes.</td></tr>{% endfor %}
+</tbody></table>
+{% endblock %}

@@ -104,6 +104,12 @@ Estructura acordada con José Luis, en tres bloques que coinciden con las diapos
 5. Se genera el archivo y queda registrado `InformeGenerado` con las evidencias usadas.
 6. La persona revisa el texto en la aplicación antes de descargar la versión final.
 
+**Implementado en la Fase 7 (06/11/2026)**, pantalla Informes (`apps/informes/`):
+- Las métricas se calculan en código y cada una recibe un identificador `M<n>` con su definición y el enlace a la lista de evidencias o piezas de la aplicación. El texto cita `[Mn]` para las cifras calculadas y `[E-xxxxxx]` para los hechos. Con esto, cada cifra del informe lleva a sus evidencias (prueba de aceptación de la fase).
+- Sin IA, cada sección se escribe con una plantilla que solo usa esas métricas y las evidencias validadas; «Oportunidades» queda para redactar. Con IA (T6, modelo de «redactar»), la IA redacta el resumen, la lectura transversal y las oportunidades.
+- **Validador** (`validador.py`): referencias `[E-…]` que no se aportaron → rechazo (CP-10); cifras que no están en las métricas ni en las evidencias o párrafos sin referencia → sección marcada para revisión (CP-09). No se puede publicar con secciones marcadas; al editar una sección se valida de nuevo.
+- Al publicar se generan el Word (portada con base documental, resumen, método, análisis por competidor con la valoración interna aparte, matriz comparativa, lectura transversal, oportunidades, límites y anexos de métricas y evidencias) y la presentación (portada, mensaje principal, tres diapositivas por competidor, recomendaciones y método). El lector solo ve y descarga los publicados.
+
 ## 5. Bandeja de revisión (RF-60)
 
 Una sola cola con filtros por tipo: atribución de mención, vínculo territorial dudoso, vínculo de órgano y municipio, clasificación de servicio, posible duplicado, propuesta de IA en documento y resolución del adjudicatario. Cada elemento muestra el dato original, la propuesta y el motivo, con las acciones aceptar, corregir y rechazar. Las acciones se pueden aplicar en bloque a elementos del mismo tipo.

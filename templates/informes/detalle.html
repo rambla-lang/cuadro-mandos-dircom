@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block titulo %}Informe{% endblock %}
+{% block contenido %}
+<p><a href="{% url 'informes' %}">← Informes</a></p>
+<h1>{{ i.titulo }}</h1>
+<p>{{ i.get_estado_display }} · {{ i.datos.metricas|length }} métricas · {{ i.evidencias_usadas.count }} evidencias validadas usadas{% if i.llamadas_ia.exists %} · {{ i.llamadas_ia.count }} llamadas a la IA{% endif %}</p>
+{% if i.estado == "publicado" %}<p><a href="{% url 'informe_descargar' i.pk 'docx' %}">Descargar Word</a> · <a href="{% url 'informe_descargar' i.pk 'pptx' %}">Descargar PowerPoint</a> · publicado por {{ i.publicado_por.email }} el {{ i.publicado_en|date:"d/m/Y H:i" }}</p>{% endif %}
+{% for s in i.secciones %}
+<section class="tarjeta" style="margin:1rem 0">
+  <h2>{{ s.titulo }} <small>({% if s.origen == "ia" %}<span class="etiqueta">Borrador IA</span>{% elif s.origen == "manual" %}editado a mano{% else %}plantilla{% endif %})</small></h2>
+  {% if s.nota %}<p><small>{{ s.nota }}</small></p>{% endif %}
+  {% if s.problemas %}<div class="aviso"><strong>No pasa el validador:</strong><ul>{% for p in s.problemas %}<li>{{ p }}</li>{% endfor %}</ul></div>{% endif %}
+  {% if puede and i.estado != "publicado" %}
+  <form method="post">{% csrf_token %}<input type="hidden" name="clave" value="{{ s.clave }}"><textarea name="texto" rows="8" style="width:100%">{{ s.texto }}</textarea><button type="submit">Guardar y validar</button></form>
+  {% else %}<p>{{ s.texto|linebreaksbr }}</p>{% endif %}
+</section>
+{% endfor %}
+<h2>Métricas citadas</h2>
+<table><thead><tr><th>ID</th><th>Valor</th><th>Definición</th></tr></thead><tbody>{% for m in i.datos.metricas %}<tr><td>{{ m.id }}</td><td>{{ m.texto }}</td><td>{{ m.definicion }}{% if m.enlace %} · <a href="{{ m.enlace }}">ver evidencias</a>{% endif %}</td></tr>{% endfor %}</tbody></table>
+{% if puede and i.estado != "publicado" %}<form method="post">{% csrf_token %}<button type="submit" name="publicar" value="1" {% if i.secciones_con_problemas %}disabled{% endif %}>Publicar y generar Word y PowerPoint</button>{% if i.secciones_con_problemas %} <small>Corrige las secciones marcadas para poder publicar.</small>{% endif %}</form>{% endif %}
+{% endblock %}

@@ -120,7 +120,7 @@ Campos mínimos. Todos los modelos tienen además `creado`, `modificado` y, si p
 - **RegistroAuditoria**: `usuario`, `accion`, `objeto`, `antes`, `despues`, `fecha`.
 - **ElementoRevision** (bandeja, RF-60; app `nucleo`): `tipo` (municipio no resuelto, operador no resuelto, nivel por decidir; se añadirán los de las fases 3 a 5), `estado` (pendiente, aceptado, corregido, rechazado), `clave` (única, para no duplicar al reimportar), `texto` (el dato original), `motivo`, `propuesta`, `datos` (lo necesario para completar la operación, como la fila pendiente), `objeto` (genérico), `lote_importacion`, `resuelto_por`, `resuelto_en`, `resolucion`, `comentario`.
 - **PlantillaImportacion** (app `evidencias`): `nombre` (único), `tipo`, `descripcion`, `configuracion` (correspondencia de columnas y valores del asistente, docs/04 §9).
-- **InformeGenerado**: `tipo` (docx, pptx), `parametros`, `archivo`, `evidencias_usadas`, `llamadas_ia`, `generado_por`.
+- **InformeGenerado**: `titulo`, `parametros`, `datos` (métricas `M<n>` y evidencias de partida), `secciones` (texto, origen y problemas del validador), `estado` (borrador, publicado), `archivo_docx` y `archivo_pptx` (se generan los dos al publicar), `evidencias_usadas`, `llamadas_ia`, `generado_por`, `publicado_por`, `publicado_en`.
 
 ## Reglas de integridad
 - Las relaciones `Evidencia`–`Empresa` y `Evidencia`–`Municipio` usan tablas intermedias explícitas con `PROTECT`, para que la restricción de borrado se aplique también a través de la relación muchos a muchos.

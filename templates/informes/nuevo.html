@@ -1,0 +1,7 @@
+{% extends "base.html" %}
+{% block titulo %}Nuevo informe{% endblock %}
+{% block contenido %}
+<h1>Generar un informe</h1>
+<p><small>Las métricas se calculan en código. Sin IA, las secciones se escriben con plantillas que solo usan esas métricas y las evidencias validadas. Con IA, las secciones narrativas las redacta la IA con ese mismo material. En los dos casos el validador revisa cifras y referencias antes de poder publicar.{% if not ia_disponible %} <span class="etiqueta">IA no disponible: {{ ia_motivo }}</span>{% endif %}</small></p>
+<form method="post">{% csrf_token %}{{ form.as_p }}<button type="submit">Generar borrador</button></form>
+{% endblock %}
