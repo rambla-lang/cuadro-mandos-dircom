@@ -31,7 +31,7 @@ El reparto de quién decide está explicado en `ENTREGA.md`. José Luis es el pr
 | P-03 | Almacenamiento de los archivos originales (PDF y Word) | Fase 4 | ADR-003: tres opciones |
 | P-15 | Dónde se ejecuta la carga histórica de PLACSP | Fase 3 | ADR-008 (aceptada): solo por comando local; desde la web, solo el mes en curso si cabe en Render Free |
 | P-04 | Correo (SMTP) para invitaciones y recuperación de contraseñas | No bloquea: el enlace manual está implementado (Fase 1) | Correo corporativo, servicio transaccional o enlace manual |
-| P-16 | Bloqueo tras intentos fallidos de login | Fase 1 (implementado) | ADR-009 (propuesta): django-axes, por usuario, 5 fallos → 15 min |
+| P-16 | Bloqueo tras intentos fallidos de login | Fase 1 (implementado) | ADR-009 (aceptada, 06/11/2026): django-axes, por usuario, 5 fallos → 15 min |
 
 Si una decisión técnica afecta a lo que ve o hace el usuario (por ejemplo, arranques en frío lentos o no poder reabrir los PDF originales), se comenta con José Luis antes de cerrarla.
 

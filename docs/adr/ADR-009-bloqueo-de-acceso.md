@@ -1,6 +1,6 @@
 # ADR-009: Bloqueo temporal de acceso tras intentos fallidos
 
-**Estado:** Propuesta (05/11/2026)
+**Estado:** Aceptada (06/11/2026, responsable de desarrollo)
 **Fecha:** 05/11/2026
 **Decisores:** responsable de desarrollo
 **Relacionada con:** docs/08 («Bloqueo temporal tras intentos fallidos repetidos. Librería o implementación a decidir en la Fase 1; documentarlo en un ADR»), ADR-002 (Render Free).

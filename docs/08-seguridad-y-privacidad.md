@@ -4,7 +4,7 @@
 - Sistema de usuarios de Django. Inicio de sesión con email (modelo de usuario propio con `email` como identificador, creado **en la primera migración**, porque cambiarlo después es costoso).
 - Sin registro público. El administrador invita y el usuario fija su contraseña con un enlace de un solo uso.
 - Validadores de contraseña de Django activos (longitud mínima 12).
-- Bloqueo temporal tras intentos fallidos repetidos: django-axes, 5 fallos seguidos por usuario → 15 minutos (ADR-009, propuesta en la Fase 1).
+- Bloqueo temporal tras intentos fallidos repetidos: django-axes, 5 fallos seguidos por usuario → 15 minutos (ADR-009, aceptada el 06/11/2026).
 - Roles con grupos de Django:
   - **Administrador**: todo.
   - **Analista**: importar, revisar, validar, editar evidencias y generar informes.
