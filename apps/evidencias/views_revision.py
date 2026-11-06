@@ -10,6 +10,8 @@ from django.views.decorators.http import require_http_methods
 
 from apps.contratacion import services_revision as srv_contratacion
 from apps.contratacion.forms import AdjudicatarioForm, ClasificarForm, VincularOrganoForm
+from apps.medios import services_revision as srv_medios
+from apps.medios.forms import ConfirmarAtribucionForm, VinculoForm
 from apps.nucleo.models import ElementoRevision
 from apps.nucleo.roles import Rol, rol_requerido
 from apps.territorio.models import Municipio
@@ -28,6 +30,8 @@ FORMULARIOS = {
     Tipo.VINCULO_ORGANO: VincularOrganoForm,
     Tipo.CLASIFICACION_SERVICIO: ClasificarForm,
     Tipo.ADJUDICATARIO_NO_RESUELTO: AdjudicatarioForm,
+    Tipo.ATRIBUCION_MENCION: ConfirmarAtribucionForm,
+    Tipo.VINCULO_TERRITORIAL: VinculoForm,
 }
 
 
@@ -144,6 +148,10 @@ def _resolver(el, iguales, datos, usuario) -> int:
                 guardar_nif=datos["guardar_nif"] and e is el,
                 comentario=datos["comentario"],
             )
+        elif el.tipo == Tipo.ATRIBUCION_MENCION:
+            srv_medios.confirmar_atribucion(e, usuario, datos["comentario"])
+        elif el.tipo == Tipo.VINCULO_TERRITORIAL:
+            srv_medios.fijar_vinculo(e.objeto, datos["vinculo"], usuario, datos["comentario"], e)
     if el.tipo == Tipo.ADJUDICATARIO_NO_RESUELTO and (
         datos.get("guardar_alias") or datos.get("guardar_nif")
     ):

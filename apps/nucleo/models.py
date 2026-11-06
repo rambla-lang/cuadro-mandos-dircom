@@ -165,6 +165,8 @@ class ElementoRevision(ModeloConFechas):
         VINCULO_ORGANO = "vinculo_organo", "Vínculo órgano-municipio"
         CLASIFICACION_SERVICIO = "clasificacion_servicio", "Clasificación de servicio"
         ADJUDICATARIO_NO_RESUELTO = "adjudicatario_no_resuelto", "Adjudicatario no resuelto"
+        ATRIBUCION_MENCION = "atribucion_mencion", "Atribución de mención dudosa"
+        VINCULO_TERRITORIAL = "vinculo_territorial", "Vínculo territorial dudoso"
 
     class Estado(models.TextChoices):
         PENDIENTE = "pendiente", "Pendiente"

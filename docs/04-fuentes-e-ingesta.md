@@ -169,6 +169,16 @@ Estimación, no medición de la base de datos: el tamaño real se medirá con `p
 - Atribución a competidores: primero por alias (con límites de palabra y alias que requieren contexto), después propuesta de IA para lo dudoso, y al final validación.
 - Pertinencia territorial: `si` si hay un municipio, comarca o provincia valenciana o actividad local en el título o el extracto; `no` si es claramente de otro territorio; `dudoso` en otro caso. El motivo se guarda siempre.
 
+**Corrección y verificación de la Fase 4 (06/11/2026):** la línea 4 de metadatos también se llama `"Query Id"`, así que la cabecera se localiza buscando la fila que contiene a la vez `Query Id`, `Resource Id` y `Url`. La primera columna de la cabecera viene vacía (índice de fila). En los tres exports: 2.742 filas y 2.500 `Resource Id` distintos; ninguno vacío.
+
+**Implementado en la Fase 4** (`apps/medios/importers/brandwatch.py`, Importar → Brandwatch, varios CSV a la vez):
+- Clave natural `Resource Id` (CP-01, CP-02). La pieza se agrupa por URL canónica: dos menciones con la misma URL canónica (republicaciones, parámetros de seguimiento) son una pieza. `news` y `blog` → prensa digital; el resto (twitter…) → redes sociales.
+- `Date` se interpreta como UTC (sigue por verificar) y la interfaz lo dice; la fecha de la pieza es la fecha local (Europe/Madrid) de ese instante.
+- `Author` **no se guarda** mientras P-06 esté sin decidir. `Estimated Reach` y similares van a `datos_fuente` y no se muestran.
+- Atribución por alias (`apps/medios/analisis.py`): alias inequívoco → atribución validada por la regla (quien importa la acepta); alias que requiere contexto (Cox, ACCIONA) → borrador y bandeja. Las menciones sin ningún alias quedan sin atribuir (filtro «Sin atribución validada» en Medios → Menciones) y se pueden atribuir a mano.
+- Vínculo territorial: «si» si nombra un municipio valenciano (salvo una lista de nombres que también son palabras o nombres de pila, como «Manuel», «Teresa», «Real», «Silla»), una provincia o la comunidad; «no» si no nombra nada valenciano y sí otra provincia (nombres del fichero del INE, salvo «Cuenca» y «León»); «dudoso» en otro caso. «Aguas de Valencia», «Valencia CF» y «Valencia Basket» no cuentan como topónimo. Una mención atribuida con vínculo dudoso va a la bandeja.
+- **Resultado con los tres exports reales en local (06/11/2026):** 2.500 menciones (242 repetidas descartadas), 2.149 atribuciones validadas por alias y 290 dudosas, 351 menciones sin atribuir; vínculo «si» en 2.072. En los 12 meses móviles: 1.561 piezas distintas con vínculo y atribución validada (suma por empresa 1.688, por las compartidas).
+
 ## 5. Recortes de prensa en PDF
 
 **Formato real observado** (30 PDF de muestra):
@@ -178,6 +188,8 @@ Estimación, no medición de la base de datos: el tamaño real se medirá con `p
 - En la muestra, el usuario agrupa los recortes en carpetas por empresa (`Prensa/Aqualia/…`). La aplicación ofrece elegir la empresa al subirlos, como propuesta inicial que se puede corregir.
 
 **Clave natural.** SHA-256 del archivo.
+
+**Implementado en la Fase 4** (`apps/medios/clipping.py`, Importar → Recortes): extracción de texto con `pypdf`; con menos de 200 caracteres el documento queda «pendiente de lectura por IA» (CP-13) y sin atribuciones automáticas. Cada recorte crea una pieza de prensa impresa y una mención; la empresa elegida al subir cuenta como atribución manual validada y los alias del texto se añaden con las reglas de Brandwatch. El original se guarda en `media/documentos/` si `GUARDAR_ORIGINALES` está activo (por defecto en local; ADR-003 sigue abierta).
 
 **Reglas.**
 - Expresión del patrón de nombre en `apps/medios/clipping.py`, con tests de los nombres reales de arriba.

@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block titulo %}Piezas{% endblock %}
+{% block contenido %}
+<p><a href="{% url 'visibilidad' %}?desde={{ desde|date:'Y-m-d' }}&hasta={{ hasta|date:'Y-m-d' }}">← Visibilidad</a></p>
+<h1>Piezas{% if g.empresa %} de {{ g.empresa }}{% endif %}{% if g.medio %} en {{ g.medio }}{% endif %}</h1>
+<p>{{ pagina.paginator.count }} piezas entre el {{ desde|date:"d/m/Y" }} y el {{ hasta|date:"d/m/Y" }}{% if g.vinculo != "todas" %}, con vínculo con la CV{% endif %}.</p>
+<table>
+  <thead><tr><th>Código</th><th>Fecha</th><th>Medio</th><th>Tipo</th><th>Título</th><th>Empresas</th></tr></thead>
+  <tbody>
+  {% for p in pagina %}
+    <tr><td>{{ p.codigo }}</td><td>{{ p.fecha_publicacion|date:"d/m/Y" }}</td><td>{{ p.medio|default:"—" }}</td><td>{{ p.get_tipo_display }}</td>
+      <td>{% with m=p.menciones.all.0 %}<a href="{% url 'mencion' m.pk %}">{{ p.titulo|default:"(sin título)"|truncatechars:120 }}</a>{% endwith %}{% if p.url_canonica %} · <a href="{{ p.url_canonica }}" target="_blank" rel="noopener noreferrer">abrir</a>{% endif %}</td>
+      <td><small>{% for m in p.menciones.all %}{% for a in m.atribuciones.all %}{% if a.estado_validacion == "validada" %}{{ a.empresa.nombre }} {% endif %}{% endfor %}{% endfor %}</small></td></tr>
+  {% empty %}<tr><td colspan="6">Sin piezas con este filtro.</td></tr>{% endfor %}
+  </tbody>
+</table>
+{% if pagina.has_other_pages %}<p>{% if pagina.has_previous %}<a href="?{{ filtros }}&pagina={{ pagina.previous_page_number }}">← Anteriores</a>{% endif %} Página {{ pagina.number }} de {{ pagina.paginator.num_pages }} {% if pagina.has_next %}<a href="?{{ filtros }}&pagina={{ pagina.next_page_number }}">Siguientes →</a>{% endif %}</p>{% endif %}
+{% endblock %}

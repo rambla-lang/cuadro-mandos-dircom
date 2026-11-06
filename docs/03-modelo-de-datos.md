@@ -96,10 +96,10 @@ Campos mínimos. Todos los modelos tienen además `creado`, `modificado` y, si p
 - **ReglaClasificacion** (Fase 3; sustituye a la `ReglaClasificacionCPV` prevista): `tipo` (prefijo CPV o frase del objeto), `patron`, `servicio`, `alcance`, `activa`, `nota`.
 
 ### medios
-- **Medio**: `nombre`, `dominio` (único), `ambito` (local, comarcal, regional, nacional, sectorial, agencia), `grupo_editorial` (opcional).
-- **Mencion**: `origen` (brandwatch, clipping, manual), `resource_id` (Brandwatch, único si existe), `url`, `url_canonica`, `fecha_publicacion`, `titulo`, `extracto`, `medio`, `tipo_pagina` (news, twitter, blog…), `idioma`, `sentimiento_fuente` (lo que dice Brandwatch, sin reinterpretar), `region_fuente`, `datos_fuente` (JSON con columnas útiles no modeladas), `vinculo_territorial`, `motivo_vinculo`, `pieza`.
-- **MencionEmpresa**: `mencion`, `empresa`, `metodo` (alias, ia, manual), `estado_validacion`, `fragmento_detectado`.
-- **Pieza**: la unidad de recuento de prensa (una URL periodística canónica o un recorte). Tiene `codigo` (por ejemplo, P001), `medio`, `fecha_publicacion` y `es_comunicado_propio`.
+- **Medio**: `nombre`, `dominio` (único; vacío en prensa impresa sin dominio), `ambito` (local, comarcal, regional, nacional, sectorial, agencia; además red social y «sin clasificar» al importar), `grupo_editorial` (opcional).
+- **Mencion**: `origen` (brandwatch, clipping, manual), `resource_id` (Brandwatch, único si existe), `url`, `url_canonica`, `fecha_publicacion`, `titulo`, `extracto`, `medio`, `tipo_pagina` (news, twitter, blog…), `idioma`, `sentimiento_fuente` (lo que dice Brandwatch, sin reinterpretar), `region_fuente`, `datos_fuente` (JSON con columnas útiles no modeladas), `vinculo_territorial`, `motivo_vinculo`, `pieza`, `documento` (si sale de un recorte) y `lote_importacion`.
+- **MencionEmpresa**: `mencion`, `empresa`, `metodo` (alias, ia, manual), `estado_validacion`, `fragmento_detectado`, `validado_por`, `validado_en`. Única por (`mencion`, `empresa`).
+- **Pieza**: la unidad de recuento de prensa (una URL periodística canónica o un recorte). Tiene `codigo` (`P000123`), `tipo` (prensa digital, prensa impresa, redes sociales, comunicado propio), `medio`, `url_canonica` (única si existe), `titulo`, `fecha_publicacion`, `es_comunicado_propio` y `hito`.
 - **Hito**: acto o noticia de fondo que agrupa varias piezas ("dos medios sobre el mismo acto son dos piezas y un hito").
 
 ### documentos

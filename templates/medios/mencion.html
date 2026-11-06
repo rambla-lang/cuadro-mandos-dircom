@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block titulo %}Mención{% endblock %}
+{% block contenido %}
+<p><a href="{% url 'menciones' %}">← Menciones</a></p>
+<h1>{{ m.titulo|default:m.url }}</h1>
+<table><tbody>
+  <tr><th>Origen</th><td>{{ m.get_origen_display }}{% if m.resource_id %} · Resource Id {{ m.resource_id }}{% endif %}{% if m.documento %} · {{ m.documento.nombre_archivo }} ({{ m.documento.get_lectura_display }}){% endif %}</td></tr>
+  <tr><th>Medio</th><td>{{ m.medio|default:"—" }} · {{ m.tipo_pagina|default:"" }} · {{ m.idioma|default:"" }}</td></tr>
+  <tr><th>Fecha de publicación</th><td>{{ m.fecha_publicacion|date:"d/m/Y H:i"|default:"—" }}{% if m.origen == "brandwatch" %} <small>(columna Date de Brandwatch interpretada como UTC)</small>{% endif %}</td></tr>
+  <tr><th>Pieza</th><td>{{ m.pieza.codigo|default:"—" }} · {{ m.pieza.get_tipo_display }}{% if m.url %} · <a href="{{ m.url }}" target="_blank" rel="noopener noreferrer">abrir</a>{% endif %}</td></tr>
+  <tr><th>Vínculo territorial</th><td>{{ m.get_vinculo_territorial_display }} <small>({{ m.motivo_vinculo }})</small></td></tr>
+  <tr><th>Tono según Brandwatch</th><td>{{ m.sentimiento_fuente|default:"—" }}</td></tr>
+</tbody></table>
+<blockquote>{{ m.extracto }}</blockquote>
+<h2>Empresas</h2>
+<ul>{% for a in atribuciones %}<li>{{ a.empresa }} · {{ a.get_metodo_display }} ({{ a.fragmento_detectado }}) · {{ a.get_estado_validacion_display }}{% if puede and a.estado_validacion != "rechazada" %} <form method="post" style="display:inline">{% csrf_token %}<input type="hidden" name="accion" value="quitar"><input type="hidden" name="atribucion" value="{{ a.pk }}"><button type="submit" style="margin:0">Quitar</button></form>{% endif %}</li>{% empty %}<li>Sin atribuir.</li>{% endfor %}</ul>
+{% if puede %}
+<form method="post" class="filtros">{% csrf_token %}<input type="hidden" name="accion" value="atribuir"><div>{{ form_atribuir.empresa.label_tag }}{{ form_atribuir.empresa }}</div><div><button type="submit">Atribuir</button></div></form>
+<form method="post" class="filtros">{% csrf_token %}<input type="hidden" name="accion" value="vinculo"><div>{{ form_vinculo.vinculo.label_tag }}{{ form_vinculo.vinculo }}</div><div>{{ form_vinculo.comentario.label_tag }}{{ form_vinculo.comentario }}</div><div><button type="submit">Guardar vínculo</button></div></form>
+{% endif %}
+{% if otras %}<h2>Otras menciones de la misma pieza</h2><ul>{% for o in otras %}<li><a href="{% url 'mencion' o.pk %}">{{ o.titulo|default:o.url }}</a></li>{% endfor %}</ul>{% endif %}
+{% endblock %}

@@ -5,6 +5,7 @@ from django.urls import path
 from apps.contratacion import views as contratacion_views
 from apps.cuadro import views as cuadro_views
 from apps.evidencias import views_importacion, views_revision
+from apps.medios import views as medios_views
 from apps.nucleo import views as nucleo_views
 from apps.territorio import views as territorio_views
 
@@ -63,6 +64,16 @@ urlpatterns = [
     ),
     path("trabajos/", contratacion_views.trabajos, name="trabajos"),
     path("trabajos/<int:pk>/", contratacion_views.trabajo, name="trabajo"),
+    path("medios/", medios_views.visibilidad, name="visibilidad"),
+    path("medios/piezas/", medios_views.piezas, name="piezas"),
+    path("medios/menciones/", medios_views.menciones, name="menciones"),
+    path("medios/menciones/<int:pk>/", medios_views.mencion, name="mencion"),
+    path(
+        "importar/brandwatch/",
+        medios_views.importar_brandwatch_vista,
+        name="importar_brandwatch",
+    ),
+    path("importar/recortes/", medios_views.importar_recortes, name="importar_recortes"),
     path("revision/", views_revision.bandeja, name="revision"),
     path("revision/<int:pk>/", views_revision.elemento, name="revision_elemento"),
     path("admin/", admin.site.urls),

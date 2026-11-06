@@ -213,6 +213,10 @@ def rechazar(elemento: ElementoRevision, usuario, comentario: str = "") -> None:
         registrar_auditoria(
             usuario, "evidencia.rechazar", evidencia, antes=antes, despues=instantanea(evidencia)
         )
+    if elemento.tipo == Tipo.ATRIBUCION_MENCION:
+        from apps.medios.services_revision import rechazar_atribucion
+
+        rechazar_atribucion(elemento, usuario)
     if elemento.tipo == Tipo.VINCULO_ORGANO and elemento.objeto is not None:
         organo = elemento.objeto
         organo.estado_vinculacion = "no_aplica"

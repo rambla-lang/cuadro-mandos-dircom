@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% block titulo %}Importar Brandwatch{% endblock %}
+{% block contenido %}
+<h1>Importar exportaciones de Brandwatch</h1>
+<p>Puedes subir varios CSV a la vez. Las menciones se identifican por su <code>Resource Id</code>: los exports solapados no duplican nada.</p>
+<form method="post" enctype="multipart/form-data">{% csrf_token %}{{ form.as_p }}<button type="submit">Importar</button></form>
+{% if resultados %}
+<h2>Resultado</h2>
+<table><thead><tr><th>Archivo</th><th>Filas</th><th>Nuevas</th><th>Ya existentes</th><th>Piezas nuevas</th><th>Atribuidas por alias</th><th>Dudosas (a la bandeja)</th><th>Vínculo territorial</th></tr></thead><tbody>
+{% for nombre, r, error in resultados %}<tr><td>{{ nombre }}</td>{% if error %}<td colspan="7" class="error">{{ error }}</td>{% else %}<td>{{ r.filas }}</td><td>{{ r.nuevas }}</td><td>{{ r.existentes }}</td><td>{{ r.piezas_nuevas }}</td><td>{{ r.atribuidas }}</td><td>{{ r.dudosas }}</td><td><small>{{ r.vinculo }}</small></td>{% endif %}</tr>{% endfor %}
+</tbody></table>
+<p><a href="{% url 'visibilidad' %}">Ver la visibilidad</a> · <a href="{% url 'revision' %}">Bandeja</a></p>
+{% endif %}
+{% endblock %}

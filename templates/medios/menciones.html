@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block titulo %}Menciones{% endblock %}
+{% block contenido %}
+<h1>Menciones</h1>
+<form method="get" class="filtros">
+  <div><label for="q">Texto</label><input id="q" name="q" value="{{ g.q }}"></div>
+  <div><label for="vinculo">Vínculo</label><select id="vinculo" name="vinculo"><option value="">Todos</option><option value="si" {% if g.vinculo == "si" %}selected{% endif %}>Sí</option><option value="dudoso" {% if g.vinculo == "dudoso" %}selected{% endif %}>Dudoso</option><option value="no" {% if g.vinculo == "no" %}selected{% endif %}>No</option></select></div>
+  <div><label for="origen">Origen</label><select id="origen" name="origen"><option value="">Todos</option><option value="brandwatch" {% if g.origen == "brandwatch" %}selected{% endif %}>Brandwatch</option><option value="clipping" {% if g.origen == "clipping" %}selected{% endif %}>Recortes</option></select></div>
+  <div><label><input type="checkbox" name="sin_atribuir" value="1" {% if g.sin_atribuir %}checked{% endif %}> Sin atribución validada</label></div>
+  <div><button type="submit">Buscar</button></div>
+</form>
+<p>{{ pagina.paginator.count }} menciones.</p>
+<table>
+  <thead><tr><th>Fecha</th><th>Medio</th><th>Título</th><th>Empresas</th><th>Vínculo</th><th>Tono (Brandwatch)</th></tr></thead>
+  <tbody>{% for m in pagina %}<tr><td>{{ m.fecha_publicacion|date:"d/m/Y" }}</td><td>{{ m.medio|default:"—" }}</td><td><a href="{% url 'mencion' m.pk %}">{{ m.titulo|default:m.url|truncatechars:110 }}</a></td><td><small>{% for a in m.atribuciones.all %}{{ a.empresa.nombre }}{% if a.estado_validacion != "validada" %} ({{ a.get_estado_validacion_display|lower }}){% endif %}{% if not forloop.last %}, {% endif %}{% empty %}—{% endfor %}</small></td><td>{{ m.get_vinculo_territorial_display }}</td><td>{{ m.sentimiento_fuente|default:"—" }}</td></tr>{% empty %}<tr><td colspan="6">Sin menciones.</td></tr>{% endfor %}</tbody>
+</table>
+{% if pagina.has_other_pages %}<p>{% if pagina.has_previous %}<a href="?{{ filtros }}&pagina={{ pagina.previous_page_number }}">← Anteriores</a>{% endif %} Página {{ pagina.number }} de {{ pagina.paginator.num_pages }} {% if pagina.has_next %}<a href="?{{ filtros }}&pagina={{ pagina.next_page_number }}">Siguientes →</a>{% endif %}</p>{% endif %}
+{% endblock %}

@@ -75,6 +75,8 @@ Estructura acordada con José Luis, en tres bloques que coinciden con las diapos
 | Mezcla de tono | Distribución del sentimiento *según Brandwatch* (`sentimiento_fuente`). Se rotula así y no se presenta como análisis propio |
 | Piezas por tipo de fuente | Prensa digital, prensa impresa, redes y comunicados propios, por separado (regla 3) |
 
+**Implementado en la Fase 4 (06/11/2026)**, pantalla Medios: periodo por defecto de 12 meses móviles (propuesta de P-10), filtro de vínculo («solo con vínculo» por defecto) y casilla para incluir Veolia e Hidraqua (fuera por defecto, son referencia propia). Cada cifra enlaza con la lista de piezas. La concentración por medio se calcula sobre las piezas de prensa (las redes no son un medio). La evolución mensual se pinta como total de piezas por mes, con la tabla por empresa debajo, para no colorear más de una serie. El tono se muestra en la tabla como positivo / neutral / negativo «según Brandwatch».
+
 **No se calcula:** audiencia o alcance regional estimado, ni "valor publicitario". El documento maestro dejó claro que no son estimables con rigor; aunque Brandwatch exporta `Estimated Reach` y `Ad Value`, no se muestran como resultados.
 
 ## 4. Informes automáticos (RF-53, RF-54)

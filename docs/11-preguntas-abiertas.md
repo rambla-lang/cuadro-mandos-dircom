@@ -7,7 +7,7 @@ El reparto de quién decide está explicado en `ENTREGA.md`. José Luis es el pr
 | ID | Pregunta | Bloquea | Opciones o propuesta |
 |---|---|---|---|
 | P-05 | Redes y webs: ¿basta con introducir a mano los datos públicos básicos o se quiere captura automática de las webs corporativas? | Fase 6 | Hay que revisar los términos de uso de cada red antes de automatizar nada |
-| P-06 | ¿Qué datos de autores de Brandwatch se pueden guardar? (Particulares en redes frente a medios y cuentas corporativas) | Fase 4 | Propuesta: no guardar autores particulares |
+| P-06 | ¿Qué datos de autores de Brandwatch se pueden guardar? (Particulares en redes frente a medios y cuentas corporativas) | Fase 4 | Propuesta: no guardar autores particulares. **Mientras no se decida, no se guarda ningún autor** (Fase 4) |
 | P-07 | ¿Incluir contratos menores de PLACSP? | Fase 3 | Más volumen y ruido; muchos servicios municipales pequeños solo aparecen así |
 | P-09 | ¿El lector del CEO necesita algo distinto (vista resumida, solo informes)? | Fase 7 | Rol lector actual o vista ejecutiva |
 | P-10 | ¿Qué periodo por defecto usan los análisis? (El documento maestro usó 12 meses: del 14/10/2025 al 14/10/2026) | Fase 4 | 12 meses móviles |

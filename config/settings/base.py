@@ -126,6 +126,9 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 # Subidas (docs/08)
 SUBIDA_MAX_MB = env.int("SUBIDA_MAX_MB", default=50)
+# ADR-003 (abierta): si se guardan los PDF y Word originales en MEDIA_ROOT. En el piloto local,
+# sí; en Render Free el disco es efímero y se decidirá con ADR-003.
+GUARDAR_ORIGINALES = env.bool("GUARDAR_ORIGINALES", default=True)
 
 # IA (ADR-005): modelos por variable de entorno, nunca en el código.
 ANTHROPIC_API_KEY = env("ANTHROPIC_API_KEY", default="")
