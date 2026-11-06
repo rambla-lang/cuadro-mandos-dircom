@@ -73,13 +73,15 @@ ALCANCES_POR_SERVICIO = {
 }
 
 
-def q_alcance_coherente(permitir_vacio: bool) -> Q:
+def q_alcance_coherente(
+    permitir_vacio: bool, campo_servicio: str = "servicio", campo_alcance: str = "alcance"
+) -> Q:
     """Condición de BD: el alcance pertenece al servicio (o ambos vacíos si se permite)."""
     q = Q()
     for servicio, alcances in ALCANCES_POR_SERVICIO.items():
-        q |= Q(servicio=servicio, alcance__in=[str(a) for a in alcances])
+        q |= Q(**{campo_servicio: servicio, f"{campo_alcance}__in": [str(a) for a in alcances]})
     if permitir_vacio:
-        q |= Q(servicio="", alcance="")
+        q |= Q(**{campo_servicio: "", campo_alcance: ""})
     return q
 
 

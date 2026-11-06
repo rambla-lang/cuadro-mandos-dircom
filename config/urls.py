@@ -2,6 +2,7 @@ from django.contrib import admin
 from django.contrib.auth import views as auth_views
 from django.urls import path
 
+from apps.contratacion import views as contratacion_views
 from apps.cuadro import views as cuadro_views
 from apps.evidencias import views_importacion, views_revision
 from apps.nucleo import views as nucleo_views
@@ -53,6 +54,15 @@ urlpatterns = [
         name="importar_tabla_confirmar",
     ),
     path("importar/lotes/<int:pk>/", views_importacion.lote, name="lote_importacion"),
+    path("contratacion/", contratacion_views.expedientes, name="expedientes"),
+    path("contratacion/<int:pk>/", contratacion_views.expediente, name="expediente"),
+    path(
+        "contratacion/actualizar/",
+        contratacion_views.actualizar,
+        name="actualizar_contratacion",
+    ),
+    path("trabajos/", contratacion_views.trabajos, name="trabajos"),
+    path("trabajos/<int:pk>/", contratacion_views.trabajo, name="trabajo"),
     path("revision/", views_revision.bandeja, name="revision"),
     path("revision/<int:pk>/", views_revision.elemento, name="revision_elemento"),
     path("admin/", admin.site.urls),

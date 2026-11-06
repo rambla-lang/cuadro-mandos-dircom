@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+{% block titulo %}Trabajo{% endblock %}
+{% block contenido %}
+<p><a href="{% url 'trabajos' %}">← Trabajos</a></p>
+<h1>Trabajo {{ t.pk }} · {{ t.tipo }}</h1>
+<p>{{ t.get_estado_display }} · {{ t.partes_hechas }}/{{ t.partes_total|default:"?" }} partes · {{ t.usuario.email|default:"comando" }}</p>
+<p><small>{{ t.contadores }}</small></p>
+<pre style="white-space:pre-wrap">{{ t.log }}</pre>
+{% endblock %}

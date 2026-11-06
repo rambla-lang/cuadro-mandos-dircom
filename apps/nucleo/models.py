@@ -162,6 +162,9 @@ class ElementoRevision(ModeloConFechas):
         MUNICIPIO_NO_RESUELTO = "municipio_no_resuelto", "Municipio no resuelto"
         OPERADOR_NO_RESUELTO = "operador_no_resuelto", "Operador no resuelto"
         NIVEL_POR_DECIDIR = "nivel_por_decidir", "Nivel de evidencia por decidir"
+        VINCULO_ORGANO = "vinculo_organo", "Vínculo órgano-municipio"
+        CLASIFICACION_SERVICIO = "clasificacion_servicio", "Clasificación de servicio"
+        ADJUDICATARIO_NO_RESUELTO = "adjudicatario_no_resuelto", "Adjudicatario no resuelto"
 
     class Estado(models.TextChoices):
         PENDIENTE = "pendiente", "Pendiente"
@@ -224,3 +227,75 @@ class ElementoRevision(ModeloConFechas):
             return None
         modelo = self.objeto_tipo.model_class()
         return modelo.objects.filter(pk=self.objeto_id).first()
+
+
+class TrabajoIngesta(models.Model):
+    """Trabajo largo ejecutado por partes (ADR-007). Cada parte se confirma en la base de
+    datos; si el proceso se reinicia, el trabajo sigue por la siguiente parte."""
+
+    class Estado(models.TextChoices):
+        PENDIENTE = "pendiente", "Pendiente"
+        EN_CURSO = "en_curso", "En curso"
+        TERMINADO = "terminado", "Terminado"
+        ERROR = "error", "Error"
+        CANCELADO = "cancelado", "Cancelado"
+
+    tipo = models.CharField("tipo", max_length=50)
+    parametros = models.JSONField("parámetros", default=dict, blank=True)
+    estado = models.CharField(
+        "estado", max_length=20, choices=Estado.choices, default=Estado.PENDIENTE
+    )
+    progreso = models.JSONField(
+        "progreso", default=dict, blank=True, help_text="Estado interno entre partes."
+    )
+    partes_total = models.PositiveIntegerField("partes en total", null=True, blank=True)
+    partes_hechas = models.PositiveIntegerField("partes hechas", default=0)
+    contadores = models.JSONField("contadores", default=dict, blank=True)
+    log = models.TextField("registro", blank=True)
+    usuario = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        verbose_name="usuario",
+        null=True,
+        blank=True,
+        on_delete=models.PROTECT,
+        related_name="trabajos",
+    )
+    lote_importacion = models.ForeignKey(
+        LoteImportacion,
+        verbose_name="lote de importación",
+        null=True,
+        blank=True,
+        on_delete=models.PROTECT,
+        related_name="trabajos",
+    )
+    creado = models.DateTimeField("creado", auto_now_add=True)
+    inicio = models.DateTimeField("inicio", null=True, blank=True)
+    fin = models.DateTimeField("fin", null=True, blank=True)
+    latido = models.DateTimeField(
+        "último latido", null=True, blank=True, help_text="Lo actualiza el ejecutor en cada parte."
+    )
+
+    class Meta:
+        verbose_name = "trabajo"
+        verbose_name_plural = "trabajos"
+        ordering = ["-creado"]
+
+    def __str__(self):
+        return f"{self.tipo} · {self.get_estado_display()} · {self.creado:%d/%m/%Y %H:%M}"
+
+    def anotar(self, linea: str):
+        self.log = f"{self.log}{timezone.localtime():%H:%M:%S} {linea}\n"
+
+    def sumar(self, **contadores):
+        for k, v in contadores.items():
+            self.contadores[k] = self.contadores.get(k, 0) + v
+
+    @property
+    def porcentaje(self) -> int | None:
+        if not self.partes_total:
+            return None
+        return min(100, round(100 * self.partes_hechas / self.partes_total))
+
+    @property
+    def activo(self) -> bool:
+        return self.estado in (self.Estado.PENDIENTE, self.Estado.EN_CURSO)

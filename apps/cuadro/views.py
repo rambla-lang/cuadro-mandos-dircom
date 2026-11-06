@@ -5,6 +5,7 @@ from django.http import Http404, HttpResponse
 from django.shortcuts import get_object_or_404, render
 from django.utils import timezone
 
+from apps.contratacion.models import Expediente
 from apps.entidades.models import Empresa
 from apps.evidencias.enums import ALCANCES_POR_SERVICIO, EstadoValidacion, Servicio
 from apps.evidencias.models import PrestacionServicio
@@ -68,8 +69,24 @@ def municipio_panel(request, codigo):
                 ),
             }
         )
+    expedientes = (
+        Expediente.objects.filter(organo__municipio=municipio)
+        .exclude(servicio_clasificado="")
+        .prefetch_related("adjudicaciones__empresa")
+        .order_by("-fecha_publicacion", "-pk")[:15]
+    )
+    total_expedientes = Expediente.objects.filter(organo__municipio=municipio).count()
     plantilla = "cuadro/_panel_municipio.html" if request.htmx else "cuadro/municipio.html"
-    return render(request, plantilla, {"municipio": municipio, "filas": filas})
+    return render(
+        request,
+        plantilla,
+        {
+            "municipio": municipio,
+            "filas": filas,
+            "expedientes": expedientes,
+            "total_expedientes": total_expedientes,
+        },
+    )
 
 
 def exportar_tabla(request, formato):

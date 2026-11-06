@@ -44,6 +44,7 @@
       <nav>
         <a href="{% url 'portada' %}">Portada</a>
         <a href="{% url 'mapa' %}">Mapa</a>
+        <a href="{% url 'expedientes' %}">Contratación</a>
         <a href="{% url 'municipios' %}">Municipios</a>
         {% if es_analista %}<a href="{% url 'importar' %}">Importar</a>
         <a href="{% url 'revision' %}">Revisión{% if pendientes_revision %} ({{ pendientes_revision }}){% endif %}</a>{% endif %}

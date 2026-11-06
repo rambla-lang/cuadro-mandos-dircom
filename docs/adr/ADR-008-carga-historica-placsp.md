@@ -45,7 +45,7 @@ En Render Free, el servicio se duerme a los 15 min sin tráfico entrante, tiene 
 - Los contratos menores (P-07) no están incluidos. Si se aprueban, habrá que medir su volumen y revisar esta ADR.
 
 ## Acciones
-1. [ ] Fase 3: implementar `ingest_placsp --fichero` con partes por `.atom` y tests de reanudación.
+1. [x] Fase 3: implementado `ingest_placsp --fichero` (y `--mes`) con partes por `.atom`. El mes de octubre de 2026 tarda 67 s en un portátil a partir del ZIP ya descargado (06/11/2026).
 2. [ ] Fase 3: medir en Render Free el espacio temporal, el tiempo de descarga y el tiempo de proceso del ZIP mensual; anotar el resultado aquí y decidir el punto 2.
 3. [ ] Primera carga anual en local: anotar la duración, las CU-horas de Neon consumidas y el tamaño de la base de datos (`pg_total_relation_size`) en `docs/04`.
 4. [ ] Fase 8: describir el procedimiento en `docs/12-operacion.md`.

@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% block titulo %}Expediente{% endblock %}
+{% block contenido %}
+<p><a href="{% url 'expedientes' %}">← Contratación</a></p>
+<h1>{{ e.objeto|default:e.id_externo }}</h1>
+{% if e.eliminado_en_fuente %}<p class="aviso">Anulado o eliminado en la fuente ({{ e.datos_fuente.eliminada|default:"sin motivo" }}).</p>{% endif %}
+<table><tbody>
+  <tr><th>Fuente</th><td>{{ e.get_fuente_display }} · <a href="{{ e.url_origen }}" target="_blank" rel="noopener noreferrer">ver en la fuente</a></td></tr>
+  <tr><th>Nº de expediente</th><td>{{ e.numero_expediente|default:"—" }}</td></tr>
+  <tr><th>Órgano</th><td>{{ e.organo.nombre|default:"—" }}{% if e.organo %} · {{ e.organo.get_estado_vinculacion_display }}{% if e.organo.municipio %} · <a href="{% url 'municipio' e.organo.municipio.codigo_ine %}">{{ e.organo.municipio.nombre_oficial }}</a>{% endif %}{% endif %}</td></tr>
+  <tr><th>Estado</th><td>{{ e.estado|default:"—" }}</td></tr>
+  <tr><th>Servicio</th><td>{{ e.get_servicio_clasificado_display|default:"Sin clasificar" }} {% if e.alcance_clasificado %}· {{ e.get_alcance_clasificado_display }}{% endif %} <small>({{ e.get_metodo_clasificacion_display }}{% if e.regla_clasificacion %}: {{ e.regla_clasificacion }}{% endif %})</small></td></tr>
+  <tr><th>CPV</th><td>{{ e.cpv|join:", "|default:"—" }}</td></tr>
+  <tr><th>Importe de licitación</th><td>{% if e.importe_licitacion is not None %}{{ e.importe_licitacion }} € ({{ e.get_iva_incluido_display }}){% else %}No consta{% endif %}{% if e.importe_licitacion_con_iva is not None %} · {{ e.importe_licitacion_con_iva }} € con IVA{% endif %}{% if e.valor_estimado is not None %} · valor estimado {{ e.valor_estimado }} €{% endif %}{% if e.datos_fuente.valor_ted is not None %} · valor TED {{ e.datos_fuente.valor_ted }} (sin interpretar){% endif %}</td></tr>
+  <tr><th>Publicación</th><td>{{ e.fecha_publicacion|date:"d/m/Y"|default:"—" }}</td></tr>
+  <tr><th>Actualizado en la fuente</th><td>{{ e.fecha_actualizacion_fuente|date:"d/m/Y H:i"|default:"—" }}</td></tr>
+  <tr><th>Criterio territorial</th><td>{{ e.criterio_territorial }} {% if e.nuts %}({{ e.nuts|join:", " }}){% endif %}</td></tr>
+  {% if e.datos_fuente.duracion %}<tr><th>Duración</th><td>{{ e.datos_fuente.duracion }}</td></tr>{% endif %}
+  <tr><th>Trazabilidad</th><td><small>{{ e.entrada_atom_id|default:e.id_externo }} · {{ e.fichero_origen|default:"API de TED" }} · lote {{ e.lote_importacion_id|default:"—" }}</small></td></tr>
+</tbody></table>
+<h2>Adjudicaciones</h2>
+<table>
+  <thead><tr><th>Lote</th><th>Adjudicatario (literal)</th><th>Empresa del catálogo</th><th>Importe sin IVA</th><th>Adjudicación</th><th>Formalización</th><th>Nivel</th></tr></thead>
+  <tbody>
+  {% for a in adjudicaciones %}
+    <tr><td>{{ a.lote.numero|default:"—" }}</td><td>{{ a.adjudicatario_texto|default:"No publicado en la fuente" }}{% if a.adjudicatario_nif %} <small>({{ a.adjudicatario_nif }})</small>{% endif %}</td><td>{{ a.empresa.nombre|default:"—" }}</td><td>{{ a.importe_adjudicacion|default:"No consta" }}</td><td>{{ a.fecha_adjudicacion|date:"d/m/Y"|default:"—" }}</td><td>{{ a.fecha_formalizacion|date:"d/m/Y"|default:"—" }}</td><td>{{ a.get_nivel_display }}</td></tr>
+  {% empty %}<tr><td colspan="7">Sin adjudicación publicada en la fuente.</td></tr>{% endfor %}
+  </tbody>
+</table>
+<p><small>«Resuelta» o «adjudicada» indica la fase del expediente, no que el servicio siga vigente.</small></p>
+{% endblock %}

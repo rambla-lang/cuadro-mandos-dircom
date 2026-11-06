@@ -37,8 +37,9 @@ uv run python manage.py runserver
 uv run pytest                             # todos los tests
 uv run pytest -m "not externo"            # sin llamadas a servicios externos (por defecto en CI)
 uv run ruff check . && uv run ruff format --check .
-uv run python manage.py ingest_ted --desde 2026-01-01 --hasta 2026-10-31
-uv run python manage.py ingest_placsp --fichero ruta.zip
+uv run python manage.py cargar_reglas_clasificacion
+uv run python manage.py ingest_ted --desde 2026-10-01 --hasta 2026-10-31
+uv run python manage.py ingest_placsp --fichero ruta.zip      # o --mes AAAAMM (descarga ~200 MB)
 uv run python manage.py import_brandwatch ruta.csv
 ```
 

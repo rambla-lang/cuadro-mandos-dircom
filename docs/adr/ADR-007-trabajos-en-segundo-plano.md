@@ -25,3 +25,6 @@ Para PLACSP, ADR-008 concreta que la carga histórica se hace solo por comando l
 ## Consecuencias
 - Un solo proceso gunicorn con un hilo ejecutor, para evitar dos ejecutores compitiendo; el bloqueo `skip_locked` protege igualmente.
 - Revisar en producción: trabajador dedicado y programación periódica.
+
+## Implementación (Fase 3, 06/11/2026)
+`apps/nucleo/trabajos.py`: registro de tipos (`@registrar`), `procesar_parte` (cada parte en su transacción), `ejecutar_hasta_terminar` (comandos) y `lanzar_ejecutor` (hilo único por proceso). El hilo se arranca al crear un trabajo desde la web y cada vez que alguien abre la página de trabajos con trabajos activos, de modo que un reinicio del servidor se retoma en cuanto alguien mira. Un trabajo «en curso» sin latido en 3 minutos se considera abandonado y se retoma.

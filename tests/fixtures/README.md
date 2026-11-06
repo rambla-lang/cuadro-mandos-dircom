@@ -10,3 +10,4 @@ Extractos pequeños de fuentes públicas reales, obtenidos en la Fase 0 (05/11/2
 | `tabla_municipal/agua_sintetico.csv` | Sintético (Fase 2), con la forma de `seed/municipios_veolia_agua.csv` | Cinco filas inventadas para los tests: nombres que casan, «TAVERNES» y «EL BOSQUE-CHIVA» para la bandeja, «JIJONA/XIXONA» compuesto y un operador ficticio. Separador `;` para probar la detección |
 
 Los tests de Excel de la Fase 2 construyen el libro en el propio test con `openpyxl` (datos sintéticos).
+| `ted/search_es52_can_titulo_20261001.json` | Search API, `place-of-performance IN (ES52) AND notice-type IN (can-standard) AND publication-date>=20261001 AND publication-date<=20261003`, `limit` 2, con `notice-title`, `winner-name`, `buyer-identifier`, `buyer-city` y `total-value` (06/11/2026) | `links` solo `MUL` y `SPA`; `notice-title` solo `spa` y `eng`. Un aviso nacional (Renfe, Madrid) y uno valenciano (Consorcio Hospital General Universitario de Valencia) |

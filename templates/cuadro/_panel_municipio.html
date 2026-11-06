@@ -20,4 +20,11 @@
 {% else %}
 <p>No localizado: no hay ninguna evidencia registrada de agua, residuos ni energía para este municipio. Eso no significa que no tenga servicio.</p>
 {% endif %}
-<p><small>Expedientes de contratación y menciones en medios: se añadirán con las fases 3 y 4.</small></p>
+<h3>Contratación de agua, residuos y energía</h3>
+{% if expedientes %}
+<ul>{% for e in expedientes %}<li><a href="{% url 'expediente' e.pk %}">{{ e.objeto|truncatechars:90 }}</a> <small>({{ e.get_fuente_display }}, {{ e.fecha_publicacion|date:"d/m/Y"|default:"sin fecha" }}, {{ e.get_servicio_clasificado_display }}, {{ e.estado }}){% for a in e.adjudicaciones.all %} · {{ a.empresa.nombre|default:a.adjudicatario_texto|default:"adjudicatario no publicado" }}{% endfor %}</small></li>{% endfor %}</ul>
+{% else %}
+<p><small>Sin expedientes clasificados de agua, residuos o energía de órganos vinculados a este municipio en los datos cargados ({{ total_expedientes }} expedientes de otros objetos). PLACSP no incluye contratos menores y TED solo publica los que superan los umbrales europeos.</small></p>
+{% endif %}
+<p><a href="{% url 'expedientes' %}?municipio={{ municipio.codigo_ine }}&servicio=">Ver toda su contratación</a></p>
+<p><small>Menciones en medios: se añadirán con la fase 4.</small></p>

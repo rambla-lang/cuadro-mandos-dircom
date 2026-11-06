@@ -213,6 +213,10 @@ def rechazar(elemento: ElementoRevision, usuario, comentario: str = "") -> None:
         registrar_auditoria(
             usuario, "evidencia.rechazar", evidencia, antes=antes, despues=instantanea(evidencia)
         )
+    if elemento.tipo == Tipo.VINCULO_ORGANO and elemento.objeto is not None:
+        organo = elemento.objeto
+        organo.estado_vinculacion = "no_aplica"
+        organo.save()
     _cerrar(elemento, usuario, Estado.RECHAZADO, {}, comentario)
     registrar_auditoria(usuario, "revision.rechazar", elemento, despues={"comentario": comentario})
 

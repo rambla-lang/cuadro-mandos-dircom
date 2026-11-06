@@ -1,0 +1,148 @@
+{
+ "notices": [
+  {
+   "notice-type": "can-standard",
+   "publication-number": "674833-2026",
+   "classification-cpv": [
+    "34631000",
+    "34631000"
+   ],
+   "buyer-name": {
+    "spa": [
+     "Dirección General de Renfe Viajeros Sociedad Mercantil Estatal, S.A."
+    ]
+   },
+   "publication-date": "2026-10-01+02:00",
+   "links": {
+    "xml": {
+     "MUL": "https://ted.europa.eu/en/notice/674833-2026/xml"
+    },
+    "pdf": {
+     "SPA": "https://ted.europa.eu/es/notice/674833-2026/pdf"
+    },
+    "pdfs": {
+     "SPA": "https://ted.europa.eu/es/notice/674833-2026/pdfs"
+    },
+    "html": {
+     "SPA": "https://ted.europa.eu/es/notice/-/detail/674833-2026"
+    },
+    "htmlDirect": {
+     "SPA": "https://ted.europa.eu/es/notice/674833-2026/html"
+    }
+   },
+   "winner-name": {
+    "spa": [
+     "KNORR-BREMSE ESPAÑA S.A.U."
+    ]
+   },
+   "notice-title": {
+    "spa": "España – Partes de locomotoras o material móvil – Suministro, desarrollo de electrónica de control de los equipos de climatización, instalación y puesta en servicio en flota de servicios comerciales",
+    "eng": "Spain – Parts of locomotives or rolling stock – Suministro, desarrollo de electrónica de control de los equipos de climatización, instalación y puesta en servicio en flota de servicios comerciales"
+   },
+   "total-value": 1180000,
+   "buyer-city": {
+    "mul": [
+     "Madrid"
+    ]
+   },
+   "buyer-identifier": [
+    "50409810076841",
+    "A86868189"
+   ]
+  },
+  {
+   "notice-type": "can-standard",
+   "publication-number": "675083-2026",
+   "classification-cpv": [
+    "33141000",
+    "33141200",
+    "33141000",
+    "33141000",
+    "33141000",
+    "33141000",
+    "33141000",
+    "33141000",
+    "33141000",
+    "33141000",
+    "33141000",
+    "33141000",
+    "33141000",
+    "33141000",
+    "33141000",
+    "33141000",
+    "33141200",
+    "33141200",
+    "33141200",
+    "33141200",
+    "33141200",
+    "33141200",
+    "33141200",
+    "33141200",
+    "33141200",
+    "33141200",
+    "33141200",
+    "33141200",
+    "33141200",
+    "33141200"
+   ],
+   "buyer-name": {
+    "spa": [
+     "Consorcio Hospital General Universitario de Valencia"
+    ]
+   },
+   "publication-date": "2026-10-01+02:00",
+   "links": {
+    "xml": {
+     "MUL": "https://ted.europa.eu/en/notice/675083-2026/xml"
+    },
+    "pdf": {
+     "SPA": "https://ted.europa.eu/es/notice/675083-2026/pdf"
+    },
+    "pdfs": {
+     "SPA": "https://ted.europa.eu/es/notice/675083-2026/pdfs"
+    },
+    "html": {
+     "SPA": "https://ted.europa.eu/es/notice/-/detail/675083-2026"
+    },
+    "htmlDirect": {
+     "SPA": "https://ted.europa.eu/es/notice/675083-2026/html"
+    }
+   },
+   "winner-name": {
+    "spa": [
+     "TERUMO EUROPE ESPAÑA SL",
+     "TERUMO EUROPE ESPAÑA SL",
+     "ibersurgical S.L",
+     "W.L. GORE Y ASOCIADOS, S.L.",
+     "TERUMO EUROPE ESPAÑA SL",
+     "Abbott Medical España, S.A.",
+     "Teleflex Medical, S.A.U.",
+     "TERUMO EUROPE ESPAÑA SL",
+     "TERUMO EUROPE ESPAÑA SL",
+     "BOSTON SCIENTIFIC IBÉRICA, S.A.",
+     "TERUMO EUROPE ESPAÑA SL",
+     "ibersurgical S.L",
+     "BOSTON SCIENTIFIC IBÉRICA, S.A.",
+     "Abbott Medical España, S.A."
+    ]
+   },
+   "notice-title": {
+    "spa": "España – Productos consumibles médicos no químicos desechables y productos consumibles hematológicos – Suministro de material fungible especializado para procedimientos de hemodinámica en el CHGUV.",
+    "eng": "Spain – Disposable non-chemical medical consumables and haematological consumables – Suministro de material fungible especializado para procedimientos de hemodinámica en el CHGUV."
+   },
+   "total-value": 1099615.5,
+   "buyer-city": {
+    "mul": [
+     "Valencia"
+    ]
+   },
+   "buyer-identifier": [
+    "20896620133422",
+    "Q4601065H"
+   ]
+  }
+ ],
+ "totalNoticeCount": 14,
+ "iterationNextToken": null,
+ "timedOut": false
+}

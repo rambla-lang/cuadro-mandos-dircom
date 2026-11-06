@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+{% load static %}
+{% block titulo %}Trabajos{% endblock %}
+{% block contenido %}
+<h1>Trabajos de actualización</h1>
+<p><small>La página se refresca cada 3 segundos mientras hay trabajos en marcha; tenerla abierta mantiene despierto el servidor.</small></p>
+<div id="lista-trabajos">{% include "contratacion/_trabajos.html" %}</div>
+<script src="{% static 'vendor/htmx-2.0.11.min.js' %}"></script>
+{% endblock %}

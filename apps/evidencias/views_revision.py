@@ -8,6 +8,8 @@ from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse
 from django.views.decorators.http import require_http_methods
 
+from apps.contratacion import services_revision as srv_contratacion
+from apps.contratacion.forms import AdjudicatarioForm, ClasificarForm, VincularOrganoForm
 from apps.nucleo.models import ElementoRevision
 from apps.nucleo.roles import Rol, rol_requerido
 from apps.territorio.models import Municipio
@@ -23,6 +25,9 @@ FORMULARIOS = {
     Tipo.MUNICIPIO_NO_RESUELTO: ResolverMunicipioForm,
     Tipo.OPERADOR_NO_RESUELTO: ResolverOperadorForm,
     Tipo.NIVEL_POR_DECIDIR: DecidirNivelForm,
+    Tipo.VINCULO_ORGANO: VincularOrganoForm,
+    Tipo.CLASIFICACION_SERVICIO: ClasificarForm,
+    Tipo.ADJUDICATARIO_NO_RESUELTO: AdjudicatarioForm,
 }
 
 
@@ -124,8 +129,26 @@ def _resolver(el, iguales, datos, usuario) -> int:
                 guardar_alias=datos["guardar_alias"] and e is el,
                 comentario=datos["comentario"],
             )
-        else:
+        elif el.tipo == Tipo.NIVEL_POR_DECIDIR:
             srv.decidir_nivel(e, datos["nivel"], usuario, datos["url_origen"], datos["comentario"])
+        elif el.tipo == Tipo.VINCULO_ORGANO:
+            srv_contratacion.vincular(e, datos["municipio"], usuario, datos["comentario"])
+        elif el.tipo == Tipo.CLASIFICACION_SERVICIO:
+            srv_contratacion.clasificar(e, datos["servicio"], usuario, datos["comentario"])
+        elif el.tipo == Tipo.ADJUDICATARIO_NO_RESUELTO:
+            srv_contratacion.resolver_adjudicatario(
+                e,
+                datos["empresa"],
+                usuario,
+                guardar_alias=datos["guardar_alias"] and e is el,
+                guardar_nif=datos["guardar_nif"] and e is el,
+                comentario=datos["comentario"],
+            )
+    if el.tipo == Tipo.ADJUDICATARIO_NO_RESUELTO and (
+        datos.get("guardar_alias") or datos.get("guardar_nif")
+    ):
+        n = srv_contratacion.aplicar_resolucion_a_otras_adjudicaciones(datos["empresa"])
+        return len(objetivos) + n
     return len(objetivos)
 
 
