@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+{% block titulo %}Lote de importación{% endblock %}
+{% block contenido %}
+<h1>Lote {{ lote.pk }} · {{ lote.parametros.archivo }}</h1>
+<p>{{ lote.inicio|date:"d/m/Y H:i" }} · {{ lote.usuario.email|default:"—" }} · SHA-256 <code>{{ lote.archivo_sha256 }}</code></p>
+<pre style="white-space:pre-wrap">{{ lote.log }}</pre>
+{% if pendientes %}<p><a href="{% url 'revision' %}">{{ pendientes }} elementos de este lote pendientes en la bandeja de revisión</a></p>{% endif %}
+<p><a href="{% url 'mapa' %}">Ver el mapa</a></p>
+{% endblock %}

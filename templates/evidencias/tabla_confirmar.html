@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% block titulo %}Importar tabla municipal{% endblock %}
+{% block contenido %}
+<h1>Importar tabla municipal · 5. Vista previa</h1>
+{% include "evidencias/_pasos.html" %}
+<p>Simulación completa sin guardar nada. Estado al importar: <strong>{{ estado.config.estado }}</strong>; fecha de consulta {{ estado.config.fecha_consulta }}; fuente «{{ estado.config.fuente.nombre }}».</p>
+<table>
+  <tbody>
+    <tr><th>Filas leídas</th><td>{{ r.filas_leidas }}</td></tr>
+    <tr><th>Evidencias nuevas</th><td>{{ r.evidencias_nuevas }}</td></tr>
+    <tr><th>Ya importadas antes (no se duplican)</th><td>{{ r.evidencias_existentes }}</td></tr>
+    <tr><th>Prestaciones nuevas</th><td>{{ r.prestaciones_nuevas }}</td></tr>
+    <tr><th>Celdas «No localizado» sin detalle ni fuente (no se guardan)</th><td>{{ r.celdas_sin_dato }}</td></tr>
+    <tr><th>Filas descartadas antes en la bandeja</th><td>{{ r.descartadas_en_revision }}</td></tr>
+    <tr><th>A la bandeja de revisión</th><td>{{ r.total_revision }}{% for t, n in r.a_revision.items %}<br><small>{{ t }}: {{ n }}</small>{% endfor %}</td></tr>
+    <tr><th>Ya pendientes en la bandeja por una importación anterior</th><td>{{ r.ya_en_revision }}</td></tr>
+    <tr><th>Errores</th><td>{{ r.errores|length }}{% for e in r.errores %}<br><small>{{ e }}</small>{% endfor %}</td></tr>
+  </tbody>
+</table>
+<form method="post">{% csrf_token %}
+  <button type="submit" name="confirmar" value="1">Importar</button>
+  <button type="submit" name="cancelar" value="1">Cancelar y borrar el archivo</button>
+  <a href="{% url 'importar_tabla_columnas' %}">Volver a las columnas</a>
+</form>
+{% endblock %}

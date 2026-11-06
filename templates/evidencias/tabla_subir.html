@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+{% block titulo %}Importar tabla municipal{% endblock %}
+{% block contenido %}
+<h1>Importar tabla municipal · 1. Archivo</h1>
+<p>El archivo se guarda solo mientras dura el asistente y se borra al terminar o cancelar. Del original se conserva su huella SHA-256.</p>
+<form method="post" enctype="multipart/form-data">{% csrf_token %}
+  {{ form.as_p }}
+  <button type="submit">Continuar</button>
+</form>
+{% endblock %}

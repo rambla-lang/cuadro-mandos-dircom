@@ -11,12 +11,12 @@ Reglas comunes:
 
 **Pregunta que responde:** ¿quién presta agua, residuos o energía en cada municipio y con qué seguridad?
 
-**Datos:** `PrestacionServicio` validadas.
+**Datos:** `PrestacionServicio` con alguna evidencia validada. Con la casilla «Incluir borradores» se añaden las que solo tienen borradores, rayadas en el mapa y marcadas «[borrador]» en la tabla. Las evidencias rechazadas no cuentan. Con «todos los alcances», energía excluye el suministro eléctrico (comercializadora), que solo aparece si se elige ese alcance (docs/03).
 
 **Vista mapa (ECharts):**
 - Selector de servicio (agua, residuos o energía) y de alcance (por ejemplo, residuos con recogida o limpieza viaria).
 - Dos modos de color:
-  1. **Por operador**: un color por empresa o grupo, con un máximo de 8 categorías; el resto entra en "Otros" (ver `07`).
+  1. **Por operador**: **tres** empresas con color como máximo; el resto, «Otros operadores»; un municipio con dos o más operadores, «Varios operadores». Por defecto se colorean las tres con más municipios de ese servicio (solo evidencias validadas, en toda la comunidad), así que filtrar por provincia o incluir borradores no cambia los colores; se pueden elegir otras. *Cambio de la Fase 2 (06/11/2026):* el borrador decía hasta 8, pero en un mapa cualquier par de municipios puede ser vecino y la paleta categórica solo supera la validación «todos los pares» con sus tres primeros colores (docs/07, resultado de `scripts/validar_paleta.py`). El tooltip, el panel y la tabla nombran siempre el operador.
   2. **Por nivel de evidencia**: escala de 5 niveles, de `oficial` a `no_localizado`.
 - Los municipios sin registro se pintan en gris neutro con el rótulo "No localizado", nunca en blanco ni como "sin servicio".
 - Al pasar el ratón: municipio, operador, alcance, año de referencia y nivel. Al hacer clic se abre el panel del municipio.

@@ -44,3 +44,10 @@ def municipios_cv(db):
     return importar_municipios_ine(
         SEED / "ine" / "26codmun.xlsx", ["03", "12", "46"], "Comunitat Valenciana"
     )
+
+
+@pytest.fixture
+def competidores(db):
+    from apps.entidades.services import cargar_competidores
+
+    return cargar_competidores(SEED / "competidores_iniciales.json")

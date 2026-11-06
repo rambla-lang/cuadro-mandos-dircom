@@ -1,0 +1,137 @@
+{% extends "base.html" %}
+{% load static %}
+{% block titulo %}Mapa municipal{% endblock %}
+{% block contenido %}
+<h1>Mapa municipal · {{ servicio_label }}</h1>
+<form method="get" class="filtros" aria-label="Filtros del mapa">
+  <div><label for="servicio">Servicio</label>
+    <select id="servicio" name="servicio" onchange="this.form.alcance.value='';this.form.submit()">
+      {% for v, l in servicios %}<option value="{{ v }}" {% if v == filtro.servicio %}selected{% endif %}>{{ l }}</option>{% endfor %}
+    </select></div>
+  <div><label for="alcance">Alcance</label>
+    <select id="alcance" name="alcance">
+      <option value="">Todos{% if filtro.servicio == "energia" %} (sin suministro eléctrico){% endif %}</option>
+      {% for v, l in alcances %}<option value="{{ v }}" {% if v == filtro.alcance %}selected{% endif %}>{{ l }}</option>{% endfor %}
+    </select></div>
+  <div><label for="provincia">Provincia</label>
+    <select id="provincia" name="provincia">
+      <option value="">Comunitat Valenciana</option>
+      {% for p in provincias %}<option value="{{ p.codigo_ine }}" {% if p.codigo_ine == filtro.provincia %}selected{% endif %}>{{ p.nombre }}</option>{% endfor %}
+    </select></div>
+  <div><label for="modo">Color</label>
+    <select id="modo" name="modo">
+      <option value="nivel" {% if filtro.modo == "nivel" %}selected{% endif %}>Por nivel de evidencia</option>
+      <option value="operador" {% if filtro.modo == "operador" %}selected{% endif %}>Por operador</option>
+    </select></div>
+  <div><label><input type="checkbox" name="borradores" value="1" style="width:auto" {% if filtro.incluir_borradores %}checked{% endif %}> Incluir borradores (sin validar)</label></div>
+  <div><button type="submit">Aplicar</button></div>
+</form>
+
+{% if filtro.modo == "operador" %}
+<details class="resaltar">
+  <summary>Operadores con color ({{ resaltadas|length }} de 3 como máximo)</summary>
+  <form method="get">
+    {% for k, v in request.GET.items %}{% if k != "resaltar" %}<input type="hidden" name="{{ k }}" value="{{ v }}">{% endif %}{% endfor %}
+    <p><small>Por defecto, los tres con más municipios en este servicio. Solo hay tres colores porque en un mapa todos los municipios pueden ser vecinos y más colores no se distinguen bien con daltonismo (docs/07).</small></p>
+    <div class="columnas">
+    {% for e in empresas %}<label class="casilla"><input type="checkbox" name="resaltar" value="{{ e.pk }}" {% if e in resaltadas %}checked{% endif %}> {{ e.nombre }}</label>{% endfor %}
+    </div>
+    <button type="submit">Aplicar colores</button>
+  </form>
+</details>
+{% endif %}
+
+<section class="tarjetas" aria-label="Indicadores">
+  <div class="tarjeta"><span class="cifra">{{ ind.con_operador }}</span> de {{ ind.total }} municipios con operador identificado{% if ind.pct_con_operador is not None %} ({{ ind.pct_con_operador }} %){% endif %}</div>
+  <div class="tarjeta">
+    <div class="barra100" role="img" aria-label="Distribución por nivel: {% for n in ind.por_nivel %}{{ n.etiqueta }} {{ n.n }}{% if not forloop.last %}, {% endif %}{% endfor %}">
+      {% for n in ind.por_nivel %}{% if n.n %}<span style="flex:{{ n.n }};background:{{ n.color }}" title="{{ n.etiqueta }}: {{ n.n }}"></span>{% endif %}{% endfor %}
+    </div>
+    <ul class="leyenda-lista">{% for n in ind.por_nivel %}<li><i style="background:{{ n.color }}"></i>{{ n.etiqueta }}: {{ n.n }}</li>{% endfor %}</ul>
+  </div>
+  <div class="tarjeta">
+    <strong>Operadores con más municipios</strong>
+    <ol class="top">{% for nombre, n in ind.top_operadores %}<li>{{ nombre }}: {{ n }}</li>{% empty %}<li>Sin operadores identificados con este filtro.</li>{% endfor %}</ol>
+    <small>Se cuentan municipios con alguna evidencia, no población ni alcance real.</small>
+  </div>
+</section>
+
+<div class="mapa-y-panel">
+  <div>
+    <div id="mapa" style="height:34rem" role="img" aria-label="Mapa de la Comunitat Valenciana coloreado {% if filtro.modo == 'operador' %}por operador{% else %}por nivel de evidencia{% endif %}: {{ ind.con_operador }} de {{ ind.total }} municipios con operador identificado. La tabla equivalente está debajo."></div>
+    <ul class="leyenda-lista" aria-label="Leyenda">{% for l in leyenda %}<li><i style="background:{{ l.color }}"></i>{{ l.etiqueta }}</li>{% endfor %}{% if filtro.incluir_borradores %}<li><i class="rayado"></i>Solo borradores</li>{% endif %}</ul>
+    <p><small>{{ atribucion }}</small></p>
+  </div>
+  <aside id="panel" aria-live="polite"><p>Pulsa un municipio para ver su detalle.</p></aside>
+</div>
+
+<h2 id="tabla">Tabla equivalente</h2>
+<p><a href="{% url 'exportar_tabla' 'csv' %}?{{ query }}">Exportar CSV</a> · <a href="{% url 'exportar_tabla' 'xlsx' %}?{{ query }}">Exportar Excel</a>
+ · <small>Una fila por municipio y una columna por servicio. {% if filtro.incluir_borradores %}Incluye borradores, marcados [borrador].{% else %}Solo evidencias validadas.{% endif %} Energía no incluye el suministro eléctrico.</small></p>
+<table class="tabla-municipios">
+  <thead><tr><th>Código INE</th><th>Municipio</th><th>Agua</th><th>Residuos</th><th>Energía</th></tr></thead>
+  <tbody>
+  {% for f in tabla %}
+    <tr><td>{{ f.codigo }}</td><td><a href="{% url 'municipio' f.codigo %}">{{ f.nombre }}</a></td>
+      <td>{{ f.agua.texto }}<br><small>{{ f.agua.nivel }}</small></td>
+      <td>{{ f.residuos.texto }}<br><small>{{ f.residuos.nivel }}</small></td>
+      <td>{{ f.energia.texto }}<br><small>{{ f.energia.nivel }}</small></td></tr>
+  {% endfor %}
+  </tbody>
+</table>
+{{ datos_json|json_script:"datos-mapa" }}
+<script src="{% static 'vendor/htmx-2.0.11.min.js' %}"></script>
+<script src="{% static 'vendor/echarts-6.1.0.min.js' %}"></script>
+<script>
+(function () {
+  const datos = JSON.parse(document.getElementById("datos-mapa").textContent);
+  const modo = "{{ filtro.modo }}";
+  const borradores = {{ filtro.incluir_borradores|yesno:"true,false" }};
+  const el = document.getElementById("mapa");
+  const grafico = echarts.init(el, null, {renderer: "canvas"});
+  const esc = (t) => String(t).replace(/[&<>"]/g, (c) => ({"&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;"}[c]));
+  fetch("{% static 'geo/municipios_cv.json' %}").then((r) => r.json()).then((geo) => {
+    const codigos = new Set(Object.keys(datos));
+    geo.features = geo.features.filter((f) => codigos.has(f.properties.codigo_ine));
+    echarts.registerMap("cv", geo);
+    const serie = Object.values(datos).map((m) => {
+      const color = modo === "operador" ? m.color_operador : m.color_nivel;
+      const estilo = {areaColor: color};
+      if (borradores && m.solo_borradores) {
+        estilo.decal = {symbol: "rect", dashArrayX: [1, 0], dashArrayY: [2, 4], rotation: Math.PI / 4, color: "rgba(255,255,255,0.7)"};
+      }
+      return {name: m.codigo, itemStyle: estilo, emphasis: {itemStyle: {areaColor: color}}};
+    });
+    grafico.setOption({
+      tooltip: {
+        trigger: "item",
+        confine: true,
+        formatter: (p) => {
+          const m = datos[p.name];
+          if (!m) return "";
+          let html = `<strong>${esc(m.nombre)}</strong><br>`;
+          const ops = m.operadores.filter((o) => o.localizado);
+          if (!ops.length) html += "No localizado";
+          for (const o of ops) {
+            html += `${esc(o.nombre)} · ${esc(o.alcance)}${o.anio ? " · " + o.anio : ""} · ${esc(o.nivel_label)}${o.borrador ? " · borrador" : ""}<br>`;
+          }
+          return html;
+        },
+      },
+      series: [{
+        type: "map", map: "cv", nameProperty: "codigo_ine", roam: true, selectedMode: false,
+        layoutCenter: ["50%", "50%"], layoutSize: "100%", scaleLimit: {min: 0.8, max: 12},
+        itemStyle: {borderColor: "#fcfcfb", borderWidth: 0.5},
+        emphasis: {label: {show: false}, itemStyle: {borderColor: "#0b0b0b", borderWidth: 1}},
+        label: {show: false},
+        data: serie,
+      }],
+    });
+    grafico.on("click", (p) => {
+      if (datos[p.name]) htmx.ajax("GET", `/municipios/${p.name}/`, {target: "#panel"});
+    });
+  });
+  window.addEventListener("resize", () => grafico.resize());
+})();
+</script>
+{% endblock %}

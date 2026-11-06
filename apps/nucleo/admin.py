@@ -2,7 +2,7 @@ from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 from django.contrib.auth.forms import AdminUserCreationForm, UserChangeForm
 
-from .models import LoteImportacion, RegistroAuditoria, Usuario
+from .models import ElementoRevision, LoteImportacion, RegistroAuditoria, Usuario
 
 
 class UsuarioCreationForm(AdminUserCreationForm):
@@ -59,4 +59,19 @@ class RegistroAuditoriaAdmin(admin.ModelAdmin):
         return False
 
     def has_delete_permission(self, request, obj=None):
+        return False
+
+
+@admin.register(ElementoRevision)
+class ElementoRevisionAdmin(admin.ModelAdmin):
+    """Consulta. Se resuelve desde la bandeja (/revision/), que aplica los cambios y audita."""
+
+    list_display = ("tipo", "texto", "estado", "resuelto_por", "resuelto_en")
+    list_filter = ("tipo", "estado")
+    search_fields = ("texto",)
+
+    def has_add_permission(self, request):
+        return False
+
+    def has_change_permission(self, request, obj=None):
         return False

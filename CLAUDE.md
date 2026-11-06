@@ -28,6 +28,11 @@ uv sync                                   # instalar dependencias
 uv run python manage.py migrate
 uv run python manage.py cargar_municipios --provincias 03 12 46 --comunidad "Comunitat Valenciana"
 uv run python manage.py cargar_competidores_iniciales
+uv run python manage.py importar_tabla_municipal --fichero seed/municipios_veolia_agua.csv \
+  --plantilla seed/plantillas_importacion/veolia_agua_csv.json --usuario EMAIL [--simular]
+uv run scripts/geo/preparar_municipios.py au_03.geojson au_12.geojson au_46.geojson \
+  --salida static/geo/municipios_cv.json --fecha-descarga AAAA-MM-DD   # docs/04 §11
+python3 scripts/validar_paleta.py "#hex,#hex" --mode light [--pairs all] [--ordinal]
 uv run python manage.py runserver
 uv run pytest                             # todos los tests
 uv run pytest -m "not externo"            # sin llamadas a servicios externos (por defecto en CI)

@@ -1,0 +1,6 @@
+{% extends "base.html" %}
+{% block titulo %}{{ municipio.nombre_oficial }}{% endblock %}
+{% block contenido %}
+<p><a href="{% url 'mapa' %}">← Mapa municipal</a></p>
+{% include "cuadro/_panel_municipio.html" %}
+{% endblock %}

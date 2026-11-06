@@ -59,3 +59,19 @@ Método de la skill de visualización usada al redactar este documento, resumido
 
 - HTMX y Apache ECharts servidos como estáticos versionados (sin CDN en producción, para no depender de terceros).
 - CSS: una hoja propia con variables (tokens) o un micro-framework sin compilación. Que Claude Code proponga en la Fase 1 y quede como ADR si se añade algo.
+
+## Validación de la paleta (Fase 2, 06/11/2026)
+
+Script: `scripts/validar_paleta.py` (copia del validador de la skill de visualización; se ejecuta con `python3 scripts/validar_paleta.py "<hex,...>" --mode light [--pairs all] [--ordinal]`). Superficie clara `#fcfcfb`.
+
+| Paleta | Uso | Resultado |
+|---|---|---|
+| Categórica de 8: `#2a78d6, #eb6834, #1baf7a, #eda100, #e87ba4, #008300, #6250d6, #e34948` | Barras y líneas (pares adyacentes) | Pasa. Peor par adyacente para daltonismo ΔE 9,1; visión normal 19,6. Aviso de contraste (aguamarina, amarillo y rosa por debajo de 3:1): obliga a etiquetas visibles o tabla |
+| La misma, todos los pares | Mapas | **No pasa** (verde y naranja ΔE 3,2 con protanopía; rojo y naranja 7,1 con visión normal). Los tres primeros (`#2a78d6, #eb6834, #1baf7a`) sí pasan todos los pares, según la referencia de la paleta. Por eso el mapa por operador usa solo tres colores (docs/05 §1) |
+| Ordinal de niveles: `#104281, #256abf, #5598e7, #86b6ef` (oficial → parcial), más «No localizado» en gris `#d9d8d2` | Mapa por nivel y barra de distribución | Pasa con `--ordinal`: un solo tono, luminosidad monótona, saltos de 0,06 o más, extremo claro a 2,06:1 |
+
+Neutros del mapa por operador: «Otros operadores» `#9a9993`, «Varios operadores» `#52514e`, «No localizado» `#d9d8d2`. Siempre van con etiqueta en la leyenda y en el tooltip.
+
+**Diferencia con la regla 2 («cada empresa tiene un color asignado y guardado»):** en el mapa no hay un color guardado por empresa, porque con tres colores no alcanza para las 15 del catálogo. Las tres con color salen de un recuento fijo por servicio, que no cambia con los filtros de provincia ni con los borradores, o las elige el usuario. Si se quiere un color fijo por empresa, habrá que limitar qué empresas pueden tenerlo. Queda para revisar (docs/11, P-18).
+
+**Pendiente:** modo oscuro. La interfaz todavía solo tiene tema claro; cuando se añada, hay que validar los pasos oscuros sobre `#1a1a19`.

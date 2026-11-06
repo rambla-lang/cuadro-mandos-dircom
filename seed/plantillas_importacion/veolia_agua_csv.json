@@ -1,0 +1,20 @@
+{
+  "nombre": "Veolia · agua (CSV de municipios)",
+  "descripcion": "seed/municipios_veolia_agua.csv: tabla propia de Veolia con el servicio de agua por municipio. Las columnas de residuos y energía vienen vacías y no se usan. Sin columna de nivel: al ser la tabla de la propia empresa, se importa como «Confirmado por la empresa» (decisión revisable). La tabla no indica fecha: la fecha de consulta es la de importación.",
+  "configuracion": {
+    "hoja": null,
+    "fila_cabecera": 1,
+    "columna_municipio": "MUNICIPIO",
+    "columna_provincia": null,
+    "fuente": {"tipo": "documento_interno", "nombre": "Tabla de municipios con agua de Veolia (municipios_veolia_agua.csv)"},
+    "fecha_consulta": null,
+    "estado": "validada",
+    "valores_nivel": {},
+    "bloques": [
+      {"servicio": "agua", "alcance": "", "columna_servicio": null, "valores_servicio": {},
+       "columna_operador": "SERVICIO DE AGUAS", "columna_detalle": null, "columna_figura": null,
+       "columna_fuente": null, "columna_anio": null, "columna_nivel": null,
+       "nivel_por_defecto": "empresa", "columnas_extra": []}
+    ]
+  }
+}

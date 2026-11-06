@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+{% block titulo %}Importar tabla municipal{% endblock %}
+{% block contenido %}
+<h1>Importar tabla municipal · 2. {{ paso }}</h1>
+{% include "evidencias/_pasos.html" %}
+<form method="post">{% csrf_token %}
+  {{ form.as_p }}
+  <button type="submit">Continuar</button>
+</form>
+{% endblock %}

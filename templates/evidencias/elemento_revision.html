@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% block titulo %}Revisión{% endblock %}
+{% block contenido %}
+<p><a href="{% url 'revision' %}?tipo={{ el.tipo }}">← Bandeja</a></p>
+<h1>{{ el.get_tipo_display }}</h1>
+<p><strong>Dato original:</strong> {{ el.texto }}</p>
+<p><strong>Motivo:</strong> {{ el.motivo }}</p>
+{% if fila %}
+<table><tbody>
+  <tr><th>Servicio</th><td>{{ fila.servicio }}{% if fila.alcance %} · {{ fila.alcance }}{% endif %}</td></tr>
+  <tr><th>Operador según la tabla</th><td>{{ fila.operador_texto }}</td></tr>
+  {% if fila.detalle %}<tr><th>Detalle</th><td>{{ fila.detalle }}</td></tr>{% endif %}
+  {% if fila.fuente_texto %}<tr><th>Fuente indicada</th><td>{{ fila.fuente_texto }}</td></tr>{% endif %}
+  {% if fila.nivel_original %}<tr><th>Nivel en la tabla</th><td>{{ fila.nivel_original }}</td></tr>{% endif %}
+  <tr><th>Fila</th><td>{{ fila.n }}</td></tr>
+</tbody></table>
+{% endif %}
+{% if objeto and el.tipo == "operador_no_resuelto" %}
+<p><strong>Prestación:</strong> {{ objeto }} · nivel {{ objeto.get_nivel_display }}</p>
+{% elif objeto and el.tipo == "nivel_por_decidir" %}
+<p><strong>Evidencia:</strong> {{ objeto.codigo }} · {{ objeto.titulo }}</p>
+<pre style="white-space:pre-wrap">{{ objeto.extracto }}</pre>
+{% if objeto.url_origen %}<p><a href="{{ objeto.url_origen }}" target="_blank" rel="noopener noreferrer">{{ objeto.url_origen }}</a>{% if objeto.datos_extra.url_derivada_de %} <small>(enlace formado a partir de «{{ objeto.datos_extra.url_derivada_de }}»)</small>{% endif %}</p>{% endif %}
+{% endif %}
+
+{% if el.estado == "pendiente" %}
+  {% if sugerencias %}<p><strong>Parecidos (solo orientan):</strong> {% for m in sugerencias %}{{ m.nombre_oficial }} ({{ m.codigo_ine }}, {{ m.provincia.nombre }}){% if not forloop.last %} · {% endif %}{% endfor %}</p>{% endif %}
+  {% if iguales %}<p>Hay otros <strong>{{ iguales }}</strong> pendientes con el mismo texto.</p>{% endif %}
+  <form method="post">{% csrf_token %}
+    <fieldset><legend>Resolver</legend>{{ form.non_field_errors }}{{ form.as_p }}
+    <button type="submit" name="resolver" value="1">Guardar</button></fieldset>
+  </form>
+  <form method="post">{% csrf_token %}
+    <fieldset><legend>Rechazar{% if el.tipo == "municipio_no_resuelto" %} (la fila no se importa){% elif el.tipo == "operador_no_resuelto" %} (queda como operador no catalogado){% else %} (la evidencia deja de contar){% endif %}</legend>
+    {{ rechazo.as_p }}
+    {% if iguales and el.tipo != "nivel_por_decidir" %}<p><label><input type="checkbox" name="aplicar_a_iguales" value="1"> Rechazar también los {{ iguales }} iguales</label></p>{% endif %}
+    <button type="submit" name="rechazar" value="1">Rechazar</button></fieldset>
+  </form>
+{% else %}
+  <p>Resuelto por {{ el.resuelto_por.email }} el {{ el.resuelto_en|date:"d/m/Y H:i" }}: {{ el.get_estado_display }}. {{ el.comentario }}</p>
+{% endif %}
+{% endblock %}

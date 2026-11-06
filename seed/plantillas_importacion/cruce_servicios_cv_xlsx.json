@@ -1,0 +1,26 @@
+{
+  "nombre": "Cruce de servicios municipales CV (borradores)",
+  "descripcion": "seed/cruce_servicios_municipales_CV.xlsx, hoja «Municipios» (búsqueda web del 01/11/2026, parcial y no exhaustiva). Todo entra como borrador (docs/04 §9). «Confirmado» se decide en la bandeja revisando la fuente (oficial, prensa o empresa); «Parcial» y «Sin verificar figura» pasan a «parcial». La provincia solo restringe la búsqueda del municipio.",
+  "configuracion": {
+    "hoja": "Municipios",
+    "fila_cabecera": 1,
+    "columna_municipio": "Municipio",
+    "columna_provincia": "Provincia",
+    "fuente": {"tipo": "otra", "nombre": "Cruce de servicios municipales CV (cruce_servicios_municipales_CV.xlsx, búsqueda web)"},
+    "fecha_consulta": "2026-11-01",
+    "estado": "borrador",
+    "valores_nivel": {"Confirmado": "decidir", "Parcial": "parcial", "Sin verificar figura": "parcial"},
+    "bloques": [
+      {"servicio": "", "alcance": "", "columna_servicio": "Servicio",
+       "valores_servicio": {
+         "Agua": {"servicio": "agua", "alcance": ""},
+         "Saneamiento / depuración": {"servicio": "agua", "alcance": "saneamiento"},
+         "Saneamiento (alcantarillado)": {"servicio": "agua", "alcance": "saneamiento"},
+         "Residuos": {"servicio": "residuos", "alcance": ""}
+       },
+       "columna_operador": "Empresa", "columna_detalle": "Detalle / duración", "columna_figura": "Figura",
+       "columna_fuente": "Fuente", "columna_anio": null, "columna_nivel": "Verificación",
+       "nivel_por_defecto": "decidir", "columnas_extra": []}
+    ]
+  }
+}

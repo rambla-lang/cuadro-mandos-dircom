@@ -1,0 +1,40 @@
+{
+  "nombre": "Veolia · residuos y energía (Excel enriquecido)",
+  "descripcion": "seed/Municipios_Veolia_agua_residuos_energia.xlsx, hoja «Municipios Veolia». Fecha de consulta 03/11/2026 (hoja «Método y límites»). La columna de agua no se importa: según la propia hoja es la tabla original sin cambios, ya importada desde el CSV. El suministro eléctrico es dato complementario sin nivel ni anuncio citado: su nivel se decide en la bandeja. Las columnas de PLACSP se guardan como datos adicionales, sin cambiar el nivel.",
+  "configuracion": {
+    "hoja": "Municipios Veolia",
+    "fila_cabecera": 1,
+    "columna_municipio": "MUNICIPIO",
+    "columna_provincia": null,
+    "fuente": {"tipo": "documento_interno", "nombre": "Municipios Veolia: residuos y energía (Municipios_Veolia_agua_residuos_energia.xlsx)"},
+    "fecha_consulta": "2026-11-03",
+    "estado": "validada",
+    "valores_nivel": {
+      "Confirmado (fuente oficial)": "oficial",
+      "Confirmado (fuente oficial) (contrato de 2019)": "oficial",
+      "Confirmado (fuente oficial) (municipio de Chiva)": "oficial",
+      "Confirmado (fuente oficial) (si es Tavernes de la Valldigna)": "oficial",
+      "Confirmado (prensa)": "prensa",
+      "Confirmado (prensa) (fecha no consta)": "prensa",
+      "Confirmado por la empresa": "empresa",
+      "Parcial": "parcial",
+      "Parcial (contrato antiguo, vigencia no confirmada)": "parcial",
+      "Parcial (renovación, no gestión)": "parcial",
+      "No localizado": "no_localizado"
+    },
+    "bloques": [
+      {"servicio": "residuos", "alcance": "", "columna_servicio": null, "valores_servicio": {},
+       "columna_operador": "SERVICIO DE RESIDUOS", "columna_detalle": "Residuos: detalle", "columna_figura": null,
+       "columna_fuente": "Residuos: fuente", "columna_anio": "Residuos: año", "columna_nivel": "Residuos: nivel",
+       "nivel_por_defecto": "decidir", "columnas_extra": ["PLACSP: residuos (04/11/2026)", "Estado del rastreo PLACSP"]},
+      {"servicio": "energia", "alcance": "", "columna_servicio": null, "valores_servicio": {},
+       "columna_operador": "SERVICIOS ENERGÉTICOS", "columna_detalle": "Energía: detalle", "columna_figura": null,
+       "columna_fuente": "Energía: fuente", "columna_anio": "Energía: año", "columna_nivel": "Energía: nivel",
+       "nivel_por_defecto": "decidir", "columnas_extra": ["PLACSP: energía (04/11/2026)", "Estado del rastreo PLACSP"]},
+      {"servicio": "energia", "alcance": "suministro_electrico", "columna_servicio": null, "valores_servicio": {},
+       "columna_operador": "Suministro eléctrico (comercializadora, dato complementario)", "columna_detalle": null, "columna_figura": null,
+       "columna_fuente": null, "columna_anio": null, "columna_nivel": null,
+       "nivel_por_defecto": "decidir", "columnas_extra": []}
+    ]
+  }
+}

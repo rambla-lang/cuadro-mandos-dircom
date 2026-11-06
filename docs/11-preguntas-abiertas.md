@@ -13,6 +13,8 @@ El reparto de quién decide está explicado en `ENTREGA.md`. José Luis es el pr
 | P-10 | ¿Qué periodo por defecto usan los análisis? (El documento maestro usó 12 meses: del 14/10/2025 al 14/10/2026) | Fase 4 | 12 meses móviles |
 | P-12 | ¿Cuándo se anota el juego de evaluación de la IA (50 menciones)? Lo anota José Luis | Fase 5 | — |
 | P-13 | Nombre definitivo de la aplicación y colores de marca, si hay guía de estilo | Fase 1 (no bloquea) | — |
+| P-17 | Tabla de agua de Veolia (`seed/municipios_veolia_agua.csv`): no trae nivel ni fecha. ¿Se acepta «Confirmado por la empresa» con la fecha de importación como fecha de consulta? ¿«TERESA» es Teresa (Castellón) o Teresa de Cofrentes (Valencia)? | No bloquea (Fase 2, importado así) | Propuesta: «Confirmado por la empresa», porque es la tabla de la propia Veolia. Se cambia en bloque si se decide otra cosa |
+| P-18 | Mapa por operador: ¿bastan tres empresas con color (las tres con más municipios por servicio, o las que se elijan) o se quiere un color fijo guardado por empresa? | No bloquea | Tres colores como máximo por la validación de la paleta (docs/07). Un color fijo obliga a elegir qué tres empresas lo tienen |
 
 ## Respondidas por José Luis (05/11/2026)
 
@@ -32,6 +34,7 @@ El reparto de quién decide está explicado en `ENTREGA.md`. José Luis es el pr
 | P-15 | Dónde se ejecuta la carga histórica de PLACSP | Fase 3 | ADR-008 (aceptada): solo por comando local; desde la web, solo el mes en curso si cabe en Render Free |
 | P-04 | Correo (SMTP) para invitaciones y recuperación de contraseñas | No bloquea: el enlace manual está implementado (Fase 1) | Correo corporativo, servicio transaccional o enlace manual |
 | P-16 | Bloqueo tras intentos fallidos de login | Fase 1 (implementado) | ADR-009 (aceptada, 06/11/2026): django-axes, por usuario, 5 fallos → 15 min |
+| P-19 | Límites municipales del mapa | Fase 2 (implementado) | ADR-006 (propuesta), verificado: WFS de unidades administrativas del IGN, CC BY 4.0 ign.es; código INE en `nationalCode` (docs/04 §11) |
 
 Si una decisión técnica afecta a lo que ve o hace el usuario (por ejemplo, arranques en frío lentos o no poder reabrir los PDF originales), se comenta con José Luis antes de cerrarla.
 
@@ -44,5 +47,5 @@ Si una decisión técnica afecta a lo que ve o hace el usuario (por ejemplo, arr
 - Límites de PDF de la API de Claude, lista de modelos con salidas estructuradas, precios y caché de prompt (ADR-005, `06`).
 - Render: límites vigentes de la instancia Free y disco persistente (ADR-002 y ADR-003).
 - Neon: regiones disponibles y restauración en el plan Free (ADR-002, `08`).
-- IGN/CNIG o ICV: licencia, campo del código INE y versión del GeoJSON municipal (ADR-006).
+- ~~IGN/CNIG o ICV: licencia, campo del código INE y versión del GeoJSON municipal (ADR-006).~~ Hecho el 06/11/2026 (docs/04 §11); la fecha de versión no figura en el servicio.
 - Django 6: si existe un marco de tareas en segundo plano utilizable (ADR-007).

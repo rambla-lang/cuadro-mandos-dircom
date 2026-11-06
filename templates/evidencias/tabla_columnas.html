@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block titulo %}Importar tabla municipal{% endblock %}
+{% block contenido %}
+<h1>Importar tabla municipal · 3. Columnas</h1>
+{% include "evidencias/_pasos.html" %}
+<h2>Primeras filas</h2>
+<div class="tabla-scroll"><table>
+  <thead><tr>{% for c in cabeceras %}<th>{{ c }}</th>{% endfor %}</tr></thead>
+  <tbody>{% for n, v in muestra %}<tr>{% for c, valor in v.items %}<td><small>{{ valor|truncatechars:60 }}</small></td>{% endfor %}</tr>{% endfor %}</tbody>
+</table></div>
+<form method="post">{% csrf_token %}
+  {{ form.non_field_errors }}
+  <h2>Datos generales</h2>
+  {{ form.as_p }}
+  <h2>Bloques de servicio</h2>
+  <p><small>Un bloque por cada columna de operador. En formato «ancho» (una columna por servicio) fija el servicio; en formato «largo» (una fila por servicio) elige la columna que lo indica. Los bloques sin columna de operador se ignoran.</small></p>
+  {{ formset.management_form }}
+  {% for f in formset %}
+    <fieldset><legend>Bloque {{ forloop.counter }}</legend>{{ f.non_field_errors }}{{ f.as_p }}</fieldset>
+  {% endfor %}
+  <button type="submit">Continuar</button>
+</form>
+{% endblock %}

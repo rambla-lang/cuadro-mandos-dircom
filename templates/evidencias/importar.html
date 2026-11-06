@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block titulo %}Importar{% endblock %}
+{% block contenido %}
+<h1>Importar</h1>
+<ul>
+  <li><a href="{% url 'importar_tabla' %}">Tabla municipal (Excel o CSV)</a>: quién presta agua, residuos o energía en cada municipio (docs/04 §9).</li>
+</ul>
+<p><small>Contratación pública (PLACSP y TED) y medios (Brandwatch y recortes) llegan en las fases 3 y 4.</small></p>
+<h2>Últimas importaciones de tablas</h2>
+<table>
+  <thead><tr><th>Fecha</th><th>Archivo</th><th>Usuario</th><th>Leídas</th><th>Nuevas</th><th>Descartadas</th><th>Errores</th></tr></thead>
+  <tbody>
+  {% for l in lotes %}
+    <tr><td><a href="{% url 'lote_importacion' l.pk %}">{{ l.inicio|date:"d/m/Y H:i" }}</a></td><td>{{ l.parametros.archivo }}</td><td>{{ l.usuario.email|default:"—" }}</td><td>{{ l.leidos }}</td><td>{{ l.nuevos }}</td><td>{{ l.descartados }}</td><td>{{ l.errores }}</td></tr>
+  {% empty %}<tr><td colspan="7">Todavía no hay importaciones.</td></tr>{% endfor %}
+  </tbody>
+</table>
+{% endblock %}

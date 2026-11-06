@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>{% block titulo %}Cuadro de mandos DIRCOM{% endblock %}</title>
   <style>
-    body { font-family: system-ui, sans-serif; max-width: 64rem; margin: 1.5rem auto; padding: 0 1rem; color: #1a1a1a; }
+    body { font-family: system-ui, sans-serif; max-width: 80rem; margin: 1.5rem auto; padding: 0 1rem; color: #1a1a1a; }
     header { display: flex; flex-wrap: wrap; gap: .75rem; align-items: center; border-bottom: 1px solid #ccc; padding-bottom: .75rem; }
     nav a { margin-right: .75rem; color: #0b4f8a; }
     label { display: block; margin-top: 1rem; }
@@ -18,6 +18,23 @@
     .enlace { word-break: break-all; font-family: ui-monospace, monospace; background: #f3f3f3; padding: .75rem; }
     .filtros { display: flex; gap: .5rem; flex-wrap: wrap; align-items: end; }
     .filtros > * { flex: 1 1 12rem; }
+    .tarjetas { display: grid; grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr)); gap: .75rem; margin: 1rem 0; }
+    .tarjeta { border: 1px solid #e1e0d9; border-radius: 6px; padding: .75rem; background: #fcfcfb; }
+    .cifra { font-size: 2rem; font-weight: 600; display: block; }
+    .barra100 { display: flex; gap: 2px; height: 1rem; border-radius: 4px; overflow: hidden; }
+    .leyenda-lista { list-style: none; padding: 0; display: flex; flex-wrap: wrap; gap: .25rem 1rem; font-size: .9rem; }
+    .leyenda-lista i { display: inline-block; width: .9rem; height: .9rem; margin-right: .35rem; vertical-align: -2px; border: 1px solid rgba(11,11,11,.1); }
+    .leyenda-lista i.rayado { background: repeating-linear-gradient(45deg, #86b6ef 0 3px, #fff 3px 6px); }
+    .top { margin: .5rem 0; padding-left: 1.25rem; }
+    .mapa-y-panel { display: grid; grid-template-columns: minmax(0, 3fr) minmax(0, 2fr); gap: 1rem; }
+    @media (max-width: 60rem) { .mapa-y-panel { grid-template-columns: 1fr; } }
+    #panel { border-left: 1px solid #e1e0d9; padding-left: 1rem; max-height: 40rem; overflow: auto; }
+    .etiqueta { background: #fff6d6; border: 1px solid #e0c060; border-radius: 3px; padding: 0 .3rem; font-size: .8rem; }
+    .columnas { columns: 3 12rem; }
+    .casilla { display: block; margin: .2rem 0; }
+    .casilla input, input[type=checkbox], input[type=radio] { width: auto; }
+    .tabla-scroll { overflow-x: auto; }
+    .paso { color: #52514e; }
   </style>
 </head>
 <body>
@@ -26,7 +43,10 @@
     {% if user.is_authenticated %}
       <nav>
         <a href="{% url 'portada' %}">Portada</a>
+        <a href="{% url 'mapa' %}">Mapa</a>
         <a href="{% url 'municipios' %}">Municipios</a>
+        {% if es_analista %}<a href="{% url 'importar' %}">Importar</a>
+        <a href="{% url 'revision' %}">Revisión{% if pendientes_revision %} ({{ pendientes_revision }}){% endif %}</a>{% endif %}
         {% if es_administrador %}<a href="{% url 'usuarios' %}">Usuarios</a>{% endif %}
         {% if user.is_staff %}<a href="{% url 'admin:index' %}">Administración</a>{% endif %}
       </nav>

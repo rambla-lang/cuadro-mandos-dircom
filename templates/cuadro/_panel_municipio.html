@@ -1,0 +1,23 @@
+<h2>{{ municipio.nombre_oficial }} <small>({{ municipio.codigo_ine }} · {{ municipio.provincia.nombre }})</small></h2>
+{% if filas %}
+<table>
+  <thead><tr><th>Servicio</th><th>Alcance</th><th>Operador</th><th>Gestión</th><th>Año</th><th>Vigencia confirmada</th><th>Nivel</th><th>Evidencias</th></tr></thead>
+  <tbody>
+  {% for f in filas %}
+    <tr>
+      <td>{{ f.p.get_servicio_display }}</td>
+      <td>{{ f.p.get_alcance_display|default:"Sin especificar" }}</td>
+      <td>{{ f.p.nombre_operador }}{% if not f.p.empresa_id and f.p.gestion == "indirecta" %} <small>(sin catalogar)</small>{% endif %}{% if f.borrador %} <span class="etiqueta">Borrador</span>{% endif %}</td>
+      <td>{{ f.p.get_gestion_display }}</td>
+      <td>{{ f.p.anio_referencia|default:"—" }}</td>
+      <td>{{ f.p.get_vigencia_confirmada_display }}</td>
+      <td>{{ f.p.get_nivel_display }}</td>
+      <td>{% for e in f.evidencias %}<div>{% if user.is_staff %}<a href="{% url 'admin:evidencias_evidencia_change' e.pk %}">{{ e.codigo }}</a>{% else %}{{ e.codigo }}{% endif %} · {{ e.get_nivel_display }} · {{ e.get_estado_validacion_display }}{% if e.url_origen %} · <a href="{{ e.url_origen }}" rel="noopener noreferrer" target="_blank">fuente</a>{% endif %}<br><small>{{ e.fuente.nombre }}{% if e.fecha_consulta %}, consultada el {{ e.fecha_consulta|date:"d/m/Y" }}{% endif %}</small></div>{% endfor %}</td>
+    </tr>
+  {% endfor %}
+  </tbody>
+</table>
+{% else %}
+<p>No localizado: no hay ninguna evidencia registrada de agua, residuos ni energía para este municipio. Eso no significa que no tenga servicio.</p>
+{% endif %}
+<p><small>Expedientes de contratación y menciones en medios: se añadirán con las fases 3 y 4.</small></p>

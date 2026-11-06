@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block titulo %}Revisión{% endblock %}
+{% block contenido %}
+<h1>Bandeja de revisión</h1>
+<p>{% for t, l, n in tipos %}<a href="?tipo={{ t }}">{{ l }}: {{ n }}</a>{% if not forloop.last %} · {% endif %}{% endfor %}</p>
+<form method="get" class="filtros">
+  <div><label for="tipo">Tipo</label><select id="tipo" name="tipo"><option value="">Todos</option>{% for t, l, n in tipos %}<option value="{{ t }}" {% if t == tipo %}selected{% endif %}>{{ l }}</option>{% endfor %}</select></div>
+  <div><label for="estado">Estado</label><select id="estado" name="estado"><option value="">Todos</option>{% for v, l in estados %}<option value="{{ v }}" {% if v == estado %}selected{% endif %}>{{ l }}</option>{% endfor %}</select></div>
+  <div><label for="q">Texto</label><input id="q" name="q" value="{{ q }}"></div>
+  <div><button type="submit">Filtrar</button></div>
+</form>
+<table>
+  <thead><tr><th>Tipo</th><th>Dato original</th><th>Motivo</th><th>Estado</th><th></th></tr></thead>
+  <tbody>
+  {% for e in pagina %}
+    <tr><td>{{ e.get_tipo_display }}</td><td>{{ e.texto }}</td><td><small>{{ e.motivo }}</small></td><td>{{ e.get_estado_display }}</td><td><a href="{% url 'revision_elemento' e.pk %}">{% if e.estado == "pendiente" %}Revisar{% else %}Ver{% endif %}</a></td></tr>
+  {% empty %}<tr><td colspan="5">Nada pendiente con este filtro.</td></tr>{% endfor %}
+  </tbody>
+</table>
+{% if pagina.has_other_pages %}<p>{% if pagina.has_previous %}<a href="?tipo={{ tipo }}&estado={{ estado }}&q={{ q }}&pagina={{ pagina.previous_page_number }}">← Anteriores</a>{% endif %} Página {{ pagina.number }} de {{ pagina.paginator.num_pages }} {% if pagina.has_next %}<a href="?tipo={{ tipo }}&estado={{ estado }}&q={{ q }}&pagina={{ pagina.next_page_number }}">Siguientes →</a>{% endif %}</p>{% endif %}
+{% endblock %}

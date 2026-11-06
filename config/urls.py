@@ -2,6 +2,8 @@ from django.contrib import admin
 from django.contrib.auth import views as auth_views
 from django.urls import path
 
+from apps.cuadro import views as cuadro_views
+from apps.evidencias import views_importacion, views_revision
 from apps.nucleo import views as nucleo_views
 from apps.territorio import views as territorio_views
 
@@ -23,5 +25,35 @@ urlpatterns = [
         name="invitacion_completada",
     ),
     path("municipios/", territorio_views.municipios, name="municipios"),
+    path("municipios/<str:codigo>/", cuadro_views.municipio_panel, name="municipio"),
+    path("mapa/", cuadro_views.mapa, name="mapa"),
+    path(
+        "mapa/exportar.<str:formato>",
+        cuadro_views.exportar_tabla,
+        name="exportar_tabla",
+    ),
+    path("importar/", views_importacion.importar, name="importar"),
+    path("importar/tabla-municipal/", views_importacion.tabla_subir, name="importar_tabla"),
+    path(
+        "importar/tabla-municipal/hoja/", views_importacion.tabla_hoja, name="importar_tabla_hoja"
+    ),
+    path(
+        "importar/tabla-municipal/columnas/",
+        views_importacion.tabla_columnas,
+        name="importar_tabla_columnas",
+    ),
+    path(
+        "importar/tabla-municipal/valores/",
+        views_importacion.tabla_valores,
+        name="importar_tabla_valores",
+    ),
+    path(
+        "importar/tabla-municipal/confirmar/",
+        views_importacion.tabla_confirmar,
+        name="importar_tabla_confirmar",
+    ),
+    path("importar/lotes/<int:pk>/", views_importacion.lote, name="lote_importacion"),
+    path("revision/", views_revision.bandeja, name="revision"),
+    path("revision/<int:pk>/", views_revision.elemento, name="revision_elemento"),
     path("admin/", admin.site.urls),
 ]
