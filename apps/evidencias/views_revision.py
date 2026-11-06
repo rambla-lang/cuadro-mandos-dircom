@@ -10,6 +10,8 @@ from django.views.decorators.http import require_http_methods
 
 from apps.contratacion import services_revision as srv_contratacion
 from apps.contratacion.forms import AdjudicatarioForm, ClasificarForm, VincularOrganoForm
+from apps.ia import tareas as ia_tareas
+from apps.ia.forms import RevisarPropuestaForm
 from apps.medios import services_revision as srv_medios
 from apps.medios.forms import ConfirmarAtribucionForm, VinculoForm
 from apps.nucleo.models import ElementoRevision
@@ -32,6 +34,7 @@ FORMULARIOS = {
     Tipo.ADJUDICATARIO_NO_RESUELTO: AdjudicatarioForm,
     Tipo.ATRIBUCION_MENCION: ConfirmarAtribucionForm,
     Tipo.VINCULO_TERRITORIAL: VinculoForm,
+    Tipo.PROPUESTA_IA: RevisarPropuestaForm,
 }
 
 
@@ -69,6 +72,8 @@ def bandeja(request):
 
 def _formulario(elemento, datos=None):
     clase = FORMULARIOS[elemento.tipo]
+    if elemento.tipo == Tipo.PROPUESTA_IA:
+        return clase(datos, propuesta=elemento.objeto)
     inicial = {}
     if elemento.tipo == Tipo.NIVEL_POR_DECIDIR and elemento.objeto:
         inicial = {"url_origen": elemento.objeto.url_origen}
@@ -110,6 +115,7 @@ def elemento(request, pk):
             "iguales": len(iguales),
             "sugerencias": sugerencias,
             "fila": (el.datos or {}).get("fila"),
+            "propuesta_json": _json_legible(el),
         },
     )
 
@@ -152,6 +158,11 @@ def _resolver(el, iguales, datos, usuario) -> int:
             srv_medios.confirmar_atribucion(e, usuario, datos["comentario"])
         elif el.tipo == Tipo.VINCULO_TERRITORIAL:
             srv_medios.fijar_vinculo(e.objeto, datos["vinculo"], usuario, datos["comentario"], e)
+        elif el.tipo == Tipo.PROPUESTA_IA:
+            todas = set(datos.get("empresas_todas") or [])
+            elegidas = [int(x) for x in datos.get("empresas") or []]
+            ia_tareas.aplicar(e.objeto, usuario, None if set(elegidas) == todas else elegidas)
+            srv._cerrar(e, usuario, Estado.ACEPTADO, {"empresas": elegidas}, datos["comentario"])
     if el.tipo == Tipo.ADJUDICATARIO_NO_RESUELTO and (
         datos.get("guardar_alias") or datos.get("guardar_nif")
     ):
@@ -169,3 +180,11 @@ def _siguiente(el):
     if siguiente:
         return reverse("revision_elemento", args=[siguiente.pk])
     return reverse("revision")
+
+
+def _json_legible(el) -> str:
+    if el.tipo != Tipo.PROPUESTA_IA or el.objeto is None:
+        return ""
+    import json
+
+    return json.dumps(el.objeto.propuesta, ensure_ascii=False, indent=2)

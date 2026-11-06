@@ -37,6 +37,10 @@
 <p><strong>Mención:</strong> <a href="{% url 'mencion' objeto.pk %}">{{ objeto.titulo|default:objeto.url }}</a> · {{ objeto.medio|default:"" }} · {{ objeto.fecha_publicacion|date:"d/m/Y" }}</p>
 <blockquote>{{ objeto.extracto }}</blockquote>
 {% if objeto.url %}<p><a href="{{ objeto.url }}" target="_blank" rel="noopener noreferrer">Abrir la pieza</a></p>{% endif %}
+{% elif objeto and el.tipo == "propuesta_ia" %}
+<p><strong>Tarea:</strong> {{ objeto.llamada.tarea }} · modelo {{ objeto.llamada.modelo }} · prompt {{ objeto.llamada.version_prompt }} · <span class="etiqueta">Borrador IA</span></p>
+<p><strong>Sobre:</strong> {{ objeto.objetivo }}</p>
+<pre style="white-space:pre-wrap">{{ propuesta_json }}</pre>
 {% endif %}
 
 {% if el.estado == "pendiente" %}

@@ -135,3 +135,11 @@ ANTHROPIC_API_KEY = env("ANTHROPIC_API_KEY", default="")
 IA_MODELO_CLASIFICAR = env("IA_MODELO_CLASIFICAR", default="")
 IA_MODELO_EXTRAER = env("IA_MODELO_EXTRAER", default="")
 IA_MODELO_REDACTAR = env("IA_MODELO_REDACTAR", default="")
+IA_ACTIVADA = env.bool("IA_ACTIVADA", default=True)
+IA_LIMITE_MENSUAL_EUR = env.float("IA_LIMITE_MENSUAL_EUR", default=0.0)  # 0 = sin llamadas
+# Precios por millón de tokens, introducidos a mano desde la página oficial (docs/06):
+# {"<modelo>": {"entrada": 0.0, "salida": 0.0}}
+IA_PRECIOS_JSON = env.json("IA_PRECIOS_JSON", default={})
+# Reintento automático en otro modelo si el elegido rechaza la petición (parámetro
+# «fallbacks» de la API, beta). No aplica a la familia Haiku.
+IA_FALLBACKS = env.bool("IA_FALLBACKS", default=True)

@@ -48,6 +48,7 @@
         <a href="{% url 'visibilidad' %}">Medios</a>
         <a href="{% url 'municipios' %}">Municipios</a>
         {% if es_analista %}<a href="{% url 'importar' %}">Importar</a>
+        <a href="{% url 'ia_panel' %}">IA</a>
         <a href="{% url 'revision' %}">Revisión{% if pendientes_revision %} ({{ pendientes_revision }}){% endif %}</a>{% endif %}
         {% if es_administrador %}<a href="{% url 'usuarios' %}">Usuarios</a>{% endif %}
         {% if user.is_staff %}<a href="{% url 'admin:index' %}">Administración</a>{% endif %}

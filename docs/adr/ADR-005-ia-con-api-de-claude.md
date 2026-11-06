@@ -21,7 +21,7 @@ Varias tareas necesitan lenguaje natural: atribuir menciones a competidores, lee
 - Coste orientativo de un PDF: entre 1.500 y 3.000 tokens de texto por página, a tarifa estándar (misma página).
 - La Files API recomienda convertir a PDF los .docx con imágenes (https://platform.claude.com/docs/en/docs/build-with-claude/files).
 - Las salidas estructuradas están disponibles de forma general en la API: https://platform.claude.com/docs/es/build-with-claude/structured-outputs
-- **Por verificar antes de implementar:** límites de tamaño y de páginas por petición en la página oficial de PDF (una fuente secundaria habla de 32 MB y 100 páginas, pero no lo usamos sin confirmarlo); lista exacta de modelos con salidas estructuradas; precios vigentes.
+- **Verificado el 06/11/2026** (referencia oficial de la API usada por Claude Code): PDF de hasta 32 MB y 600 páginas por petición (100 en modelos de 200.000 tokens); identificadores y precios de los modelos vigentes en docs/06; las citas no se pueden combinar con la salida estructurada. Queda **por verificar** la lista exacta de modelos con salida estructurada (se comprobará con la primera llamada real).
 
 ## Opciones consideradas
 | Opción | Valoración |

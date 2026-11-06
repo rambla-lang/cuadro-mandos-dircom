@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% block titulo %}IA{% endblock %}
+{% block contenido %}
+<h1>IA: uso y lotes</h1>
+<p><small>La IA solo propone: cada resultado va a la <a href="{% url 'revision' %}?tipo=propuesta_ia">bandeja</a> ({{ pendientes }} pendientes) y no se aplica hasta que alguien lo acepta. El coste es una estimación con tokens × precio configurado.</small></p>
+<table><thead><tr><th>Uso</th><th>Modelo</th><th>Estado</th></tr></thead><tbody>
+{% for tipo, d in disponibilidad.items %}<tr><td>{{ tipo }}</td><td><code>{% for t, m in modelos.items %}{% if t == tipo %}{{ m }}{% endif %}{% endfor %}</code></td><td>{% if d.0 %}Disponible{% else %}<span class="etiqueta">No disponible</span> {{ d.1 }}{% endif %}</td></tr>{% endfor %}
+</tbody></table>
+<section class="tarjetas">
+  <div class="tarjeta"><span class="cifra">{{ gasto }} €</span> gasto estimado este mes, de un límite de {{ limite }} €</div>
+  <div class="tarjeta"><strong>Lanzar un lote</strong> (como máximo {{ max_lote }} por vez)
+    <form method="post" action="{% url 'ia_lanzar' %}">{% csrf_token %}
+      <p><label><input type="radio" name="tarea" value="T1" required> T1 · Atribuir menciones sin atribución validada ({{ candidatos.T1 }})</label></p>
+      <p><label><input type="radio" name="tarea" value="T2"> T2 · Leer recortes sin capa de texto ({{ candidatos.T2 }})</label></p>
+      <p><label><input type="radio" name="tarea" value="T3"> T3 · Clasificar expedientes dudosos ({{ candidatos.T3 }})</label></p>
+      <button type="submit">Lanzar</button></form></div>
+</section>
+<h2>Este mes por tarea</h2>
+<table><thead><tr><th>Tarea</th><th>Modelo</th><th>Llamadas</th><th>Tokens de entrada</th><th>Tokens de salida</th><th>Coste estimado</th></tr></thead><tbody>
+{% for t in por_tarea %}<tr><td>{{ t.tarea }}</td><td>{{ t.modelo|default:"—" }}</td><td>{{ t.n }}</td><td>{{ t.entrada }}</td><td>{{ t.salida }}</td><td>{{ t.coste }} €</td></tr>{% empty %}<tr><td colspan="6">Sin llamadas este mes.</td></tr>{% endfor %}
+</tbody></table>
+<h2>Últimas llamadas</h2>
+<table><thead><tr><th>Fecha</th><th>Tarea</th><th>Modelo</th><th>Prompt</th><th>Estado</th><th>Tokens</th><th>Coste</th><th>Usuario</th></tr></thead><tbody>
+{% for l in llamadas %}<tr><td>{{ l.creado|date:"d/m/Y H:i" }}</td><td>{{ l.tarea }}</td><td>{{ l.modelo|default:"—" }}</td><td><small>{{ l.version_prompt }}</small></td><td>{{ l.get_estado_display }}{% if l.error %}<br><small>{{ l.error|truncatechars:120 }}</small>{% endif %}</td><td>{{ l.tokens_entrada }} / {{ l.tokens_salida }}</td><td>{{ l.coste_estimado }}</td><td>{{ l.usuario.email|default:"—" }}</td></tr>{% empty %}<tr><td colspan="8">Sin llamadas.</td></tr>{% endfor %}
+</tbody></table>
+{% endblock %}

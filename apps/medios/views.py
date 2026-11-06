@@ -10,6 +10,7 @@ from django.views.decorators.http import require_http_methods
 
 from apps.documentos.models import Documento
 from apps.evidencias.enums import EstadoValidacion, VinculoTerritorial
+from apps.ia.cliente import estado as ia_estado
 from apps.nucleo.roles import Rol, rol_requerido, tiene_rol
 
 from . import metricas
@@ -176,5 +177,11 @@ def importar_recortes(request):
     return render(
         request,
         "medios/importar_recortes.html",
-        {"form": form, "resultados": resultados, "documentos": documentos},
+        {
+            "form": form,
+            "resultados": resultados,
+            "documentos": documentos,
+            "ia_disponible": ia_estado("extraer")[0],
+            "ia_motivo": ia_estado("extraer")[1],
+        },
     )

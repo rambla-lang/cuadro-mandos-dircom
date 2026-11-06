@@ -167,6 +167,7 @@ class ElementoRevision(ModeloConFechas):
         ADJUDICATARIO_NO_RESUELTO = "adjudicatario_no_resuelto", "Adjudicatario no resuelto"
         ATRIBUCION_MENCION = "atribucion_mencion", "Atribución de mención dudosa"
         VINCULO_TERRITORIAL = "vinculo_territorial", "Vínculo territorial dudoso"
+        PROPUESTA_IA = "propuesta_ia", "Propuesta de la IA"
 
     class Estado(models.TextChoices):
         PENDIENTE = "pendiente", "Pendiente"

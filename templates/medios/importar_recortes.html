@@ -2,7 +2,7 @@
 {% block titulo %}Importar recortes{% endblock %}
 {% block contenido %}
 <h1>Subir recortes de prensa (PDF)</h1>
-<p>Medio, edición, fecha y página se leen del nombre del archivo cuando sigue el patrón <code>MEDIO-EDICION-DD_MM_AAAA-PAGINA.pdf</code>. Los PDF sin capa de texto quedan pendientes de lectura por IA.</p>
+<p>Medio, edición, fecha y página se leen del nombre del archivo cuando sigue el patrón <code>MEDIO-EDICION-DD_MM_AAAA-PAGINA.pdf</code>. Los PDF sin capa de texto quedan pendientes de lectura por IA{% if not ia_disponible %}. <span class="etiqueta">La IA no está disponible ({{ ia_motivo }}): quedarán pendientes hasta que se active.</span>{% else %}; se lanzan desde el <a href="{% url 'ia_panel' %}">panel de IA</a>.{% endif %}</p>
 <form method="post" enctype="multipart/form-data">{% csrf_token %}{{ form.as_p }}<button type="submit">Subir</button></form>
 {% if resultados %}<h2>Resultado</h2><ul>{% for r in resultados %}<li>{{ r.documento.nombre_archivo }}: {% if r.nuevo %}nuevo{% else %}ya estaba subido{% endif %}{% if r.pendiente_ia %} · <span class="etiqueta">sin capa de texto, pendiente de lectura por IA</span>{% endif %}</li>{% endfor %}</ul>{% endif %}
 <h2>Últimos recortes</h2>

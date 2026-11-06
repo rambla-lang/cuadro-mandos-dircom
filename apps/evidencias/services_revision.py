@@ -213,6 +213,10 @@ def rechazar(elemento: ElementoRevision, usuario, comentario: str = "") -> None:
         registrar_auditoria(
             usuario, "evidencia.rechazar", evidencia, antes=antes, despues=instantanea(evidencia)
         )
+    if elemento.tipo == Tipo.PROPUESTA_IA and elemento.objeto is not None:
+        from apps.ia.tareas import rechazar as rechazar_propuesta
+
+        rechazar_propuesta(elemento.objeto, usuario, comentario)
     if elemento.tipo == Tipo.ATRIBUCION_MENCION:
         from apps.medios.services_revision import rechazar_atribucion
 
