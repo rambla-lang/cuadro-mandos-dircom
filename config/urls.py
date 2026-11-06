@@ -4,6 +4,9 @@ from django.urls import path
 
 from apps.contratacion import views as contratacion_views
 from apps.cuadro import views as cuadro_views
+from apps.digital import views as digital_views
+from apps.documentos import views as documentos_views
+from apps.evidencias import views as evidencias_views
 from apps.evidencias import views_importacion, views_revision
 from apps.ia import views as ia_views
 from apps.medios import views as medios_views
@@ -77,6 +80,16 @@ urlpatterns = [
     path("importar/recortes/", medios_views.importar_recortes, name="importar_recortes"),
     path("ia/", ia_views.panel, name="ia_panel"),
     path("ia/lanzar/", ia_views.lanzar, name="ia_lanzar"),
+    path("competidores/", cuadro_views.competidores, name="competidores"),
+    path("competidores/<int:pk>/", cuadro_views.ficha_competidor, name="ficha"),
+    path("evidencias/", evidencias_views.lista, name="evidencias"),
+    path("evidencias/nueva/", evidencias_views.editar, name="evidencia_nueva"),
+    path("evidencias/<int:pk>/", evidencias_views.detalle, name="evidencia"),
+    path("evidencias/<int:pk>/editar/", evidencias_views.editar, name="evidencia_editar"),
+    path("evidencias/<int:pk>/validar/", evidencias_views.validar, name="evidencia_validar"),
+    path("digital/", digital_views.panel, name="digital"),
+    path("digital/nuevo/", digital_views.nuevo, name="digital_nuevo"),
+    path("importar/word/", documentos_views.importar_word, name="importar_word"),
     path("revision/", views_revision.bandeja, name="revision"),
     path("revision/<int:pk>/", views_revision.elemento, name="revision_elemento"),
     path("admin/", admin.site.urls),

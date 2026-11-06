@@ -103,13 +103,13 @@ Campos mínimos. Todos los modelos tienen además `creado`, `modificado` y, si p
 - **Hito**: acto o noticia de fondo que agrupa varias piezas ("dos medios sobre el mismo acto son dos piezas y un hito").
 
 ### documentos
-- **Documento**: `tipo` (recorte, valoracion_interna, informe_sostenibilidad, otro), `nombre_archivo`, `sha256` (único), `ruta_almacen` (vacía en modo sin originales), `paginas`, `texto_extraido`, `texto_obtenido_por_ia`, `metadatos` (medio, fecha y página deducidos del nombre del archivo), `subido_por`.
+- **Documento**: `tipo` (recorte, valoracion_interna, informe_sostenibilidad, otro), `nombre_archivo`, `sha256` (único), `ruta_almacen` (vacía en modo sin originales), `paginas`, `texto_extraido`, `texto_obtenido_por_ia`, `lectura` (texto, pendiente de IA, IA, error), `metadatos` (medio, fecha y página deducidos del nombre del archivo), `empresa_propuesta`, `subido_por`. Tipos añadidos en la Fase 6: lista de publicaciones y documento maestro.
 - **Fragmento**: `documento`, `empresa`, `pagina_inicio`, `pagina_fin`, `texto`.
 - **PercepcionInterna**: `empresa`, `texto`, `documento_origen`, `contraste` (texto que la relaciona con evidencias), `evidencias_relacionadas`.
 
 ### digital
-- **PerfilDigital**: `empresa`, `red` (instagram, linkedin, x, facebook, youtube, tiktok, web), `url`, `cuenta_verificada` (sí, no o desconocido).
-- **ObservacionDigital**: `perfil`, `fecha_observacion`, `seguidores` (entero o nulo si no es visible), `publicaciones_observadas`, `periodo_observado`, `historico_suficiente` (bool), `notas`. Nunca se guarda 0 cuando el dato no es visible.
+- **PerfilDigital**: `empresa`, `red` (instagram, linkedin, x, facebook, youtube, tiktok, web), `url` (única), `cuenta_verificada` (sí, no o desconocido).
+- **ObservacionDigital**: `perfil`, `fecha_observacion`, `seguidores` (entero o nulo si no es visible), `publicaciones_observadas`, `periodo_observado`, `historico_suficiente` (bool), `notas`. Nunca se guarda 0 cuando el dato no es visible. Única por (`perfil`, `fecha_observacion`).
 - **AuditoriaWeb**: `empresa`, `url`, `fecha`, `tono`, `contenidos_destacados`, `usabilidad` (texto libre con cita de lo observado).
 
 ### ia, sistema e informes

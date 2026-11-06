@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% block titulo %}{{ e.codigo }}{% endblock %}
+{% block contenido %}
+<p><a href="{% url 'evidencias' %}">← Evidencias</a></p>
+<h1>{{ e.codigo }} · {{ e.titulo }}</h1>
+{% if e.estado_validacion != "validada" %}<p class="aviso">{{ e.get_estado_validacion_display }}{% if e.origen == "ia" %} · Borrador IA{% endif %}: no cuenta como dato confirmado hasta que se valide.</p>{% endif %}
+<table><tbody>
+  <tr><th>Categoría</th><td>{{ e.get_categoria_display }}</td></tr>
+  <tr><th>Empresas</th><td>{% for x in e.empresas.all %}<a href="{% url 'ficha' x.pk %}">{{ x }}</a>{% if not forloop.last %}, {% endif %}{% empty %}—{% endfor %}</td></tr>
+  <tr><th>Municipios</th><td>{{ e.municipios.all|join:", "|default:"—" }}</td></tr>
+  <tr><th>Servicio</th><td>{{ e.get_servicio_display|default:"—" }} {{ e.get_alcance_display }}</td></tr>
+  <tr><th>Nivel</th><td>{{ e.get_nivel_display }}</td></tr>
+  <tr><th>Fuente</th><td>{{ e.fuente }} ({{ e.fuente.get_tipo_display }}){% if e.url_origen %} · <a href="{{ e.url_origen }}" target="_blank" rel="noopener noreferrer">abrir el origen</a>{% if e.datos_extra.url_derivada_de %} <small>(formada a partir de «{{ e.datos_extra.url_derivada_de }}»)</small>{% endif %}{% endif %}</td></tr>
+  <tr><th>Fechas</th><td>Publicación {{ e.fecha_publicacion|date:"d/m/Y"|default:"no consta" }}{% if e.fecha_evento %} · evento {{ e.fecha_evento|date:"d/m/Y" }}{% endif %}{% if e.fecha_consulta %} · consultada {{ e.fecha_consulta|date:"d/m/Y" }}{% endif %}{% if e.datos_extra.fecha_texto %} · <small>«{{ e.datos_extra.fecha_texto }}»</small>{% endif %}</td></tr>
+  <tr><th>Origen</th><td>{{ e.get_origen_display }}{% if e.lote_importacion %} · lote {{ e.lote_importacion_id }}{% endif %}{% if e.creado_por %} · creada por {{ e.creado_por.email }}{% endif %}</td></tr>
+  <tr><th>Validación</th><td>{{ e.get_estado_validacion_display }}{% if e.validado_por %} · {{ e.validado_por.email }} el {{ e.validado_en|date:"d/m/Y H:i" }}{% endif %}</td></tr>
+  {% if e.tratamiento_limites %}<tr><th>Tratamiento y límites</th><td>{{ e.tratamiento_limites }}</td></tr>{% endif %}
+</tbody></table>
+{% if e.extracto %}<blockquote>{{ e.extracto|linebreaksbr }}</blockquote>{% endif %}
+{% if prestaciones %}<p>Apoya a: {% for p in prestaciones %}{{ p }}{% if not forloop.last %}; {% endif %}{% endfor %}</p>{% endif %}
+<p>{% if puede_editar %}<a href="{% url 'evidencia_editar' e.pk %}">Editar</a>{% endif %}
+{% if puede_validar and e.estado_validacion != "validada" %}<form method="post" action="{% url 'evidencia_validar' e.pk %}" style="display:inline">{% csrf_token %}<button type="submit" style="margin:0">Validar</button></form>{% endif %}
+{% if puede_validar and e.estado_validacion != "rechazada" %}<form method="post" action="{% url 'evidencia_validar' e.pk %}" style="display:inline">{% csrf_token %}<input type="hidden" name="accion" value="rechazar"><button type="submit" style="margin:0">Rechazar</button></form>{% endif %}</p>
+<h2>Historial</h2>
+<ul>{% for h in historial %}<li>{{ h.fecha|date:"d/m/Y H:i" }} · {{ h.usuario_email|default:"sistema" }} · {{ h.accion }}</li>{% empty %}<li>Sin cambios registrados.</li>{% endfor %}</ul>
+{% endblock %}

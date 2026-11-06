@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% block titulo %}Digital{% endblock %}
+{% block contenido %}
+<h1>Presencia digital</h1>
+<p><small>Solo datos públicos básicos introducidos a mano; no hay rastreo automático de redes (P-05). Un dato no visible se guarda como «no visible», nunca como cero.</small></p>
+{% if es_analista %}<p><a href="{% url 'digital_nuevo' %}?tipo=perfil">Nuevo perfil</a> · <a href="{% url 'digital_nuevo' %}?tipo=observacion">Nueva observación</a> · <a href="{% url 'digital_nuevo' %}?tipo=csv">Importar CSV</a> · <a href="{% url 'digital_nuevo' %}?tipo=auditoria">Nueva auditoría web</a></p>{% endif %}
+<h2>Perfiles</h2>
+<table><thead><tr><th>Empresa</th><th>Red</th><th>Perfil</th><th>Última observación</th><th>Seguidores</th><th>Histórico suficiente</th></tr></thead><tbody>
+{% for p in perfiles %}{% with u=p.observaciones.all.0 %}<tr><td><a href="{% url 'ficha' p.empresa_id %}">{{ p.empresa }}</a></td><td>{{ p.get_red_display }}</td><td><a href="{{ p.url }}" target="_blank" rel="noopener noreferrer">{{ p.url|truncatechars:50 }}</a></td><td>{{ u.fecha_observacion|date:"d/m/Y"|default:"—" }}</td><td>{% if u %}{% if u.seguidores is None %}no visible{% else %}{{ u.seguidores }}{% endif %}{% else %}—{% endif %}</td><td>{% if u %}{{ u.historico_suficiente|yesno:"Sí,No" }}{% else %}—{% endif %}</td></tr>{% endwith %}{% empty %}<tr><td colspan="6">Sin perfiles.</td></tr>{% endfor %}
+</tbody></table>
+<h2>Auditorías web</h2>
+<ul>{% for a in auditorias %}<li>{{ a.fecha|date:"d/m/Y" }} · <a href="{% url 'ficha' a.empresa_id %}">{{ a.empresa }}</a> · {{ a.url }}</li>{% empty %}<li>Sin auditorías.</li>{% endfor %}</ul>
+{% endblock %}

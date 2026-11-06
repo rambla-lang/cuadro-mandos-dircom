@@ -207,6 +207,12 @@ Estimación, no medición de la base de datos: el tamaño real se medirá con `p
 - Extraer con `python-docx`. Separar por empresa usando el estilo de título o, si no lo hay, las líneas que coinciden con un alias de empresa en mayúsculas.
 - Las percepciones internas van a `PercepcionInterna`, nunca a `Evidencia`.
 
+**Implementado en la Fase 6 (06/11/2026)** (`apps/documentos/word.py`, Importar → Documentos Word; clave natural SHA-256 del archivo):
+- **Percepciones:** una `PercepcionInterna` por empresa con el texto bajo cada cabecera en mayúsculas que nombra a una empresa del catálogo. Una cabecera que no es del catálogo («SIMETRIA») cierra el bloque anterior y su texto no se atribuye. En una cabecera también valen los alias que requieren contexto (es una lista de competidores). Sin cabeceras, se puede dividir con la IA (T4) cuando esté activa.
+- **Lista de publicaciones:** cada URL bajo una cabecera de empresa es una mención manual con atribución validada (la de quien hizo la lista); si la URL ya existe (por ejemplo, de Brandwatch), solo se añade la atribución. Sin título, el vínculo territorial queda «dudoso».
+- **Anexo del documento maestro:** las tablas con la cabecera `ID | Marca | Fecha / control temporal | Fuente | Tema y enlace | Tratamiento / límites` se importan una vez como evidencias en **borrador** (clave `maestro:<ID>`). El enlace sale del hipervínculo de la celda «Tema y enlace». Fecha solo si es `DD/MM/AAAA`; si no, el texto se guarda aparte. Nivel **propuesto** para revisar al validar: P → prensa; D → oficial si la fuente es una administración y hay enlace; empresa si la fuente es la propia empresa; parcial en otro caso. Categoría: P → mención en medios, S → digital, D → otra (eventos y premios se reclasifican a mano).
+- **Resultado con las muestras en local (06/11/2026):** 5 percepciones (FACSA, Aqualia, Hozono Global, Global Omnium y Cox; Simetria no está en el catálogo); 24 URL de publicaciones (14 menciones nuevas, 8 ya existentes de Brandwatch, 2 bajo cabeceras fuera del catálogo: IDRICA, AMJASA, Aguas de Calp); 98 evidencias del anexo (57 prensa, 24 empresa, 5 oficial, 12 parcial), todas con su empresa.
+
 ## 7. Informes de sostenibilidad y EINF (después del MVP)
 
 **Muestras:** 6 PDF de entre 0,8 y 33 MB y de 23 a 468 páginas. Al menos uno no tiene capa de texto en su primera página (Global Omnium).
@@ -217,6 +223,8 @@ Estimación, no medición de la base de datos: el tamaño real se medirá con `p
 **Decisión de José Luis:** solo datos públicos básicos.
 **Implementación MVP:** formulario y plantilla CSV (`perfil_url, red, fecha_observacion, seguidores, publicaciones_observadas, periodo_observado, historico_suficiente, notas`). No hay rastreo automático de redes (pregunta P-05: términos de uso de cada red).
 **Web corporativa:** formulario de auditoría (tono, contenidos y usabilidad) con la fecha de observación. Una descarga automática de páginas propias de competidores podría añadirse respetando `robots.txt`; se decidirá en P-05.
+
+**Implementado en la Fase 6:** pantalla Digital con formularios de perfil, observación y auditoría web, e importación CSV con las columnas de arriba y una opcional `empresa` para dar de alta el perfil. «no visible», vacío o «—» se guardan como nulo, nunca como 0 (CP-12). Clave: perfil y fecha de observación.
 
 ## 9. Excel y CSV del usuario (tablas municipales)
 

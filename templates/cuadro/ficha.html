@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+{% block titulo %}{{ empresa.nombre }}{% endblock %}
+{% block contenido %}
+<p><a href="{% url 'competidores' %}">← Competidores</a></p>
+<h1>{{ empresa.nombre }}{% if empresa.grupo %} <small>(grupo {{ empresa.grupo }})</small>{% endif %}</h1>
+{% if empresa.es_propia %}<p class="aviso">Empresa propia: referencia, fuera del benchmarking.</p>{% endif %}
+{% for a in empresa.acotaciones.all %}<p class="aviso">Acotación: {{ a.nota }}{% if a.ambito_geografico %} ({{ a.ambito_geografico }}){% endif %}</p>{% endfor %}
+<p><a href="#bloque1">Bloque 1</a> · <a href="#bloque2">Bloque 2</a> · <a href="#bloque3">Bloque 3</a> · <a href="#contratacion">Contratación</a> · <a href="{% url 'evidencias' %}?empresa={{ empresa.pk }}">Todas sus evidencias ({{ otras_evidencias }})</a></p>
+
+<h2 id="bloque1">Bloque 1</h2>
+<h3>1. Percepción interna y contraste</h3>
+{% for p in percepciones %}
+<div class="aviso"><strong>Valoración interna, no verificada.</strong><br>{{ p.texto|linebreaksbr }}
+{% if p.evidencias_relacionadas.all %}<br><small>Evidencias relacionadas: {% for e in p.evidencias_relacionadas.all %}<a href="{% url 'evidencia' e.pk %}">{{ e.codigo }}</a> {% endfor %}</small>{% endif %}{% if p.contraste %}<br><small>Contraste: {{ p.contraste }}</small>{% endif %}</div>
+{% empty %}<p><small>Sin valoraciones internas importadas.</small></p>{% endfor %}
+
+<h3>2. Municipios y servicios</h3>
+<p><small>{{ aviso_municipios }} El suministro eléctrico (comercializadora) se muestra aparte y no cuenta como servicio energético.</small></p>
+{% if municipios %}
+<p>{% for s, n in por_servicio.items %}<strong>{{ s }}</strong>: {{ n }} municipios{% if not forloop.last %} · {% endif %}{% endfor %}</p>
+<table><thead><tr><th>Servicio</th><th>Alcance</th><th>Municipios</th></tr></thead><tbody>
+{% for f in municipios %}<tr><td>{{ f.servicio }}{% if f.complementario %} <small>(dato complementario)</small>{% endif %}</td><td>{{ f.alcance }}</td><td><details><summary>{{ f.municipios|length }}</summary>{{ f.municipios|join:", " }}</details></td></tr>{% endfor %}
+</tbody></table>
+{% else %}<p><small>Sin prestaciones validadas: no localizado.</small></p>{% endif %}
+
+<h3>3. Medios con más presencia</h3>
+<p><small>Del {{ desde|date:"d/m/Y" }} al {{ hasta|date:"d/m/Y" }}; piezas de prensa con atribución validada ({{ total_piezas }}).</small></p>
+{% if medios %}<ol>{% for m, n in medios %}<li><a href="{% url 'piezas' %}?empresa={{ empresa.nombre|urlencode }}&medio={{ m|urlencode }}&desde={{ desde|date:'Y-m-d' }}&hasta={{ hasta|date:'Y-m-d' }}&vinculo=todas">{{ m }}</a>: {{ n }}</li>{% endfor %}</ol>{% else %}<p><small>Sin piezas en el periodo.</small></p>{% endif %}
+
+<h3>4. Eventos y premios</h3>
+{% include "cuadro/_evidencias.html" with lista=eventos %}
+
+<h2 id="bloque2">Bloque 2</h2>
+<h3>5. Grupos de interés</h3>
+{% include "cuadro/_evidencias.html" with lista=grupos_interes %}
+<h3>6. Innovación y financiación europea</h3>
+{% include "cuadro/_evidencias.html" with lista=innovacion %}
+<h3>7. Informes de sostenibilidad y EINF</h3>
+{% include "cuadro/_evidencias.html" with lista=sostenibilidad %}
+<p><small>La extracción automática de hitos de los informes (T5) es posterior al MVP.</small></p>
+
+<h2 id="bloque3">Bloque 3</h2>
+<h3>8. Redes sociales</h3>
+{% if redes %}
+<table><thead><tr><th>Red</th><th>Perfil</th><th>Última observación</th><th>Seguidores</th><th>Publicaciones observadas</th><th>Histórico suficiente</th></tr></thead><tbody>
+{% for r in redes %}<tr><td>{{ r.perfil.get_red_display }}</td><td><a href="{{ r.perfil.url }}" target="_blank" rel="noopener noreferrer">{{ r.perfil.url|truncatechars:40 }}</a></td>
+<td>{{ r.ultima.fecha_observacion|date:"d/m/Y"|default:"—" }}</td>
+<td>{% if r.ultima %}{% if r.ultima.seguidores is None %}no visible{% else %}{{ r.ultima.seguidores }}{% endif %}{% else %}—{% endif %}</td>
+<td>{% if r.ultima %}{% if r.ultima.publicaciones_observadas is None %}no visible{% else %}{{ r.ultima.publicaciones_observadas }}{% endif %}{% else %}—{% endif %}</td>
+<td>{% if r.ultima %}{{ r.ultima.historico_suficiente|yesno:"Sí,No" }}{% else %}—{% endif %}</td></tr>{% endfor %}
+</tbody></table>
+{% if not redes.0.ultima %}<p><small>{{ sin_redes }}</small></p>{% endif %}
+{% else %}<p>{{ sin_redes }}</p>{% endif %}
+<h3>9. Web corporativa</h3>
+{% if web %}<p>{{ web.fecha|date:"d/m/Y" }} · <a href="{{ web.url }}" target="_blank" rel="noopener noreferrer">{{ web.url }}</a></p><p><strong>Tono:</strong> {{ web.tono }}</p><p><strong>Contenidos destacados:</strong> {{ web.contenidos_destacados }}</p><p><strong>Usabilidad:</strong> {{ web.usabilidad }}</p>
+{% else %}<p><small>Sin auditoría web registrada.</small></p>{% endif %}
+
+<h2 id="contratacion">Contratación</h2>
+{% with c=contratacion %}
+<p><small>Adjudicaciones a {{ empresa.nombre }}{% if c.grupo %} o a otras empresas del grupo {{ c.grupo }}{% endif %} en los datos cargados de PLACSP y TED. TED solo publica contratos por encima de los umbrales europeos y PLACSP no incluye contratos menores.</small></p>
+{% if c.adjudicaciones %}
+<p>{{ c.adjudicaciones|length }} adjudicaciones{% if c.comparables %}, {{ c.suma }} € sin IVA en total{% else %}. <span class="etiqueta">No se suman importes</span> porque no todos son conocidos o comparables (sin IVA).{% endif %} {% for s, n in c.por_servicio.items %}· {{ s }}: {{ n }} {% endfor %}</p>
+<table><thead><tr><th>Fecha</th><th>Objeto</th><th>Municipio</th><th>Empresa</th><th>Importe sin IVA</th><th>Nivel</th></tr></thead><tbody>
+{% for a in c.adjudicaciones %}<tr><td>{{ a.fecha_adjudicacion|date:"d/m/Y"|default:"—" }}</td><td><a href="{% url 'expediente' a.expediente_id %}">{{ a.expediente.objeto|truncatechars:90 }}</a></td><td>{{ a.expediente.organo.municipio.nombre_oficial|default:"—" }}</td><td>{{ a.empresa }}</td><td>{{ a.importe_adjudicacion|default:"No consta" }}</td><td>{{ a.get_nivel_display }}</td></tr>{% endfor %}
+</tbody></table>
+{% else %}<p><small>Sin adjudicaciones resueltas a esta empresa en los datos cargados (los adjudicatarios se resuelven en la bandeja).</small></p>{% endif %}
+{% endwith %}
+{% endblock %}

@@ -138,3 +138,42 @@ def exportar_tabla(request, formato):
     )
     respuesta["Content-Disposition"] = f'attachment; filename="mapa_municipal_{sello}.xlsx"'
     return respuesta
+
+
+def competidores(request):
+    from django.db.models import Count, Q
+
+    from apps.evidencias.enums import EstadoValidacion
+
+    lista = (
+        Empresa.objects.filter(activa=True)
+        .annotate(
+            n_prestaciones=Count(
+                "prestaciones",
+                filter=Q(prestaciones__evidencias__estado_validacion=EstadoValidacion.VALIDADA),
+                distinct=True,
+            ),
+            n_menciones=Count(
+                "menciones",
+                filter=Q(menciones__estado_validacion=EstadoValidacion.VALIDADA),
+                distinct=True,
+            ),
+            n_adjudicaciones=Count("adjudicaciones", distinct=True),
+        )
+        .order_by("-es_competidor_seguido", "es_propia", "nombre")
+    )
+    return render(request, "cuadro/competidores.html", {"empresas": lista})
+
+
+def ficha_competidor(request, pk):
+    from datetime import date
+
+    from . import fichas
+
+    empresa = get_object_or_404(Empresa, pk=pk)
+    try:
+        desde = date.fromisoformat(request.GET["desde"]) if request.GET.get("desde") else None
+        hasta = date.fromisoformat(request.GET["hasta"]) if request.GET.get("hasta") else None
+    except ValueError:
+        desde = hasta = None
+    return render(request, "cuadro/ficha.html", fichas.ficha(empresa, desde, hasta))

@@ -51,6 +51,8 @@ Estructura acordada con José Luis, en tres bloques que coinciden con las diapos
 
 **Contratación (pestaña adicional):** expedientes con adjudicación a la empresa (o a su grupo) en el territorio, con importes. Las sumas de importes se muestran solo si todos los importes son comparables (con o sin IVA, todos conocidos); si no, se muestra el recuento y la advertencia.
 
+**Implementado en la Fase 6 (06/11/2026)**, pantalla Competidores → ficha: bloques 1 a 3 y contratación. Los municipios cuentan solo prestaciones con evidencia validada y el suministro eléctrico se muestra aparte, sin contar como servicio energético (CP-16). Los medios principales son los 5 con más piezas de prensa con atribución validada en los 12 meses móviles. Las listas de evidencias muestran también los borradores, marcados. Los importes de contratación se suman solo si todos son conocidos y sin IVA. Las evidencias se crean, editan y validan en Evidencias; editar una validada deja registro con los valores anteriores.
+
 ## 3. Visibilidad en medios (RF-52)
 
 **Unidad de recuento: la pieza.** Reglas del documento maestro, implementadas tal cual:

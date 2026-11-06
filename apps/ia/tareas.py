@@ -202,6 +202,14 @@ def aplicar(propuesta: PropuestaIA, usuario, empresas_aceptadas: list[int] | Non
         obj.save()
     elif tarea == "T2":
         _aplicar_t2(obj, datos, ids, usuario)
+    elif tarea == "T4":
+        from apps.documentos.models import PercepcionInterna
+
+        for f in datos["fragmentos"]:
+            if f["empresa_id"] and Empresa.objects.filter(pk=f["empresa_id"]).exists():
+                PercepcionInterna.objects.create(
+                    empresa_id=f["empresa_id"], texto=f["texto"], documento_origen=obj
+                )
     elif tarea == "T3":
         servicio = "" if datos["servicio"] == "ninguno" else datos["servicio"]
         alcance = (

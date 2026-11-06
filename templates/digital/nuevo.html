@@ -1,0 +1,8 @@
+{% extends "base.html" %}
+{% block titulo %}Digital{% endblock %}
+{% block contenido %}
+<p><a href="{% url 'digital' %}">← Digital</a></p>
+<h1>{% if tipo == "perfil" %}Nuevo perfil{% elif tipo == "auditoria" %}Nueva auditoría web{% elif tipo == "csv" %}Importar observaciones en CSV{% else %}Nueva observación{% endif %}</h1>
+{% if tipo == "csv" %}<p>Columnas: <code>{{ columnas }}</code>, y opcionalmente <code>empresa</code> para dar de alta un perfil nuevo. Escribe «no visible» cuando el dato no se vea.</p>{% endif %}
+<form method="post" enctype="multipart/form-data">{% csrf_token %}{{ form.as_p }}<button type="submit">Guardar</button></form>
+{% endblock %}
