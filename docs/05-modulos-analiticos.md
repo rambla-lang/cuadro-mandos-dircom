@@ -92,7 +92,7 @@ Estructura acordada con José Luis, en tres bloques que coinciden con las diapos
 6. Lectura transversal.
 7. Oportunidades.
 8. Límites y siguiente nivel de precisión.
-9. Anexo de evidencias (tabla `ID | Marca | Fecha | Fuente | Tema y enlace | Tratamiento / límites`).
+9. Anexo de evidencias (tabla `ID | Marca | Fecha | Fuente | Tema y enlace | Tratamiento / límites`). «Marca» es la empresa; en «Fuente» va el nivel y, si está validada, «Validado por DIRCOM» (docs/03).
 
 **Presentación (pptx)**: portada, mensaje principal, tres diapositivas por competidor (bloques 1, 2 y 3), recomendaciones, y un anexo de método y evidencias. Se siguen las reglas de la skill de informe ejecutivo del usuario: un mensaje por diapositiva en el título, cada cifra con fuente y fecha, y lo no verificado marcado como tal.
 

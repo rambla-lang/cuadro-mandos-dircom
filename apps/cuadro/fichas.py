@@ -24,7 +24,7 @@ def _evidencias(empresa, categorias):
     return (
         Evidencia.objects.filter(empresas=empresa, categoria__in=categorias)
         .exclude(estado_validacion=EstadoValidacion.RECHAZADA)
-        .select_related("fuente")
+        .select_related("fuente", "validado_por")
         .order_by("-fecha_publicacion", "-pk")
     )
 

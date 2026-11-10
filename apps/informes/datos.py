@@ -12,7 +12,7 @@ from django.urls import reverse
 from apps.cuadro import fichas
 from apps.entidades.models import Empresa
 from apps.evidencias.enums import EstadoValidacion
-from apps.evidencias.models import Evidencia
+from apps.evidencias.models import MARCA_VALIDACION, Evidencia
 from apps.medios import metricas as m_medios
 
 MAX_EVIDENCIAS_POR_EMPRESA = 40
@@ -52,6 +52,7 @@ def _evidencia(e: Evidencia) -> dict:
         "extracto": e.extracto[:600],
         "url": e.url_origen,
         "nivel": e.get_nivel_display(),
+        "validacion": MARCA_VALIDACION if e.validada_por_dircom else "",
         "categoria": e.get_categoria_display(),
         "limites": e.tratamiento_limites,
         "empresas": [x.nombre for x in e.empresas.all()],

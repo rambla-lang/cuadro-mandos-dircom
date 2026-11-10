@@ -12,7 +12,7 @@
       <td>{{ f.p.anio_referencia|default:"—" }}</td>
       <td>{{ f.p.get_vigencia_confirmada_display }}</td>
       <td>{{ f.p.get_nivel_display }}</td>
-      <td>{% for e in f.evidencias %}<div>{% if user.is_staff %}<a href="{% url 'admin:evidencias_evidencia_change' e.pk %}">{{ e.codigo }}</a>{% else %}{{ e.codigo }}{% endif %} · {{ e.get_nivel_display }} · {{ e.get_estado_validacion_display }}{% if e.url_origen %} · <a href="{{ e.url_origen }}" rel="noopener noreferrer" target="_blank">fuente</a>{% endif %}<br><small>{{ e.fuente.nombre }}{% if e.fecha_consulta %}, consultada el {{ e.fecha_consulta|date:"d/m/Y" }}{% endif %}</small></div>{% endfor %}</td>
+      <td>{% for e in f.evidencias %}<div>{% if user.is_staff %}<a href="{% url 'admin:evidencias_evidencia_change' e.pk %}">{{ e.codigo }}</a>{% else %}{{ e.codigo }}{% endif %} · {{ e.get_nivel_display }} · {% if e.validada_por_dircom %}{% include "evidencias/_marca.html" %}{% else %}{{ e.get_estado_validacion_display }}{% endif %}{% if e.url_origen %} · <a href="{{ e.url_origen }}" rel="noopener noreferrer" target="_blank">fuente</a>{% endif %}<br><small>{{ e.fuente.nombre }}{% if e.fecha_consulta %}, consultada el {{ e.fecha_consulta|date:"d/m/Y" }}{% endif %}</small></div>{% endfor %}</td>
     </tr>
   {% endfor %}
   </tbody>

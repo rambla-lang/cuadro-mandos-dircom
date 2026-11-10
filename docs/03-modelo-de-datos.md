@@ -50,6 +50,7 @@ Son los niveles del análisis vigente. Su significado no cambia sin actualizar e
 Reglas:
 - Un nivel `oficial` exige una URL de origen oficial guardada.
 - La IA nunca deja una evidencia en `oficial`, `prensa` ni `empresa`: propone, y una persona valida.
+- **Marca «Validado por DIRCOM»** (10/11/2026, a petición del usuario): se muestra junto al nivel cuando la evidencia está `validada` y consta quién la validó (panel municipal, ficha, buscador y detalle de evidencias, y columna «Fuente» del anexo del informe). No es un nivel ni lo cambia: el nivel dice qué tipo de fuente respalda el dato; la marca, que una persona de la DIRCOM lo ha revisado y lo da por bueno. Se descartó subir todas las evidencias a `oficial`, porque presentaría como fuente oficial noticias, datos de la empresa y «No localizado», y `oficial` exige URL.
 - La percepción interna **no** es un nivel de evidencia. Es otro tipo de registro (`PercepcionInterna`) y se muestra siempre separada.
 
 ### Servicio y alcance

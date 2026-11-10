@@ -24,7 +24,7 @@ ROLES = (Rol.ADMINISTRADOR, Rol.ANALISTA)
 
 def lista(request):
     g = request.GET
-    qs = Evidencia.objects.select_related("fuente").prefetch_related("empresas")
+    qs = Evidencia.objects.select_related("fuente", "validado_por").prefetch_related("empresas")
     if g.get("q"):
         qs = qs.filter(
             Q(titulo__icontains=g["q"]) | Q(extracto__icontains=g["q"]) | Q(codigo__iexact=g["q"])

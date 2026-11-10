@@ -50,7 +50,7 @@ def municipio_panel(request, codigo):
     prestaciones = (
         PrestacionServicio.objects.filter(municipio=municipio)
         .select_related("empresa")
-        .prefetch_related("evidencias__fuente")
+        .prefetch_related("evidencias__fuente", "evidencias__validado_por")
         .order_by("servicio", "alcance")
     )
     filas = []

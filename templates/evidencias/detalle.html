@@ -13,7 +13,7 @@
   <tr><th>Fuente</th><td>{{ e.fuente }} ({{ e.fuente.get_tipo_display }}){% if e.url_origen %} · <a href="{{ e.url_origen }}" target="_blank" rel="noopener noreferrer">abrir el origen</a>{% if e.datos_extra.url_derivada_de %} <small>(formada a partir de «{{ e.datos_extra.url_derivada_de }}»)</small>{% endif %}{% endif %}</td></tr>
   <tr><th>Fechas</th><td>Publicación {{ e.fecha_publicacion|date:"d/m/Y"|default:"no consta" }}{% if e.fecha_evento %} · evento {{ e.fecha_evento|date:"d/m/Y" }}{% endif %}{% if e.fecha_consulta %} · consultada {{ e.fecha_consulta|date:"d/m/Y" }}{% endif %}{% if e.datos_extra.fecha_texto %} · <small>«{{ e.datos_extra.fecha_texto }}»</small>{% endif %}</td></tr>
   <tr><th>Origen</th><td>{{ e.get_origen_display }}{% if e.lote_importacion %} · lote {{ e.lote_importacion_id }}{% endif %}{% if e.creado_por %} · creada por {{ e.creado_por.email }}{% endif %}</td></tr>
-  <tr><th>Validación</th><td>{{ e.get_estado_validacion_display }}{% if e.validado_por %} · {{ e.validado_por.email }} el {{ e.validado_en|date:"d/m/Y H:i" }}{% endif %}</td></tr>
+  <tr><th>Validación</th><td>{% if e.validada_por_dircom %}{% include "evidencias/_marca.html" %}{% else %}{{ e.get_estado_validacion_display }}{% endif %}{% if e.validado_por %} · {{ e.validado_por.email }} el {{ e.validado_en|date:"d/m/Y H:i" }}{% endif %}</td></tr>
   {% if e.tratamiento_limites %}<tr><th>Tratamiento y límites</th><td>{{ e.tratamiento_limites }}</td></tr>{% endif %}
 </tbody></table>
 {% if e.extracto %}<blockquote>{{ e.extracto|linebreaksbr }}</blockquote>{% endif %}

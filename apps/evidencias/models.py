@@ -45,6 +45,11 @@ class Fuente(ModeloConFechas):
         return self.nombre
 
 
+MARCA_VALIDACION = "Validado por DIRCOM"
+"""Se muestra junto al nivel cuando una persona ha validado la evidencia. No cambia el nivel:
+el nivel dice qué tipo de fuente respalda el dato; la marca, que la DIRCOM lo ha revisado."""
+
+
 class Evidencia(ModeloConFechas):
     codigo = models.CharField("código", max_length=12, unique=True, editable=False, null=True)  # noqa: DJ001 (NULL hasta asignar E-xxxxxx; único)
     categoria = models.CharField("categoría", max_length=30, choices=CategoriaEvidencia.choices)
@@ -164,6 +169,10 @@ class Evidencia(ModeloConFechas):
 
     def __str__(self):
         return f"{self.codigo or 'E-(nueva)'} · {self.titulo[:80]}"
+
+    @property
+    def validada_por_dircom(self) -> bool:
+        return self.estado_validacion == EstadoValidacion.VALIDADA and bool(self.validado_por_id)
 
     def clean(self):
         super().clean()

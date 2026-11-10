@@ -112,7 +112,9 @@ def generar_docx(informe) -> bytes:
             fila[0].text = e["codigo"]
             fila[1].text = ", ".join(e["empresas"])
             fila[2].text = _fecha(e["fecha"]) if e["fecha"] else "No consta"
-            fila[3].text = f"{e['fuente']} ({e['nivel']})"
+            fila[3].text = f"{e['fuente']} ({e['nivel']})" + (
+                f" · {e['validacion']}" if e.get("validacion") else ""
+            )
             fila[4].text = f"{e['titulo']} {e['url']}".strip()
             fila[5].text = e["limites"]
     salida = io.BytesIO()

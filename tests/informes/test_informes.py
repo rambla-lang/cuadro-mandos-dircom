@@ -64,6 +64,8 @@ def test_borrador_con_plantilla_pasa_el_validador_y_se_publica(base):
     assert "Resumen ejecutivo" in textos and "Valoración interna" not in textos  # sin percepciones
     anexos = [t for t in d.tables if t.rows[0].cells[0].text == "ID"]
     assert len(anexos) == 2  # métricas y evidencias
+    fuentes = [f.cells[3].text for f in anexos[1].rows[1:]]
+    assert fuentes and all("Validado por DIRCOM" in f for f in fuentes)
     p = pptx.Presentation(default_storage.open(informe.archivo_pptx))
     assert len(p.slides) == 2 + 3 * 2 + 2
 
