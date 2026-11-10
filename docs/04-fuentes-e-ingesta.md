@@ -13,6 +13,8 @@ Pasos comunes a todos los importadores (skill `.claude/skills/importador-fuente`
 
 ## 1. PLACSP: datos abiertos de sindicación (ATOM)
 
+> **Retirado el 10/11/2026 (ADR-010).** La contratación pública ya no se importa. Se conservan las verificaciones como referencia.
+
 **Acceso.** Ficheros ATOM/XML y ZIP publicados por la Plataforma de Contratación del Sector Público y Hacienda (ADR-004). Conjuntos:
 - Licitaciones de perfiles de contratante alojados en PLACSP, sin contratos menores. Feed: `https://contrataciondelsectorpublico.gob.es/sindicacion/sindicacion_643/licitacionesPerfilesContratanteCompleto3.atom`, citado por Hacienda en datos.gob.es.
 - Licitaciones publicadas mediante agregación, sin contratos menores. Feed: `https://contrataciondelestado.es/sindicacion/sindicacion_1044/PlataformasAgregadasSinMenores.atom`.
@@ -102,6 +104,8 @@ Pasos comunes a todos los importadores (skill `.claude/skills/importador-fuente`
 
 ## 2. TED: Search API v3
 
+> **Retirado el 10/11/2026 (ADR-010).** La contratación pública ya no se importa. Se conservan las verificaciones como referencia.
+
 **Acceso.** `POST https://api.ted.europa.eu/v3/notices/search` con consulta experta (la misma sintaxis que la búsqueda experta de la web de TED). No requiere clave.
 
 **Verificado (documentación).** En modo paginación: máximo 15.000 avisos recuperables y 250 por página; el modo scroll no tiene límite de avisos. Fuente original: https://docs.ted.europa.eu/api/endpoints/ted-europa-eu.html, que el 05/11/2026 **devuelve 404**. Página vigente: https://docs.ted.europa.eu/api/latest/search.html, que solo describe la API y remite al Swagger (https://api.ted.europa.eu/swagger-ui/index.html, que carga una especificación de ejemplo y no la de TED). No se ha localizado una especificación OpenAPI pública de TED.
@@ -143,6 +147,8 @@ Estimación, no medición de la base de datos: el tamaño real se medirá con `p
 
 ## 3. BOE: sección V.A (después del MVP)
 
+> **Retirado el 10/11/2026 (ADR-010).** La contratación pública ya no se importa. Se conservan las verificaciones como referencia.
+
 **Acceso.** Datos abiertos del BOE. Hay una API de sumario por fecha, documentada para el BORME en `/datosabiertos/api/borme/sumario/{fecha}`. La sección 5A del sumario del BOE corresponde a "Licitaciones públicas y adjudicaciones". El sumario en XML también se obtiene en `https://boe.es/diario_boe/xml.php?id=BOE-S-AAAAMMDD` según la documentación v1.0.
 **Por verificar:** el endpoint actual equivalente para el BOE, el formato JSON o XML y los campos del anuncio. La reutilización implica aceptar la licencia del BOE: incluir la atribución.
 **Clave natural.** Identificador del anuncio, por ejemplo `BOE-B-2016-49469`.
@@ -155,7 +161,7 @@ Estimación, no medición de la base de datos: el tamaño real se medirá con `p
 - `Start Date` y `End Date` vienen en formato texto (`Wed Dec 31 23:00:00 UTC 2025`). La columna `Date` viene como `2026-10-30 08:30:00.000`, sin zona horaria. **Por verificar** si `Date` está en UTC o en la hora del proyecto de Brandwatch. Hasta confirmarlo, se interpreta como UTC y se avisa en la interfaz.
 - Columnas útiles: `Query Id`, `Query Name`, `Date`, `Title`, `Snippet`, `Url`, `Domain`, `Sentiment`, `Emotion`, `Page Type`, `Language`, `Country`, `Region`, `City`, `Author`, `Resource Id`, `Thread Id`, `Thread URL`, `Publication Name`, `Estimated Reach`, `Potential Audience`, `Impressions`, `Engagement Score`, `Likes`, `Comments`, `Shares`, `Tags`, `Category Details`.
 - Valores observados: `Page Type` es news, twitter o blog; `Sentiment` es neutral, negative o positive; `Language` es es o ca; `Country` siempre Spain; `Region` está vacía en la mayoría de filas.
-- Todas las filas tienen el mismo `Query Name` ("MONITORIZACION COMPETENCIA") y `Tags` está vacío. **El export no dice a qué competidor se refiere cada mención**: hay que deducirlo (RF-31).
+- Todas las filas tienen el mismo `Query Name` ("MONITORIZACION COMPETENCIA") y `Tags` está vacío. **El export no dice a qué empresa gestora se refiere cada mención**: hay que deducirlo (RF-31).
 - Las exportaciones se solapan en fechas (por ejemplo, "mentions (9)" va del 31/05 al 30/10/2026 y "mentions (8)" del 30/09 al 30/10/2026). Por eso hay que deduplicar.
 - Cabecera real de referencia: `seed/brandwatch_cabecera_ejemplo.csv`.
 
@@ -166,7 +172,7 @@ Estimación, no medición de la base de datos: el tamaño real se medirá con `p
 - URL canónica: minúsculas en el dominio, sin parámetros de seguimiento (`utm_*`, `fbclid`, etc.) y sin barra final.
 - `sentimiento_fuente` se guarda tal cual, como dato de Brandwatch, y no se presenta como análisis propio.
 - `Estimated Reach` y similares se guardan en `datos_fuente`, pero no se usan como audiencia real (regla del documento maestro: el alcance regional numérico no es estimable con rigor).
-- Atribución a competidores: primero por alias (con límites de palabra y alias que requieren contexto), después propuesta de IA para lo dudoso, y al final validación.
+- Atribución a empresas gestoras: primero por alias (con límites de palabra y alias que requieren contexto), después propuesta de IA para lo dudoso, y al final validación.
 - Pertinencia territorial: `si` si hay un municipio, comarca o provincia valenciana o actividad local en el título o el extracto; `no` si es claramente de otro territorio; `dudoso` en otro caso. El motivo se guarda siempre.
 
 **Corrección y verificación de la Fase 4 (06/11/2026):** la línea 4 de metadatos también se llama `"Query Id"`, así que la cabecera se localiza buscando la fila que contiene a la vez `Query Id`, `Resource Id` y `Url`. La primera columna de la cabecera viene vacía (índice de fila). En los tres exports: 2.742 filas y 2.500 `Resource Id` distintos; ninguno vacío.
@@ -201,14 +207,14 @@ Estimación, no medición de la base de datos: el tamaño real se medirá con `p
 **Muestras observadas:**
 - *Análisis subjetivo: percepciones competencia*: texto sin estilos de título; cada empresa empieza con una línea en mayúsculas ("NEALIS /FACSA") seguida de párrafos.
 - *Publicaciones en prensa*: lista de URL agrupadas por empresa ("FACSA (NEALIS):"). Se importa como lista de URL candidatas a `Mencion` manual.
-- *Documento maestro*: informe con títulos (Heading 1 y 2) por competidor y tablas de anexo de evidencias con columnas `ID | Marca | Fecha / control temporal | Fuente | Tema y enlace | Tratamiento / límites` (98 evidencias: P001-P057 prensa, S001-S027 social, D001-D014 propias u oficiales). **Es la mejor semilla de evidencias**: se importa una vez como `Evidencia` en estado `borrador`.
+- *Documento maestro*: informe con títulos (Heading 1 y 2) por empresa gestora y tablas de anexo de evidencias con columnas `ID | Marca | Fecha / control temporal | Fuente | Tema y enlace | Tratamiento / límites` (98 evidencias: P001-P057 prensa, S001-S027 social, D001-D014 propias u oficiales). **Es la mejor semilla de evidencias**: se importa una vez como `Evidencia` en estado `borrador`.
 
 **Reglas.**
 - Extraer con `python-docx`. Separar por empresa usando el estilo de título o, si no lo hay, las líneas que coinciden con un alias de empresa en mayúsculas.
 - Las percepciones internas van a `PercepcionInterna`, nunca a `Evidencia`.
 
 **Implementado en la Fase 6 (06/11/2026)** (`apps/documentos/word.py`, Importar → Documentos Word; clave natural SHA-256 del archivo):
-- **Percepciones:** una `PercepcionInterna` por empresa con el texto bajo cada cabecera en mayúsculas que nombra a una empresa del catálogo. Una cabecera que no es del catálogo («SIMETRIA») cierra el bloque anterior y su texto no se atribuye. En una cabecera también valen los alias que requieren contexto (es una lista de competidores). Sin cabeceras, se puede dividir con la IA (T4) cuando esté activa.
+- **Percepciones:** una `PercepcionInterna` por empresa con el texto bajo cada cabecera en mayúsculas que nombra a una empresa del catálogo. Una cabecera que no es del catálogo («SIMETRIA») cierra el bloque anterior y su texto no se atribuye. En una cabecera también valen los alias que requieren contexto (es una lista de empresas gestoras). Sin cabeceras, se puede dividir con la IA (T4) cuando esté activa.
 - **Lista de publicaciones:** cada URL bajo una cabecera de empresa es una mención manual con atribución validada (la de quien hizo la lista); si la URL ya existe (por ejemplo, de Brandwatch), solo se añade la atribución. Sin título, el vínculo territorial queda «dudoso».
 - **Anexo del documento maestro:** las tablas con la cabecera `ID | Marca | Fecha / control temporal | Fuente | Tema y enlace | Tratamiento / límites` se importan una vez como evidencias en **borrador** (clave `maestro:<ID>`). El enlace sale del hipervínculo de la celda «Tema y enlace». Fecha solo si es `DD/MM/AAAA`; si no, el texto se guarda aparte. Nivel **propuesto** para revisar al validar: P → prensa; D → oficial si la fuente es una administración y hay enlace; empresa si la fuente es la propia empresa; parcial en otro caso. Categoría: P → mención en medios, S → digital, D → otra (eventos y premios se reclasifican a mano).
 - **Resultado con las muestras en local (06/11/2026):** 5 percepciones (FACSA, Aqualia, Hozono Global, Global Omnium y Cox; Simetria no está en el catálogo); 24 URL de publicaciones (14 menciones nuevas, 8 ya existentes de Brandwatch, 2 bajo cabeceras fuera del catálogo: IDRICA, AMJASA, Aguas de Calp); 98 evidencias del anexo (57 prensa, 24 empresa, 5 oficial, 12 parcial), todas con su empresa.
@@ -222,7 +228,7 @@ Estimación, no medición de la base de datos: el tamaño real se medirá con `p
 
 **Decisión de José Luis:** solo datos públicos básicos.
 **Implementación MVP:** formulario y plantilla CSV (`perfil_url, red, fecha_observacion, seguidores, publicaciones_observadas, periodo_observado, historico_suficiente, notas`). No hay rastreo automático de redes (pregunta P-05: términos de uso de cada red).
-**Web corporativa:** formulario de auditoría (tono, contenidos y usabilidad) con la fecha de observación. Una descarga automática de páginas propias de competidores podría añadirse respetando `robots.txt`; se decidirá en P-05.
+**Web corporativa:** formulario de auditoría (tono, contenidos y usabilidad) con la fecha de observación. Una descarga automática de páginas propias de empresas gestoras podría añadirse respetando `robots.txt`; se decidirá en P-05.
 
 **Implementado en la Fase 6:** pantalla Digital con formularios de perfil, observación y auditoría web, e importación CSV con las columnas de arriba y una opcional `empresa` para dar de alta el perfil. «no visible», vacío o «—» se guardan como nulo, nunca como 0 (CP-12). Clave: perfil y fecha de observación.
 

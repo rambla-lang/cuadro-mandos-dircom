@@ -21,7 +21,7 @@ def test_preparar_piloto_idempotente(db):
 
 
 def test_informe_se_regenera_si_falta_el_archivo(
-    competidores, municipios_cv, administrador, client, settings, tmp_path
+    empresas_gestoras, municipios_cv, administrador, client, settings, tmp_path
 ):
     from datetime import date
 

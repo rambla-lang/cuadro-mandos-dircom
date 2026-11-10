@@ -5,7 +5,7 @@
   {% for t in trabajos %}
     <tr><td><a href="{% url 'trabajo' t.pk %}">{{ t.creado|date:"d/m/Y H:i" }}</a></td><td>{{ t.tipo }}</td><td><small>{{ t.parametros }}</small></td><td>{{ t.get_estado_display }}</td>
       <td>{% if t.porcentaje is not None %}<progress max="100" value="{{ t.porcentaje }}">{{ t.porcentaje }} %</progress> {{ t.partes_hechas }}/{{ t.partes_total }}{% else %}—{% endif %}</td>
-      <td><small>{% if t.contadores.nuevos is not None %}{{ t.contadores.nuevos }} nuevos{% endif %}{% if t.contadores.actualizados %}, {{ t.contadores.actualizados }} actualizados{% endif %}{% if t.contadores.no_valencianos %}, {{ t.contadores.no_valencianos }} no valencianos{% endif %}</small></td></tr>
+      <td><small>{% if t.contadores.nuevos is not None %}{{ t.contadores.nuevos }} nuevos{% endif %}{% if t.contadores.actualizados %}, {{ t.contadores.actualizados }} actualizados{% endif %}</small></td></tr>
   {% empty %}<tr><td colspan="6">Todavía no hay trabajos.</td></tr>{% endfor %}
   </tbody>
 </table>

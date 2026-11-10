@@ -244,8 +244,8 @@ def registrar_atribuciones(mencion, coincidencias, usuario, lote, res=None):
             defaults={
                 "tipo": Tipo.VINCULO_TERRITORIAL,
                 "texto": mencion.titulo[:500] or mencion.url[:500],
-                "motivo": "Mención de un competidor sin lugar reconocible: ¿tiene vínculo con la "
-                "Comunitat Valenciana?",
+                "motivo": "Mención de una empresa gestora sin lugar reconocible: ¿tiene vínculo "
+                "con la Comunitat Valenciana?",
                 "objeto_tipo": ContentType.objects.get_for_model(mencion),
                 "objeto_id": mencion.pk,
                 "lote_importacion": lote,

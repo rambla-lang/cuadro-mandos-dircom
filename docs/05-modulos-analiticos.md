@@ -3,7 +3,7 @@
 Reglas comunes:
 - Solo cuentan las evidencias en estado `validada`, salvo que el usuario active "incluir borradores". En ese caso la pantalla lo indica con una franja visible.
 - Toda cifra lleva un enlace a la lista de evidencias que la componen (RF-61).
-- Los filtros comunes son periodo, provincia, servicio, competidor y nivel mínimo de evidencia.
+- Los filtros comunes son periodo, provincia, servicio, empresa gestora y nivel mínimo de evidencia.
 - Las empresas marcadas `es_propia` no aparecen en rankings ni comparativas.
 - Las cifras mínimas se muestran como mínimos ("al menos 12") cuando la fuente no es exhaustiva (prensa, redes).
 
@@ -21,7 +21,7 @@ Reglas comunes:
 - Los municipios sin registro se pintan en gris neutro con el rótulo "No localizado", nunca en blanco ni como "sin servicio".
 - Al pasar el ratón: municipio, operador, alcance, año de referencia y nivel. Al hacer clic se abre el panel del municipio.
 
-**Panel del municipio:** tabla de servicio, alcance, operador, gestión, año, vigencia confirmada, nivel y evidencias; más los expedientes de contratación vinculados (los más recientes primero) y las menciones en medios con vínculo territorial.
+**Panel del municipio:** tabla de servicio, alcance, operador, gestión, año, vigencia confirmada, nivel y evidencias; y las menciones en medios con vínculo territorial.
 
 **Tabla equivalente** (accesibilidad y exportación): una fila por municipio con una columna por servicio, igual que la tabla actual de Veolia.
 
@@ -30,7 +30,7 @@ Reglas comunes:
 - Distribución por nivel de evidencia.
 - Top de operadores por número de municipios, por servicio. **Se cuenta municipios con alguna evidencia, no población ni alcance real**, y así se indica.
 
-## 2. Ficha de competidor (RF-51)
+## 2. Ficha de empresa gestora (RF-51)
 
 Estructura acordada con José Luis, en tres bloques que coinciden con las diapositivas de la presentación:
 
@@ -49,9 +49,9 @@ Estructura acordada con José Luis, en tres bloques que coinciden con las diapos
 8. *Redes sociales*: última observación por red (seguidores, si es visible) e indicador de histórico suficiente. Si no lo hay, se muestra el texto "Actividad no caracterizable con la evidencia pública disponible".
 9. *Web corporativa*: la última auditoría.
 
-**Contratación (pestaña adicional):** expedientes con adjudicación a la empresa (o a su grupo) en el territorio, con importes. Las sumas de importes se muestran solo si todos los importes son comparables (con o sin IVA, todos conocidos); si no, se muestra el recuento y la advertencia.
+~~**Contratación (pestaña adicional):**~~ **Retirado el 10/11/2026 (ADR-010).** expedientes con adjudicación a la empresa (o a su grupo) en el territorio, con importes. Las sumas de importes se muestran solo si todos los importes son comparables (con o sin IVA, todos conocidos); si no, se muestra el recuento y la advertencia.
 
-**Implementado en la Fase 6 (06/11/2026)**, pantalla Competidores → ficha: bloques 1 a 3 y contratación. Los municipios cuentan solo prestaciones con evidencia validada y el suministro eléctrico se muestra aparte, sin contar como servicio energético (CP-16). Los medios principales son los 5 con más piezas de prensa con atribución validada en los 12 meses móviles. Las listas de evidencias muestran también los borradores, marcados. Los importes de contratación se suman solo si todos son conocidos y sin IVA. Las evidencias se crean, editan y validan en Evidencias; editar una validada deja registro con los valores anteriores.
+**Implementado en la Fase 6 (06/11/2026)**, pantalla Empresas gestoras → ficha: bloques 1 a 3 (la pestaña de contratación se retiró el 10/11/2026, ADR-010). Los municipios cuentan solo prestaciones con evidencia validada y el suministro eléctrico se muestra aparte, sin contar como servicio energético (CP-16). Los medios principales son los 5 con más piezas de prensa con atribución validada en los 12 meses móviles. Las listas de evidencias muestran también los borradores, marcados. Los importes de contratación se suman solo si todos son conocidos y sin IVA. Las evidencias se crean, editan y validan en Evidencias; editar una validada deja registro con los valores anteriores.
 
 ## 3. Visibilidad en medios (RF-52)
 
@@ -69,10 +69,10 @@ Estructura acordada con José Luis, en tres bloques que coinciden con las diapos
 
 | Métrica | Definición exacta |
 |---|---|
-| Piezas por competidor | Nº de piezas distintas con `MencionEmpresa` validada para la empresa en el periodo |
-| Cuota de piezas | Piezas del competidor / total de piezas distintas del periodo (las compartidas cuentan en el numerador de cada empresa, por eso la suma puede pasar del 100 %, lo que se indica en pantalla) |
+| Piezas por empresa gestora | Nº de piezas distintas con `MencionEmpresa` validada para la empresa en el periodo |
+| Cuota de piezas | Piezas de la empresa gestora / total de piezas distintas del periodo (las compartidas cuentan en el numerador de cada empresa, por eso la suma puede pasar del 100 %, lo que se indica en pantalla) |
 | Concentración por medio | % de piezas del total que aportan los N medios principales (el documento maestro usó 3: "concentran 32 de las 57 piezas, un 56 %") |
-| Medios por competidor | Nº de medios distintos con al menos una pieza |
+| Medios por empresa gestora | Nº de medios distintos con al menos una pieza |
 | Evolución mensual | Piezas por mes. Los meses sin piezas se pintan, pero no se interpretan como silencio (regla 7) |
 | Mezcla de tono | Distribución del sentimiento *según Brandwatch* (`sentimiento_fuente`). Se rotula así y no se presenta como análisis propio |
 | Piezas por tipo de fuente | Prensa digital, prensa impresa, redes y comunicados propios, por separado (regla 3) |
@@ -87,17 +87,17 @@ Estructura acordada con José Luis, en tres bloques que coinciden con las diapos
 1. Portada (periodo, ámbito, fecha de revisión, base documental: número de evidencias por tipo).
 2. Resumen ejecutivo.
 3. Alcance, fuentes y método, con las reglas de interpretación.
-4. Análisis por competidor.
+4. Análisis por empresa gestora.
 5. Matriz comparativa.
 6. Lectura transversal.
 7. Oportunidades.
 8. Límites y siguiente nivel de precisión.
 9. Anexo de evidencias (tabla `ID | Marca | Fecha | Fuente | Tema y enlace | Tratamiento / límites`). «Marca» es la empresa; en «Fuente» va el nivel y, si está validada, «Validado por DIRCOM» (docs/03).
 
-**Presentación (pptx)**: portada, mensaje principal, tres diapositivas por competidor (bloques 1, 2 y 3), recomendaciones, y un anexo de método y evidencias. Se siguen las reglas de la skill de informe ejecutivo del usuario: un mensaje por diapositiva en el título, cada cifra con fuente y fecha, y lo no verificado marcado como tal.
+**Presentación (pptx)**: portada, mensaje principal, tres diapositivas por empresa gestora (bloques 1, 2 y 3), recomendaciones, y un anexo de método y evidencias. Se siguen las reglas de la skill de informe ejecutivo del usuario: un mensaje por diapositiva en el título, cada cifra con fuente y fecha, y lo no verificado marcado como tal.
 
 **Proceso de generación:**
-1. Selección de periodo, competidores y plantilla.
+1. Selección de periodo, empresas gestoras y plantilla.
 2. Cálculo de métricas (en código, no con la IA).
 3. La IA redacta las secciones de texto recibiendo **solo** las métricas calculadas y las evidencias validadas (identificador, fecha, fuente y extracto), con la instrucción de citar `[E-xxxx]` en cada afirmación.
 4. Validador posterior: comprueba que cada número del texto aparece en las métricas o en las evidencias aportadas y que cada `[E-xxxx]` existe. Si falla, el texto se marca para revisión y no se publica.
@@ -108,8 +108,8 @@ Estructura acordada con José Luis, en tres bloques que coinciden con las diapos
 - Las métricas se calculan en código y cada una recibe un identificador `M<n>` con su definición y el enlace a la lista de evidencias o piezas de la aplicación. El texto cita `[Mn]` para las cifras calculadas y `[E-xxxxxx]` para los hechos. Con esto, cada cifra del informe lleva a sus evidencias (prueba de aceptación de la fase).
 - Sin IA, cada sección se escribe con una plantilla que solo usa esas métricas y las evidencias validadas; «Oportunidades» queda para redactar. Con IA (T6, modelo de «redactar»), la IA redacta el resumen, la lectura transversal y las oportunidades.
 - **Validador** (`validador.py`): referencias `[E-…]` que no se aportaron → rechazo (CP-10); cifras que no están en las métricas ni en las evidencias o párrafos sin referencia → sección marcada para revisión (CP-09). No se puede publicar con secciones marcadas; al editar una sección se valida de nuevo.
-- Al publicar se generan el Word (portada con base documental, resumen, método, análisis por competidor con la valoración interna aparte, matriz comparativa, lectura transversal, oportunidades, límites y anexos de métricas y evidencias) y la presentación (portada, mensaje principal, tres diapositivas por competidor, recomendaciones y método). El lector solo ve y descarga los publicados.
+- Al publicar se generan el Word (portada con base documental, resumen, método, análisis por empresa gestora con la valoración interna aparte, matriz comparativa, lectura transversal, oportunidades, límites y anexos de métricas y evidencias) y la presentación (portada, mensaje principal, tres diapositivas por empresa gestora, recomendaciones y método). El lector solo ve y descarga los publicados.
 
 ## 5. Bandeja de revisión (RF-60)
 
-Una sola cola con filtros por tipo: atribución de mención, vínculo territorial dudoso, vínculo de órgano y municipio, clasificación de servicio, posible duplicado, propuesta de IA en documento y resolución del adjudicatario. Cada elemento muestra el dato original, la propuesta y el motivo, con las acciones aceptar, corregir y rechazar. Las acciones se pueden aplicar en bloque a elementos del mismo tipo.
+Una sola cola con filtros por tipo: atribución de mención, vínculo territorial dudoso, posible duplicado, propuesta de IA en documento y resolución del adjudicatario. Cada elemento muestra el dato original, la propuesta y el motivo, con las acciones aceptar, corregir y rechazar. Las acciones se pueden aplicar en bloque a elementos del mismo tipo.

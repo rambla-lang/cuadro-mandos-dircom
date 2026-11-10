@@ -28,9 +28,9 @@ Identificadores de modelo vigentes: `claude-haiku-5-5`, `claude-sonnet-5-5`, `cl
 
 | Tarea | Entrada | Salida (esquema) | Modelo | Modo |
 |---|---|---|---|---|
-| T1. Atribuir mención | Título + extracto + lista de competidores con alias y acotaciones | `{empresas:[{empresa_id, fragmento, confianza}], vinculo_territorial: si/no/dudoso, motivo, municipios:[codigo_ine]}` | Clasificar | Lotes si son más de 50 |
+| T1. Atribuir mención | Título + extracto + lista de empresas gestoras con alias y acotaciones | `{empresas:[{empresa_id, fragmento, confianza}], vinculo_territorial: si/no/dudoso, motivo, municipios:[codigo_ine]}` | Clasificar | Lotes si son más de 50 |
 | T2. Leer recorte PDF | PDF (texto + imagen) | `{medio, fecha_publicacion, pagina, titular, resumen_breve, empresas:[…], municipios:[…], es_publicidad_identificada: bool}` con citas | Extraer | Directo |
-| T3. Clasificar expediente dudoso | Objeto + CPV + órgano | `{servicio, alcance, motivo}` | Clasificar | Lotes |
+| ~~T3. Clasificar expediente dudoso~~ | Retirada el 10/11/2026 con la contratación (ADR-010) | — | — | — |
 | T4. Dividir Word de percepciones | Texto completo + lista de empresas | `{fragmentos:[{empresa_id, texto}]}`. El texto se copia literal, sin reescribir | Extraer | Directo |
 | T5. Hitos de un informe de sostenibilidad | Rango de páginas del PDF | `{hitos:[{tipo, descripcion, cifra_declarada, pagina}]}` con citas | Extraer | Directo por partes |
 | T6. Redactar sección de informe | Métricas calculadas + evidencias validadas (id, fecha, fuente, extracto) + estructura | `{parrafos:[{texto, evidencias:[id]}]}` | Redactar | Directo |
@@ -57,7 +57,7 @@ Guardar en `apps/ia/prompts/comun_v1.md`. Su sentido:
 
 - Precios: no se escriben en el código. El administrador los introduce desde la página oficial de precios. El coste mostrado es una estimación con tokens × precio.
 - PDF: la documentación indica entre 1.500 y 3.000 tokens de texto por página. Además, cada página se procesa también como imagen (coste adicional **por verificar**).
-- Usar lotes (Message Batches) para T1 y T3 cuando no hay prisa, y caché de prompt para el bloque fijo de competidores y alias (**por verificar** las condiciones mínimas de la caché).
+- Usar lotes (Message Batches) para T1 cuando no hay prisa, y caché de prompt para el bloque fijo de empresas gestoras y alias (**por verificar** las condiciones mínimas de la caché).
 
 ## Pruebas de la IA
 

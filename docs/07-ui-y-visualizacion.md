@@ -6,10 +6,9 @@
 |---|---|---|
 | Inicio | Lector | Indicadores clave (municipios con operador identificado por servicio, piezas del periodo, pendientes de revisión) y accesos directos |
 | Mapa municipal | Lector | Mapa + tabla + panel de municipio (`05` §1) |
-| Competidores | Lector | Listado con indicadores y acceso a cada ficha |
-| Ficha de competidor | Lector | Bloques 1-3 y pestaña de contratación (`05` §2) |
+| Empresas gestoras | Lector | Listado con indicadores y acceso a cada ficha |
+| Ficha de empresa gestora | Lector | Bloques 1-3 (`05` §2) |
 | Medios | Lector | Visibilidad (`05` §3) |
-| Contratación | Lector | Buscador de expedientes con filtros; detalle con enlace a la fuente |
 | Evidencias | Lector | Buscador global de evidencias; ficha de evidencia con su historial |
 | Importar | Analista | Asistentes por fuente, historial de lotes y trabajos |
 | Revisión | Analista | Bandeja (`05` §5) |
@@ -23,7 +22,7 @@
 - Los niveles de evidencia se muestran siempre con etiqueta de texto y color, nunca solo con color.
 - Los textos de la IA no validados llevan la etiqueta "Borrador IA".
 - Las percepciones internas van en un recuadro diferenciado con la etiqueta "Valoración interna".
-- Los estados vacíos explican la causa: "Sin resultados en TED a 05/11/2026; TED solo publica contratos por encima de los umbrales europeos".
+- Los estados vacíos explican la causa: "Sin resultados en Brandwatch para el periodo elegido a 05/11/2026".
 - Aviso de arranque en frío: si la primera respuesta tarda, una página ligera indica "La aplicación se está activando…".
 - Responsive: las tablas pasan a tarjetas en móvil; el mapa se puede usar con el dedo.
 
@@ -32,13 +31,13 @@
 Método de la skill de visualización usada al redactar este documento, resumido y adaptado:
 
 1. **Primero la forma; el color al final.**
-   - Comparar magnitudes entre competidores: barras horizontales ordenadas.
+   - Comparar magnitudes entre empresas gestoras: barras horizontales ordenadas.
    - Evolución mensual: líneas, o barras si hay pocos meses.
    - Una cifra principal: tarjeta con el número, no un gráfico.
    - Composición por nivel de evidencia: barra apilada al 100 % con 5 segmentos como máximo.
    - Territorio: mapa de coropletas solo cuando la pregunta es "dónde"; si es "cuántos", barras.
 2. **Color según su función.**
-   - Identidad (operador o competidor): paleta categórica en orden fijo. **El color sigue a la empresa, no a su posición en el ranking**: cada empresa tiene un color asignado y guardado, y un filtro no lo cambia. Como máximo 8 categorías; el resto es "Otros".
+   - Identidad (operador o empresa gestora): paleta categórica en orden fijo. **El color sigue a la empresa, no a su posición en el ranking**: cada empresa tiene un color asignado y guardado, y un filtro no lo cambia. Como máximo 8 categorías; el resto es "Otros".
    - Magnitud: un solo tono, de claro a oscuro.
    - Niveles de evidencia: escala ordenada propia, que no se reutiliza para otra cosa.
    - Los colores de estado (correcto, aviso, error) se reservan para el estado de las importaciones y no se usan en series de datos.

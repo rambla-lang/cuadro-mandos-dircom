@@ -1,0 +1,129 @@
+{
+  "fuente": "Documento maestro del análisis de competencia (apartado «Alcance, fuentes y método») y docs/00-vision-y-alcance.md",
+  "nota": "Datos iniciales. Tras la carga se editan en la administración; el comando no sobrescribe lo editado. Sin NIF: ninguno figura en las fuentes citadas. Desde el 10/11/2026 todas son «empresas gestoras»; Veolia e Hidraqua (grupo Veolia) se tratan como una más (ADR-010).",
+  "grupos": [
+    "Nealis",
+    "Veolia"
+  ],
+  "empresas": [
+    {
+      "nombre": "FACSA",
+      "grupo": "Nealis",
+      "con_ficha": true,
+      "alias": [
+        {
+          "texto": "Nealis",
+          "tipo": "marca"
+        }
+      ]
+    },
+    {
+      "nombre": "Aqualia",
+      "con_ficha": true,
+      "acotaciones": [
+        {
+          "servicios": [],
+          "nota": "Se analiza separada de FCC: su actividad no se cuenta en la ficha de FCC."
+        }
+      ]
+    },
+    {
+      "nombre": "Hozono Global",
+      "con_ficha": true,
+      "acotaciones": [
+        {
+          "servicios": [],
+          "nota": "Las actividades multiservicio solo se consideran evidencia de agua cuando existe un vínculo explícito."
+        }
+      ]
+    },
+    {
+      "nombre": "Global Omnium",
+      "con_ficha": true
+    },
+    {
+      "nombre": "Cox",
+      "con_ficha": true,
+      "alias_requiere_contexto": true
+    },
+    {
+      "nombre": "STV",
+      "con_ficha": true,
+      "alias": [
+        {
+          "texto": "STV Gestión",
+          "tipo": "marca"
+        }
+      ],
+      "acotaciones": [
+        {
+          "servicios": [],
+          "ambito": "Elche",
+          "nota": "Limitada a jardines y zonas verdes de Elche (servicio fuera del catálogo agua, residuos y energía de docs/03)."
+        }
+      ]
+    },
+    {
+      "nombre": "Urbaser",
+      "con_ficha": true
+    },
+    {
+      "nombre": "PreZero",
+      "con_ficha": true
+    },
+    {
+      "nombre": "Valoriza",
+      "con_ficha": true
+    },
+    {
+      "nombre": "FCC",
+      "con_ficha": true,
+      "acotaciones": [
+        {
+          "servicios": [
+            "residuos",
+            "energia"
+          ],
+          "nota": "Se distinguen residuos y energía. La actividad de Aqualia no se cuenta en esta ficha."
+        }
+      ]
+    },
+    {
+      "nombre": "ENGIE",
+      "con_ficha": true
+    },
+    {
+      "nombre": "ACCIONA Energía",
+      "con_ficha": true,
+      "alias": [
+        {
+          "texto": "ACCIONA",
+          "tipo": "marca",
+          "requiere_contexto": true
+        }
+      ],
+      "acotaciones": [
+        {
+          "servicios": [
+            "energia"
+          ],
+          "nota": "ACCIONA se analiza solo en energía."
+        }
+      ]
+    },
+    {
+      "nombre": "Naturgy",
+      "con_ficha": true
+    },
+    {
+      "nombre": "Veolia",
+      "grupo": "Veolia",
+      "con_ficha": true
+    },
+    {
+      "nombre": "Hidraqua",
+      "grupo": "Veolia",
+      "con_ficha": true
+    }
+  ]
+}

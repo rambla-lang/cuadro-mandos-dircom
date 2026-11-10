@@ -16,11 +16,13 @@ Cada requisito tiene un identificador para referenciarlo desde tareas, tests y c
 | ID | Requisito | Criterio | Prioridad |
 |---|---|---|---|
 | RF-10 | Gestión de empresas, grupos y alias de marca | Se puede indicar que "Nealis" y "FACSA" pertenecen al mismo grupo y que "Fomento Benicasim, S.A." es un alias de Fobesa | MVP |
-| RF-11 | Acotaciones por competidor | Se puede limitar una empresa a servicios concretos (por ejemplo, ACCIONA solo energía); las métricas respetan la acotación | MVP |
+| RF-11 | Acotaciones por empresa gestora | Se puede limitar una empresa a servicios concretos (por ejemplo, ACCIONA solo energía); las métricas respetan la acotación | MVP |
 | RF-12 | Marca propia | Se marcan las empresas propias (Veolia, Hidraqua…), que quedan excluidas del benchmarking | MVP |
 | RF-13 | Municipios por territorio | Se cargan los municipios con su código INE; añadir otra comunidad no exige cambiar el código | MVP |
 
 ### Contratación pública
+
+**Retirado el 10/11/2026 (ADR-010).** Los requisitos RF-20 a RF-25 quedan fuera: la DIRCOM no usa los expedientes de contratación; el cuadro gestiona quién presta cada servicio en cada municipio (municipio, empresa gestora y servicio).
 | ID | Requisito | Criterio | Prioridad |
 |---|---|---|---|
 | RF-20 | Importar datos abiertos de PLACSP | Desde un ZIP o ATOM de datos abiertos se cargan los expedientes de órganos de la Comunitat Valenciana, sin duplicados al repetir | MVP |
@@ -34,7 +36,7 @@ Cada requisito tiene un identificador para referenciarlo desde tareas, tests y c
 | ID | Requisito | Criterio | Prioridad |
 |---|---|---|---|
 | RF-30 | Importar CSV de Brandwatch | Acepta el formato real (8 líneas de metadatos, cabecera en la línea 9, 129 columnas); deduplica entre exportaciones solapadas | MVP |
-| RF-31 | Atribuir menciones a competidores | El export no trae la empresa mencionada; se detecta por alias en título y extracto, con propuesta de IA para los dudosos y validación humana | MVP |
+| RF-31 | Atribuir menciones a empresas gestoras | El export no trae la empresa mencionada; se detecta por alias en título y extracto, con propuesta de IA para los dudosos y validación humana | MVP |
 | RF-32 | Pertinencia territorial | Cada mención se marca como "con vínculo valenciano" solo si hay una referencia territorial o de actividad local; el motivo queda guardado | MVP |
 | RF-33 | Subir recortes PDF | Subida múltiple; extrae medio, fecha y página del nombre de archivo cuando sigue el patrón conocido; si no, los pide o los propone la IA | MVP |
 | RF-34 | Recortes escaneados | Los PDF sin capa de texto se procesan con lectura visual de la IA y se marcan como "texto obtenido por IA" | MVP |
@@ -51,7 +53,7 @@ Cada requisito tiene un identificador para referenciarlo desde tareas, tests y c
 | ID | Requisito | Criterio | Prioridad |
 |---|---|---|---|
 | RF-50 | Mapa municipal | Ver `05-modulos-analiticos.md` §1 | MVP |
-| RF-51 | Ficha de competidor | Ver §2 | MVP |
+| RF-51 | Ficha de empresa gestora | Ver §2 | MVP |
 | RF-52 | Visibilidad en medios | Ver §3 | MVP |
 | RF-53 | Informe ejecutivo | Genera un documento Word con la estructura definida; cada cifra lleva su referencia de evidencia | MVP |
 | RF-54 | Presentación | Genera un PowerPoint con la estructura de tres diapositivas por empresa | MVP |
@@ -70,7 +72,7 @@ Cada requisito tiene un identificador para referenciarlo desde tareas, tests y c
 |---|---|---|
 | RNF-01 | Coste de alojamiento del piloto | 0 €/mes, sin contar la API de Claude |
 | RNF-02 | Arranque en frío | En el plan gratuito de Render el servicio se duerme tras 15 min sin tráfico; se acepta y la interfaz avisa con un mensaje de "despertando" (ver ADR-002) |
-| RNF-03 | Volumen esperado | Del orden de miles de menciones al año (las tres exportaciones de 2026 suman 2.742 filas antes de deduplicar) y cientos de expedientes por actualización. Revisar tras la Fase 0 |
+| RNF-03 | Volumen esperado | Del orden de miles de menciones al año (las tres exportaciones de 2026 suman 2.742 filas antes de deduplicar) (los expedientes de contratación se retiraron el 10/11/2026, ADR-010). Revisar tras la Fase 0 |
 | RNF-04 | Memoria | Los importadores procesan los ficheros en streaming, sin cargarlos enteros en memoria. La instancia gratuita de Render tiene 512 MB |
 | RNF-05 | Almacenamiento | La base de datos gratuita de Neon tiene 0,5 GB por proyecto; los PDF originales no se guardan en la base de datos (ADR-003) |
 | RNF-06 | Seguridad | HTTPS, contraseñas con hash de Django, CSRF activo y secretos solo en variables de entorno (ver `08`) |

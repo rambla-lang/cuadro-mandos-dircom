@@ -14,7 +14,7 @@ from tests.evidencias.test_tabla_municipal import FIXTURES, config_agua
 
 
 @pytest.fixture
-def con_datos(municipios_cv, competidores, administrador):
+def con_datos(municipios_cv, empresas_gestoras, administrador):
     importar_tabla(FIXTURES / "agua_sintetico.csv", config_agua(), administrador)
     return administrador
 
@@ -69,7 +69,7 @@ def test_cp07_en_la_pagina_y_la_exportacion(con_datos, client):
     assert client.get(reverse("exportar_tabla", args=["pdf"])).status_code == 404
 
 
-def test_borradores_ocultos_por_defecto(municipios_cv, competidores, administrador):
+def test_borradores_ocultos_por_defecto(municipios_cv, empresas_gestoras, administrador):
     importar_tabla(FIXTURES / "agua_sintetico.csv", config_agua(estado="borrador"), administrador)
     sin = _por_codigo(services.datos_mapa(services.Filtro(servicio="agua")))
     assert sin["03002"]["nivel"] == NivelEvidencia.NO_LOCALIZADO
@@ -110,7 +110,7 @@ def test_panel_municipio(con_datos, client, lector):
 
 
 def test_suministro_electrico_no_cuenta_como_energia(
-    municipios_cv, competidores, administrador, tmp_path
+    municipios_cv, empresas_gestoras, administrador, tmp_path
 ):
     from tests.evidencias.test_tabla_municipal import _libro
 

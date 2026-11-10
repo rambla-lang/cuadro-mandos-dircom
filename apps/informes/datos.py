@@ -71,7 +71,7 @@ def calcular(empresas: list[Empresa], desde: date, hasta: date) -> dict:
         "(todas las empresas seguidas)",
         reverse("piezas") + q_medios,
     )
-    competidores = []
+    resultado = []
     evidencias_usadas = set()
     for e in empresas:
         f = fichas.ficha(e, desde, hasta)
@@ -94,11 +94,11 @@ def calcular(empresas: list[Empresa], desde: date, hasta: date) -> dict:
                 datos_medios["medios"],
                 f"Medios distintos con piezas de {e.nombre}",
             ),
-            "adjudicaciones": r.m(
-                f"adjudicaciones:{e.pk}",
-                len(f["contratacion"]["adjudicaciones"]),
-                f"Adjudicaciones resueltas a {e.nombre} o su grupo en PLACSP y TED cargados",
-                reverse("ficha", args=[e.pk]) + "#contratacion",
+            "municipios_total": r.m(
+                f"municipios_total:{e.pk}",
+                len({m for fila in f["municipios"] for m in fila["municipios"]}),
+                f"Municipios distintos con algún servicio validado gestionado por {e.nombre}",
+                reverse("ficha", args=[e.pk]) + "#bloque1",
             ),
         }
         municipios = {}
@@ -120,7 +120,7 @@ def calcular(empresas: list[Empresa], desde: date, hasta: date) -> dict:
             .order_by("-fecha_publicacion")[:MAX_EVIDENCIAS_POR_EMPRESA]
         )
         evidencias_usadas.update(x.pk for x in evs)
-        competidores.append(
+        resultado.append(
             {
                 "id": e.pk,
                 "nombre": e.nombre,
@@ -148,7 +148,7 @@ def calcular(empresas: list[Empresa], desde: date, hasta: date) -> dict:
         "metricas": r.metricas,
         "total_piezas": total_piezas,
         "concentracion_top3": medios["concentracion_top3"],
-        "competidores": competidores,
+        "empresas": resultado,
         "base_documental": dict(base),
         "evidencias_ids": sorted(evidencias_usadas),
         "n_evidencias_validadas": Evidencia.objects.filter(

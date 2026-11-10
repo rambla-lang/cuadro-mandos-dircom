@@ -1,6 +1,5 @@
 """Lotes de IA como trabajos por partes (ADR-007): una parte = un objeto."""
 
-from apps.contratacion.models import Expediente
 from apps.documentos.models import Documento
 from apps.medios.models import Mencion
 from apps.nucleo.models import TrabajoIngesta
@@ -13,7 +12,6 @@ TIPO = "ia_lote"
 FUNCIONES = {
     "T1": (Mencion, tareas.t1_atribuir_mencion),
     "T2": (Documento, tareas.t2_leer_recorte),
-    "T3": (Expediente, tareas.t3_clasificar_expediente),
 }
 
 

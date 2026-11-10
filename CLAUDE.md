@@ -27,22 +27,19 @@ cp .env.example .env                      # y rellena DATABASE_URL con tu Postgr
 uv sync                                   # instalar dependencias
 uv run python manage.py migrate
 uv run python manage.py cargar_municipios --provincias 03 12 46 --comunidad "Comunitat Valenciana"
-uv run python manage.py cargar_competidores_iniciales
+uv run python manage.py cargar_empresas_gestoras
 uv run python manage.py importar_tabla_municipal --fichero seed/municipios_veolia_agua.csv \
   --plantilla seed/plantillas_importacion/veolia_agua_csv.json --usuario EMAIL [--simular]
 uv run scripts/geo/preparar_municipios.py au_03.geojson au_12.geojson au_46.geojson \
   --salida static/geo/municipios_cv.json --fecha-descarga AAAA-MM-DD   # docs/04 §11
 python3 scripts/validar_paleta.py "#hex,#hex" --mode light [--pairs all] [--ordinal]
-uv run python manage.py preparar_piloto         # municipios, competidores y reglas (idempotente)
+uv run python manage.py preparar_piloto         # municipios y empresas gestoras (idempotente)
 uv run python manage.py validar_borradores --usuario EMAIL [--simular]  # validación en bloque autorizada
 uv run python manage.py preparar_eval_menciones # plantilla del juego de evaluación de T1
 uv run python manage.py runserver
 uv run pytest                             # todos los tests
 uv run pytest -m "not externo"            # sin llamadas a servicios externos (por defecto en CI)
 uv run ruff check . && uv run ruff format --check .
-uv run python manage.py cargar_reglas_clasificacion
-uv run python manage.py ingest_ted --desde 2026-10-01 --hasta 2026-10-31
-uv run python manage.py ingest_placsp --fichero ruta.zip      # o --mes AAAAMM (descarga ~200 MB)
 DATABASE_URL='postgres://…' scripts/copia_seguridad.sh   # copia semanal (docs/12)
 ```
 
@@ -57,7 +54,6 @@ apps/
   territorio/      municipios, provincias, servicios municipales
   entidades/       empresas, grupos empresariales, alias de marca
   evidencias/      Evidencia, Fuente, NivelEvidencia (núcleo de trazabilidad)
-  contratacion/    expedientes, adjudicaciones, importadores PLACSP/TED/BOE
   medios/          menciones, medios, importadores Brandwatch/clipping
   documentos/      PDF y Word subidos, texto extraído, valoraciones cualitativas
   digital/         métricas públicas de redes y webs
@@ -84,7 +80,7 @@ static/  templates/  tests/  docs/  seed/
 - No des una tarea por terminada sin ejecutar `pytest` y `ruff`, y di qué ejecutaste.
 - Los tests no llaman a servicios externos salvo los marcados `@pytest.mark.externo`. Usa los ficheros de `tests/fixtures/`.
 - No subas secretos. `.env` está en `.gitignore`; usa `.env.example` como plantilla.
-- No hagas peticiones masivas a PLACSP: usa sus ficheros de datos abiertos. El buscador web de PLACSP bloqueó un rastreo anterior.
+- La contratación pública (PLACSP, TED, BOE) se retiró el 10/11/2026 (ADR-010). Si vuelve, no hagas peticiones masivas a PLACSP: el buscador web bloqueó un rastreo anterior.
 - Cuando cambie el comportamiento de una métrica, actualiza `docs/05-modulos-analiticos.md` en el mismo cambio.
 
 ## Skills y subagentes del proyecto

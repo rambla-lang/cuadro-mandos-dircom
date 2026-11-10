@@ -32,7 +32,7 @@ def _importar(fichero, plantilla, *extra):
 
 
 @pytest.fixture
-def base(municipios_cv, competidores, administrador):
+def base(municipios_cv, empresas_gestoras, administrador):
     return administrador
 
 

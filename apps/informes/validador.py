@@ -30,7 +30,7 @@ def numeros_permitidos(datos: dict) -> set[str]:
     textos = [datos.get("desde", ""), datos.get("hasta", "")]
     for m in datos.get("metricas", []):
         permitidos.add(_normalizar(str(m["valor"])))
-    for c in datos.get("competidores", []):
+    for c in datos.get("empresas", []):
         for e in c["evidencias"]:
             textos += [e["titulo"], e["extracto"], e["fecha"], e["limites"]]
     for t in textos:
@@ -43,7 +43,7 @@ def numeros_permitidos(datos: dict) -> set[str]:
 
 def validar_texto(texto: str, datos: dict, permitidos: set[str] | None = None) -> list[str]:
     permitidos = permitidos if permitidos is not None else numeros_permitidos(datos)
-    codigos = {e["codigo"] for c in datos.get("competidores", []) for e in c["evidencias"]}
+    codigos = {e["codigo"] for c in datos.get("empresas", []) for e in c["evidencias"]}
     metricas = {m["id"] for m in datos.get("metricas", [])}
     problemas = []
     parrafos = [p for p in re.split(r"\n\s*\n|\n", texto) if p.strip()]

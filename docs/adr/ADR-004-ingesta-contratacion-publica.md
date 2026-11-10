@@ -1,6 +1,6 @@
 # ADR-004: Cómo se obtienen los datos de contratación pública
 
-**Estado:** Aceptada (por la experiencia del rastreo de noviembre de 2026)
+**Estado:** Sustituida por ADR-010 (10/11/2026). Antes: aceptada (por la experiencia del rastreo de noviembre de 2026)
 **Fecha:** 05/11/2026
 
 ## Contexto

@@ -100,7 +100,7 @@ FILAS = [
 
 
 @pytest.fixture
-def base_medios(municipios_cv, competidores, administrador):
+def base_medios(municipios_cv, empresas_gestoras, administrador):
     from apps.medios.analisis import limpiar_caches
 
     limpiar_caches()

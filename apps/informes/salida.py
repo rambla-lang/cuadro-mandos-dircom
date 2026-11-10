@@ -50,9 +50,9 @@ def generar_docx(informe) -> bytes:
 
     escribir("resumen")
     escribir("metodo")
-    doc.add_heading("Análisis por competidor", 1)
-    for c in d["competidores"]:
-        escribir(f"competidor:{c['id']}", 2)
+    doc.add_heading("Análisis por empresa gestora", 1)
+    for c in d["empresas"]:
+        escribir(f"empresa:{c['id']}", 2)
         if c["percepciones"]:
             p = doc.add_paragraph()
             p.add_run("Valoración interna, no verificada: ").bold = True
@@ -62,18 +62,20 @@ def generar_docx(informe) -> bytes:
     t.style = "Table Grid"
     for celda, texto in zip(
         t.rows[0].cells,
-        ["Empresa", "Piezas", "Cuota de piezas", "Medios", "Adjudicaciones"],
+        ["Empresa", "Piezas", "Cuota de piezas", "Medios", "Municipios con servicio"],
         strict=True,
     ):
         celda.text = texto
-    for c in d["competidores"]:
+    for c in d["empresas"]:
         met = c["metricas"]
         fila = t.add_row().cells
         fila[0].text = c["nombre"]
         fila[1].text = f"{_m(d, met['piezas'])} [{met['piezas']}]"
         fila[2].text = f"{_m(d, met['cuota'])} % [{met['cuota']}]"
         fila[3].text = f"{_m(d, met['medios'])} [{met['medios']}]"
-        fila[4].text = f"{_m(d, met['adjudicaciones'])} [{met['adjudicaciones']}]"
+        # Informes anteriores a ADR-010 no tienen esta métrica: se regeneran para tenerla.
+        ident = met.get("municipios_total")
+        fila[4].text = f"{_m(d, ident)} [{ident}]" if ident else "Regenerar el informe"
     escribir("transversal")
     escribir("oportunidades")
     escribir("limites")
@@ -103,7 +105,7 @@ def generar_docx(informe) -> bytes:
     ):
         celda.text = texto
     vistos = set()
-    for c in d["competidores"]:
+    for c in d["empresas"]:
         for e in c["evidencias"]:
             if e["codigo"] in vistos:
                 continue
@@ -149,8 +151,8 @@ def generar_pptx(informe) -> bytes:
     ].text = f"{_fecha(d['desde'])} a {_fecha(d['hasta'])} · Comunitat Valenciana"
     resumen = secciones.get("resumen", {}).get("texto", "").splitlines()
     diapositiva("Mensaje principal", resumen[:4])
-    for c in d["competidores"]:
-        bloque1 = secciones.get(f"competidor:{c['id']}", {}).get("texto", "").splitlines()
+    for c in d["empresas"]:
+        bloque1 = secciones.get(f"empresa:{c['id']}", {}).get("texto", "").splitlines()
         diapositiva(
             f"{c['nombre']}: presencia y servicios",
             bloque1[:4],

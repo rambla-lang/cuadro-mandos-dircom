@@ -1,6 +1,6 @@
 # ADR-008: Carga histórica de PLACSP solo por comando local
 
-**Estado:** Aceptada (05/11/2026, responsable de desarrollo)
+**Estado:** Sustituida por ADR-010 (10/11/2026). Antes: aceptada (05/11/2026, responsable de desarrollo)
 **Fecha:** 05/11/2026
 **Decisores:** responsable de desarrollo; José Luis queda informado porque afecta a quién puede lanzar la carga inicial
 **Relacionada con:** ADR-002 (Render Free y Neon Free), ADR-004 (datos abiertos de PLACSP) y ADR-007 (trabajos largos). No sustituye a ninguna: concreta dónde se ejecuta cada tipo de ingesta de PLACSP.

@@ -1,9 +1,8 @@
-"""Fase 6: Word (docs/04 §6), digital (CP-12), evidencias y ficha de competidor (docs/05 §2).
+"""Fase 6: Word (docs/04 §6), digital (CP-12), evidencias y ficha de empresa gestora (docs/05 §2).
 Los .docx se generan en el test con datos sintéticos."""
 
 import io
 from datetime import date
-from decimal import Decimal
 
 import docx
 import pytest
@@ -11,7 +10,6 @@ from docx.opc.constants import RELATIONSHIP_TYPE as RT
 from docx.oxml import OxmlElement
 from docx.oxml.ns import qn
 
-from apps.contratacion.models import Adjudicacion, Expediente
 from apps.digital.models import ObservacionDigital, PerfilDigital
 from apps.digital.services import importar_csv
 from apps.documentos import word
@@ -40,7 +38,7 @@ def _hipervinculo(parrafo, url, texto):
 
 
 @pytest.fixture
-def base(competidores, municipios_cv, administrador):
+def base(empresas_gestoras, municipios_cv, administrador):
     return administrador
 
 
@@ -144,11 +142,11 @@ def test_cp12_seguidores_no_visibles(base, client, lector):
     assert PerfilDigital.objects.get().empresa == facsa
     client.force_login(lector)
     ObservacionDigital.objects.filter(fecha_observacion=date(2026, 11, 1)).delete()
-    html = client.get(f"/competidores/{facsa.pk}/").content.decode()
+    html = client.get(f"/empresas-gestoras/{facsa.pk}/").content.decode()
     assert "no visible" in html
 
 
-def test_ficha_competidor(base, client, lector):
+def test_ficha_empresa_gestora(base, client, lector):
     import tempfile
     from pathlib import Path
 
@@ -174,28 +172,13 @@ def test_ficha_competidor(base, client, lector):
     }
     importar_tabla(ruta, config, base)
     urbaser = Empresa.objects.get(nombre="Urbaser")
-    exp = Expediente.objects.create(
-        fuente="placsp", id_externo="e1", objeto="Recogida", servicio_clasificado="residuos"
-    )
-    Adjudicacion.objects.create(
-        expediente=exp,
-        adjudicatario_texto="URBASER SA",
-        empresa=urbaser,
-        importe_adjudicacion=Decimal("1000"),
-        nivel="oficial",
-    )
     client.force_login(lector)
-    html = client.get(f"/competidores/{urbaser.pk}/").content.decode()
+    html = client.get(f"/empresas-gestoras/{urbaser.pk}/").content.decode()
     assert "Residuos</strong>: 2 municipios" in html
-    assert "1000,00 € sin IVA en total" in html
+    assert "Contratación" not in html  # retirada (ADR-010)
     assert "Actividad no caracterizable" in html
-    exp2 = Expediente.objects.create(fuente="ted", id_externo="e2", objeto="Limpieza")
-    Adjudicacion.objects.create(
-        expediente=exp2, adjudicatario_texto="Urbaser", empresa=urbaser, nivel="oficial"
-    )
-    html = client.get(f"/competidores/{urbaser.pk}/").content.decode()
-    assert "No se suman importes" in html
-    assert client.get("/competidores/").status_code == 200
+    lista = client.get("/empresas-gestoras/").content.decode()
+    assert "Empresas gestoras" in lista and "Veolia" in lista
 
 
 def test_evidencia_manual_validar_y_auditar(base, client, analista, lector):
@@ -225,7 +208,7 @@ def test_evidencia_manual_validar_y_auditar(base, client, analista, lector):
     from apps.nucleo.models import RegistroAuditoria
 
     assert RegistroAuditoria.objects.filter(accion="evidencia.editar_validada").exists()
-    html = client.get(f"/competidores/{facsa.pk}/").content.decode()
+    html = client.get(f"/empresas-gestoras/{facsa.pk}/").content.decode()
     assert "Premio sintético corregido" in html
     client.force_login(lector)
     assert client.get(f"/evidencias/{ev.pk}/").status_code == 200

@@ -3,7 +3,6 @@ aplica sin que una persona lo acepte."""
 
 import base64
 import contextlib
-import json
 from datetime import date
 
 from django.contrib.contenttypes.models import ContentType
@@ -12,10 +11,9 @@ from django.core.files.storage import default_storage
 from django.db import transaction
 from django.utils import timezone
 
-from apps.contratacion.models import Expediente
 from apps.documentos.models import Documento
 from apps.entidades.models import Empresa
-from apps.evidencias.enums import ALCANCES_POR_SERVICIO, EstadoValidacion, Servicio
+from apps.evidencias.enums import EstadoValidacion
 from apps.medios.analisis import vinculo_territorial
 from apps.medios.models import Medio, Mencion, MencionEmpresa, Pieza
 from apps.nucleo.models import ElementoRevision
@@ -116,28 +114,6 @@ def t2_leer_recorte(documento: Documento, usuario=None) -> PropuestaIA:
     )
 
 
-def t3_clasificar_expediente(exp: Expediente, usuario=None) -> PropuestaIA:
-    texto = (
-        f"Objeto: {exp.objeto}\nCPV: {', '.join(exp.cpv) or 'no consta'}\n"
-        f"Órgano: {exp.organo.nombre if exp.organo else 'no consta'}\n"
-        "Catálogo: "
-        + json.dumps({s: [str(a) for a in al] for s, al in ALCANCES_POR_SERVICIO.items()})
-    )
-    r = llamar(
-        tarea="T3",
-        tipo_modelo="clasificar",
-        prompt_tarea="t3_v1",
-        contenido=[{"type": "text", "text": texto}],
-        esquema=esquemas.ESQUEMA_T3,
-        validador=esquemas.SalidaT3,
-        usuario=usuario,
-        objeto=exp,
-        max_tokens=800,
-        esfuerzo="low",
-    )
-    return _proponer(r, exp, "T3", exp.objeto, "Clasificación propuesta por la IA (T3).")
-
-
 def t4_dividir_percepciones(documento: Documento, usuario=None) -> PropuestaIA:
     r = llamar(
         tarea="T4",
@@ -210,18 +186,6 @@ def aplicar(propuesta: PropuestaIA, usuario, empresas_aceptadas: list[int] | Non
                 PercepcionInterna.objects.create(
                     empresa_id=f["empresa_id"], texto=f["texto"], documento_origen=obj
                 )
-    elif tarea == "T3":
-        servicio = "" if datos["servicio"] == "ninguno" else datos["servicio"]
-        alcance = (
-            datos["alcance"]
-            if servicio and datos["alcance"] in ALCANCES_POR_SERVICIO[Servicio(servicio)]
-            else ""
-        )
-        obj.servicio_clasificado = servicio
-        obj.alcance_clasificado = alcance
-        obj.metodo_clasificacion = Expediente.Clasificacion.IA
-        obj.regla_clasificacion = f"IA validada por {usuario.email}: {datos['motivo']}"[:200]
-        obj.save()
     propuesta.estado_revision = (
         PropuestaIA.Estado.ACEPTADA if empresas_aceptadas is None else PropuestaIA.Estado.CORREGIDA
     )

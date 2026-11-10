@@ -1,9 +1,0 @@
-{% extends "base.html" %}
-{% block titulo %}Competidores{% endblock %}
-{% block contenido %}
-<h1>Competidores</h1>
-<table>
-  <thead><tr><th>Empresa</th><th>Grupo</th><th>Tipo</th><th>Prestaciones validadas</th><th>Atribuciones en medios</th><th>Adjudicaciones</th></tr></thead>
-  <tbody>{% for e in empresas %}<tr><td><a href="{% url 'ficha' e.pk %}">{{ e.nombre }}</a></td><td>{{ e.grupo|default:"—" }}</td><td>{% if e.es_propia %}Propia (referencia){% elif e.es_competidor_seguido %}Competidor con ficha{% else %}Otra{% endif %}</td><td>{{ e.n_prestaciones }}</td><td>{{ e.n_menciones }}</td><td>{{ e.n_adjudicaciones }}</td></tr>{% endfor %}</tbody>
-</table>
-{% endblock %}

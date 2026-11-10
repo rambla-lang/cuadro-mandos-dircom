@@ -17,7 +17,7 @@ Tipo = ElementoRevision.Tipo
 
 
 @pytest.fixture
-def importado(municipios_cv, competidores, administrador):
+def importado(municipios_cv, empresas_gestoras, administrador):
     importar_tabla(FIXTURES / "agua_sintetico.csv", config_agua(), administrador)
     return administrador
 
@@ -74,7 +74,7 @@ def test_resolver_operador_con_alias_y_varias_empresas(importado, tmp_path):
 
 
 def test_decidir_nivel_oficial_exige_url_y_valida(
-    municipios_cv, competidores, administrador, tmp_path
+    municipios_cv, empresas_gestoras, administrador, tmp_path
 ):
     ruta = _libro(
         tmp_path,
@@ -100,7 +100,7 @@ def test_decidir_nivel_oficial_exige_url_y_valida(
 
 
 def test_rechazar_nivel_deja_la_evidencia_fuera(
-    municipios_cv, competidores, administrador, tmp_path
+    municipios_cv, empresas_gestoras, administrador, tmp_path
 ):
     ruta = _libro(
         tmp_path,
@@ -113,7 +113,7 @@ def test_rechazar_nivel_deja_la_evidencia_fuera(
     assert Evidencia.objects.get().estado_validacion == EstadoValidacion.RECHAZADA
 
 
-def test_validar_borradores(municipios_cv, competidores, administrador):
+def test_validar_borradores(municipios_cv, empresas_gestoras, administrador):
     importar_tabla(FIXTURES / "agua_sintetico.csv", config_agua(estado="borrador"), administrador)
     assert srv.validar_evidencias(Evidencia.objects.all(), administrador) == 3
     assert not Evidencia.objects.exclude(estado_validacion=EstadoValidacion.VALIDADA).exists()

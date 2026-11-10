@@ -1,11 +1,10 @@
 {% extends "base.html" %}
 {% block titulo %}{{ empresa.nombre }}{% endblock %}
 {% block contenido %}
-<p><a href="{% url 'competidores' %}">← Competidores</a></p>
+<p><a href="{% url 'empresas_gestoras' %}">← Empresas gestoras</a></p>
 <h1>{{ empresa.nombre }}{% if empresa.grupo %} <small>(grupo {{ empresa.grupo }})</small>{% endif %}</h1>
-{% if empresa.es_propia %}<p class="aviso">Empresa propia: referencia, fuera del benchmarking.</p>{% endif %}
 {% for a in empresa.acotaciones.all %}<p class="aviso">Acotación: {{ a.nota }}{% if a.ambito_geografico %} ({{ a.ambito_geografico }}){% endif %}</p>{% endfor %}
-<p><a href="#bloque1">Bloque 1</a> · <a href="#bloque2">Bloque 2</a> · <a href="#bloque3">Bloque 3</a> · <a href="#contratacion">Contratación</a> · <a href="{% url 'evidencias' %}?empresa={{ empresa.pk }}">Todas sus evidencias ({{ otras_evidencias }})</a></p>
+<p><a href="#bloque1">Bloque 1</a> · <a href="#bloque2">Bloque 2</a> · <a href="#bloque3">Bloque 3</a> · <a href="{% url 'evidencias' %}?empresa={{ empresa.pk }}">Todas sus evidencias ({{ otras_evidencias }})</a></p>
 
 <h2 id="bloque1">Bloque 1</h2>
 <h3>1. Percepción interna y contraste</h3>
@@ -55,14 +54,4 @@
 {% if web %}<p>{{ web.fecha|date:"d/m/Y" }} · <a href="{{ web.url }}" target="_blank" rel="noopener noreferrer">{{ web.url }}</a></p><p><strong>Tono:</strong> {{ web.tono }}</p><p><strong>Contenidos destacados:</strong> {{ web.contenidos_destacados }}</p><p><strong>Usabilidad:</strong> {{ web.usabilidad }}</p>
 {% else %}<p><small>Sin auditoría web registrada.</small></p>{% endif %}
 
-<h2 id="contratacion">Contratación</h2>
-{% with c=contratacion %}
-<p><small>Adjudicaciones a {{ empresa.nombre }}{% if c.grupo %} o a otras empresas del grupo {{ c.grupo }}{% endif %} en los datos cargados de PLACSP y TED. TED solo publica contratos por encima de los umbrales europeos y PLACSP no incluye contratos menores.</small></p>
-{% if c.adjudicaciones %}
-<p>{{ c.adjudicaciones|length }} adjudicaciones{% if c.comparables %}, {{ c.suma }} € sin IVA en total{% else %}. <span class="etiqueta">No se suman importes</span> porque no todos son conocidos o comparables (sin IVA).{% endif %} {% for s, n in c.por_servicio.items %}· {{ s }}: {{ n }} {% endfor %}</p>
-<table><thead><tr><th>Fecha</th><th>Objeto</th><th>Municipio</th><th>Empresa</th><th>Importe sin IVA</th><th>Nivel</th></tr></thead><tbody>
-{% for a in c.adjudicaciones %}<tr><td>{{ a.fecha_adjudicacion|date:"d/m/Y"|default:"—" }}</td><td><a href="{% url 'expediente' a.expediente_id %}">{{ a.expediente.objeto|truncatechars:90 }}</a></td><td>{{ a.expediente.organo.municipio.nombre_oficial|default:"—" }}</td><td>{{ a.empresa }}</td><td>{{ a.importe_adjudicacion|default:"No consta" }}</td><td>{{ a.get_nivel_display }}</td></tr>{% endfor %}
-</tbody></table>
-{% else %}<p><small>Sin adjudicaciones resueltas a esta empresa en los datos cargados (los adjudicatarios se resuelven en la bandeja).</small></p>{% endif %}
-{% endwith %}
 {% endblock %}

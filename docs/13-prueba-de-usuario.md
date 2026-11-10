@@ -17,7 +17,6 @@ Abre http://localhost:8000 y entra con el administrador de desarrollo (su contra
 |---|---|
 | Municipios | 542 de la Comunitat Valenciana (INE) con su polígono (IGN) |
 | Tablas municipales | Las tres de `seed/`: agua de Veolia (validada), residuos y energía (validada) y el cruce multiempresa (borradores) |
-| Contratación | PLACSP de octubre de 2026 (4.944 expedientes valencianos) y TED de octubre (363 avisos de compradores valencianos) |
 | Medios | Los tres exports de Brandwatch (2.500 menciones únicas) y la lista de publicaciones del Word |
 | Documentos | Percepciones internas (5 empresas) y las 98 evidencias del anexo del documento maestro, en borrador |
 | Bandeja | Unos 985 elementos pendientes de todos los tipos |
@@ -25,17 +24,15 @@ Abre http://localhost:8000 y entra con el administrador de desarrollo (su contra
 ## Qué probar (criterios de aceptación de docs/10)
 
 - [ ] **Usuarios y roles (Fase 1).** Invita un analista y un lector; entra con cada uno. El lector no ve Importar, Revisión ni IA, y si fuerza la URL recibe 403.
-- [ ] **Mapa (Fase 2).** Agua, residuos y energía; color por nivel y por operador; casilla de borradores. Pulsa un municipio para abrir su panel (servicios, evidencias y contratación). Exporta la tabla a CSV y Excel. «EL BOSQUE-CHIVA» y «TAVERNES» están en la bandeja: resuélvelos (Tavernes de la Valldigna; Chiva o rechazar).
-- [ ] **Contratación (Fase 3).** Contratación → filtra por servicio y municipio, abre un expediente y su enlace a PLACSP o TED. Actualizar contratación con TED de unos días (tarda segundos) y mira el progreso en Trabajos. Repite: no duplica.
-- [ ] **Medios (Fase 4).** Medios: comprueba el total de piezas y el reparto por competidor (por ejemplo, con una tabla dinámica de los CSV). Cada cifra enlaza con sus piezas. Sube algún recorte PDF.
+- [ ] **Mapa (Fase 2).** Agua, residuos y energía; color por nivel y por operador; casilla de borradores. Pulsa un municipio para abrir su panel (servicios y evidencias). Exporta la tabla a CSV y Excel. «EL BOSQUE-CHIVA» y «TAVERNES» están en la bandeja: resuélvelos (Tavernes de la Valldigna; Chiva o rechazar).
+- [ ] **Medios (Fase 4).** Medios: comprueba el total de piezas y el reparto por empresa gestora (por ejemplo, con una tabla dinámica de los CSV). Cada cifra enlaza con sus piezas. Sube algún recorte PDF.
 - [ ] **IA (Fase 5).** Sin clave aparece «No disponible» con el motivo. Para activarla: en `.env`, `ANTHROPIC_API_KEY`, los tres `IA_MODELO_*`, `IA_PRECIOS_JSON` (en euros) e `IA_LIMITE_MENSUAL_EUR` mayor que 0; reinicia y lanza un lote pequeño desde el panel de IA. Las propuestas van a la bandeja.
-- [ ] **Fichas (Fase 6).** Competidores → FACSA: valoración interna aparte, municipios, medios, evidencias, redes y contratación. Valida algunas evidencias del anexo (Evidencias → filtro «Borrador») y comprueba que aparecen en la ficha. Añade una observación de redes con «no visible».
+- [ ] **Fichas (Fase 6).** Empresas gestoras → FACSA: valoración interna aparte, municipios, medios, evidencias y redes. Valida algunas evidencias del anexo (Evidencias → filtro «Borrador») y comprueba que aparecen en la ficha. Añade una observación de redes con «no visible».
 - [ ] **Informes (Fase 7).** Hay un borrador generado (Informes). Elige 10 cifras al azar: cada una lleva `[Mn]` o `[E-xxxxxx]`, y el anexo y la tabla de métricas te llevan a sus evidencias. Edita una sección con una cifra inventada: el validador la marca y no deja publicar. Publica y descarga el Word y el PowerPoint.
 
 ## Lo que verás vacío o incompleto, y por qué
 
-- **Pocas prestaciones de competidores en el mapa.** El cruce multiempresa entró en borrador (docs/04 §9): hasta que se validen sus evidencias o se resuelva la bandeja, solo cuenta lo validado. La casilla «Incluir borradores» lo muestra.
-- **Adjudicaciones sin empresa.** El catálogo no tiene NIF ni razones sociales: los adjudicatarios de agua, residuos y energía están en la bandeja para resolverlos una vez (se guarda el alias o el NIF y los siguientes se resuelven solos).
+- **Pocas prestaciones de empresas gestoras en el mapa.** El cruce multiempresa entró en borrador (docs/04 §9): hasta que se validen sus evidencias o se resuelva la bandeja, solo cuenta lo validado. La casilla «Incluir borradores» lo muestra.
 - **Eventos, premios, grupos de interés, innovación.** Dependen de evidencias con esa categoría; las del anexo entraron como «mención en medios», «digital» u «otra» y hay que reclasificarlas al validarlas.
 - **Redes y web.** No hay datos hasta que se introduzcan (no hay rastreo automático, P-05).
 - **Informes de sostenibilidad (T5) y BOE.** Posteriores al MVP.

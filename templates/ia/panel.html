@@ -12,7 +12,6 @@
     <form method="post" action="{% url 'ia_lanzar' %}">{% csrf_token %}
       <p><label><input type="radio" name="tarea" value="T1" required> T1 · Atribuir menciones sin atribución validada ({{ candidatos.T1 }})</label></p>
       <p><label><input type="radio" name="tarea" value="T2"> T2 · Leer recortes sin capa de texto ({{ candidatos.T2 }})</label></p>
-      <p><label><input type="radio" name="tarea" value="T3"> T3 · Clasificar expedientes dudosos ({{ candidatos.T3 }})</label></p>
       <button type="submit">Lanzar</button></form></div>
 </section>
 <h2>Este mes por tarea</h2>

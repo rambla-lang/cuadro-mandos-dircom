@@ -43,7 +43,7 @@ def config_agua(**extra):
 
 
 @pytest.fixture
-def entorno(municipios_cv, competidores, administrador):
+def entorno(municipios_cv, empresas_gestoras, administrador):
     return administrador
 
 

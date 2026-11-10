@@ -29,7 +29,7 @@ Este paquete contiene la documentación que Claude Code necesita para construir 
 | `docs/02-arquitectura.md` | Componentes, flujos de datos, despliegue piloto y límites conocidos |
 | `docs/13-prueba-de-usuario.md` | Cómo arrancar la versión local, qué datos tiene y qué probar en cada fase |
 | `docs/12-operacion.md` | Despliegue en Render y Neon, carga de datos, copias de seguridad y qué hacer si algo falla |
-| `docs/adr/` | Decisiones de arquitectura (ADR-001 a ADR-009) con alternativas y consecuencias |
+| `docs/adr/` | Decisiones de arquitectura (ADR-001 a ADR-010) con alternativas y consecuencias |
 | `docs/03-modelo-de-datos.md` | Entidades, campos, relaciones y niveles de evidencia |
 | `docs/04-fuentes-e-ingesta.md` | Cada fuente: acceso, formato real observado, reglas de importación y lecciones aprendidas |
 | `docs/05-modulos-analiticos.md` | Definición exacta de cada métrica y pantalla de análisis |
@@ -42,7 +42,7 @@ Este paquete contiene la documentación que Claude Code necesita para construir 
 | `.claude/skills/` | Dos skills del proyecto: añadir un importador y aplicar reglas de evidencia |
 | `.claude/agents/revisor-datos.md` | Subagente que revisa cambios que tocan datos o métricas |
 | `.env.example` | Variables de entorno necesarias, sin valores |
-| `seed/` | Datos reales para arrancar: municipios con agua de Veolia, esa tabla con residuos y energía, cruce de servicios municipales de competidores, y cabecera real de un export de Brandwatch |
+| `seed/` | Datos reales para arrancar: municipios con agua de Veolia, esa tabla con residuos y energía, cruce de servicios municipales de empresas gestoras, y cabecera real de un export de Brandwatch |
 
 ## Convención de este paquete
 

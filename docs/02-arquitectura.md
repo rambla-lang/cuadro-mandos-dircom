@@ -43,6 +43,8 @@ flowchart LR
 ## Flujos principales
 
 ### A. Actualizar contratación pública (bajo demanda)
+
+**Retirado el 10/11/2026 (ADR-010).** Se conserva como referencia histórica; el marco de trabajos (`TrabajoIngesta`) sigue en uso para los lotes de IA.
 1. El analista pulsa "Actualizar contratación" y elige la fuente y el rango de fechas.
 2. Se crea un `TrabajoIngesta` en estado `pendiente`. La vista responde en el acto y la página consulta el progreso cada pocos segundos con HTMX.
 3. El ejecutor descarga los ficheros por partes, los procesa en streaming, filtra por territorio y hace un upsert por clave natural.
@@ -52,7 +54,7 @@ flowchart LR
 El mismo servicio se invoca con `manage.py ingest_placsp` o `ingest_ted` para ejecutarlo en local si el plan gratuito se queda corto.
 
 ### B. Cargar menciones de Brandwatch
-Subida del CSV → validar formato → normalizar → deduplicar por `Resource Id` y luego por URL canónica → detectar competidores por alias → marcar la pertinencia territorial → bandeja de revisión para lo dudoso.
+Subida del CSV → validar formato → normalizar → deduplicar por `Resource Id` y luego por URL canónica → detectar empresas gestoras por alias → marcar la pertinencia territorial → bandeja de revisión para lo dudoso.
 
 ### C. Subir recortes PDF y documentos Word
 1. El archivo se sube al almacén de objetos (en local, a la carpeta `media/`).
@@ -62,7 +64,7 @@ Subida del CSV → validar formato → normalizar → deduplicar por `Resource I
 5. El analista valida y se crean las `Evidencia`.
 
 ### D. Generar un informe
-El usuario elige el periodo, los competidores y la plantilla. El servicio reúne solo las evidencias validadas y calcula las métricas. La IA redacta los textos a partir de esas evidencias, con referencias a sus identificadores, y se genera el docx o el pptx. Cada cifra incluye su referencia (por ejemplo, `[E-0123]`) y un anexo lista las evidencias usadas.
+El usuario elige el periodo, las empresas gestoras y la plantilla. El servicio reúne solo las evidencias validadas y calcula las métricas. La IA redacta los textos a partir de esas evidencias, con referencias a sus identificadores, y se genera el docx o el pptx. Cada cifra incluye su referencia (por ejemplo, `[E-0123]`) y un anexo lista las evidencias usadas.
 
 ## Despliegue del piloto (gratuito)
 

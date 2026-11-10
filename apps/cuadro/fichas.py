@@ -1,11 +1,10 @@
-"""Ficha de competidor (RF-51, docs/05 §2)."""
+"""Ficha de empresa gestora (RF-51, docs/05 §2)."""
 
 from collections import Counter
 from datetime import date, timedelta
 
 from django.db.models import Q
 
-from apps.contratacion.models import Adjudicacion
 from apps.digital.models import AuditoriaWeb, PerfilDigital
 from apps.documentos.models import PercepcionInterna
 from apps.entidades.models import Empresa
@@ -82,34 +81,6 @@ def redes(empresa):
     return salida
 
 
-def contratacion(empresa):
-    """Adjudicaciones a la empresa o a su grupo. Solo se suman importes si todos son
-    comparables (todos conocidos y sin IVA)."""
-    empresas = [empresa]
-    if empresa.grupo_id:
-        empresas = list(Empresa.objects.filter(grupo_id=empresa.grupo_id))
-    adjudicaciones = list(
-        Adjudicacion.objects.filter(empresa__in=empresas)
-        .select_related("expediente__organo__municipio", "empresa", "lote")
-        .order_by("-fecha_adjudicacion", "-expediente__fecha_publicacion")
-    )
-    importes = [a.importe_adjudicacion for a in adjudicaciones]
-    comparables = bool(adjudicaciones) and all(i is not None for i in importes)
-    return {
-        "adjudicaciones": adjudicaciones,
-        "suma": sum(importes) if comparables else None,
-        "comparables": comparables,
-        # dict y no Counter: en la plantilla, Counter["items"] devolvería 0.
-        "por_servicio": dict(
-            Counter(
-                a.expediente.get_servicio_clasificado_display() or "Sin clasificar"
-                for a in adjudicaciones
-            )
-        ),
-        "grupo": empresa.grupo,
-    }
-
-
 def ficha(empresa: Empresa, desde: date | None = None, hasta: date | None = None) -> dict:
     hasta = hasta or date.today()
     desde = desde or hasta - timedelta(days=365)
@@ -137,7 +108,6 @@ def ficha(empresa: Empresa, desde: date | None = None, hasta: date | None = None
         "redes": redes(empresa),
         "sin_redes": SIN_REDES,
         "web": AuditoriaWeb.objects.filter(empresa=empresa).first(),
-        "contratacion": contratacion(empresa),
         "otras_evidencias": Evidencia.objects.filter(empresas=empresa)
         .exclude(Q(estado_validacion=EstadoValidacion.RECHAZADA))
         .count(),

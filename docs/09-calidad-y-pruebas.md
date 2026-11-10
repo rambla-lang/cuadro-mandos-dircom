@@ -6,7 +6,7 @@
 |---|---|---|---|
 | Unitarias | Normalizadores, analizadores (Brandwatch, ATOM, nombre de recorte), reglas de clasificación, cálculo de métricas, validador de informes | pytest | Siempre (`pytest -m "not externo"`) |
 | Integración | Importadores completos sobre Postgres de test con fixtures reales; vistas con permisos; generación de docx y pptx | pytest-django | Siempre |
-| Contrato externo | Una petición real a TED, un ZIP real de PLACSP y una llamada real a Claude | pytest `-m externo` | A mano y antes de desplegar |
+| Contrato externo | Una llamada real a Claude (las de PLACSP y TED se retiraron con la contratación, ADR-010) | pytest `-m externo` | A mano y antes de desplegar |
 | E2E | Recorridos clave en el navegador, con captura de pantalla | Playwright | Antes de cerrar cada fase |
 | Evaluación de IA | Precisión de T1 y T2 sobre el juego anotado | pytest `-m externo` + informe | Al cambiar un prompt o un modelo |
 
@@ -15,8 +15,6 @@ Objetivo de cobertura: ≥ 80 % en `importers/`, `services/` de métricas y `app
 ## Datos de prueba (`tests/fixtures/`)
 
 - `brandwatch/`: la cabecera real de `seed/` y unas 30 filas sintéticas que reproducen casos reales (fila duplicada entre dos exports, URL con `utm_`, idioma ca, mención de "Cox" municipio frente a Cox empresa, `Region` vacía).
-- `placsp/`: un ATOM recortado de un fichero real (Fase 0) con entradas de la Comunitat Valenciana y de fuera, una entrada actualizada dos veces y una `deleted-entry`.
-- `ted/`: una respuesta JSON real grabada.
 - `clipping/`: nombres de archivo reales (lista en `04` §5) y 2 PDF pequeños, uno con texto y otro sin él, generados para el test. No se usan recortes de prensa reales en el repositorio, por derechos de autor.
 - `word/`: un docx sintético con la estructura del documento de percepciones (líneas de empresa en mayúsculas seguidas de párrafos).
 - `municipios/`: `seed/municipios_veolia_agua.csv`.
@@ -30,7 +28,7 @@ Objetivo de cobertura: ≥ 80 % en `importers/`, `services/` de métricas y `app
 | CP-03 | Órgano "Ayuntamiento de Llagostera" al buscar Agost | No se vincula con Agost |
 | CP-04 | Órgano "Junta de Gobierno del Ayuntamiento de Monforte del Cid" | Se vincula con Monforte del Cid |
 | CP-05 | "L'Eliana", "l'Eliana" y "Eliana" | Resuelven el mismo municipio si figuran en `nombres_alternativos` |
-| CP-06 | Expediente sin adjudicatario | `Adjudicacion` sin empresa y nivel `parcial`, nunca con un nombre inventado |
+| CP-06 (retirado, ADR-010) | Expediente sin adjudicatario | `Adjudicacion` sin empresa y nivel `parcial`, nunca con un nombre inventado |
 | CP-07 | Municipio sin ningún registro | Aparece como "No localizado" en el mapa y la tabla, no como 0 |
 | CP-08 | Pieza compartida por dos empresas | Cuenta 1 en el total y 1 para cada empresa |
 | CP-09 | Texto de la IA con una cifra que no está en las métricas | El validador marca la sección para revisión |

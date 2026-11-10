@@ -1,6 +1,5 @@
 from django.contrib.postgres.fields import ArrayField
 from django.db import models
-from django.db.models import Q
 
 from apps.evidencias.enums import Servicio
 from apps.nucleo.models import ModeloConFechas
@@ -20,7 +19,8 @@ class GrupoEmpresarial(ModeloConFechas):
 
 
 class Empresa(ModeloConFechas):
-    """Empresa competidora o propia. No se borra si tiene evidencias: se desactiva (docs/03)."""
+    """Empresa gestora de servicios municipales. No se borra si tiene evidencias: se desactiva
+    (docs/03)."""
 
     nombre = models.CharField("nombre", max_length=200, unique=True)
     grupo = models.ForeignKey(
@@ -32,26 +32,18 @@ class Empresa(ModeloConFechas):
         related_name="empresas",
     )
     nif = models.CharField("NIF", max_length=20, null=True, blank=True, unique=True)
-    es_propia = models.BooleanField(
-        "es propia",
+    con_ficha = models.BooleanField(
+        "con ficha",
         default=False,
-        help_text="Veolia, Hidraqua y sus marcas: referencia propia, fuera del benchmarking.",
+        help_text="Empresa gestora con ficha y seguimiento en medios e informes.",
     )
-    es_competidor_seguido = models.BooleanField("competidor con ficha", default=False)
     activa = models.BooleanField("activa", default=True)
     notas = models.TextField("notas", blank=True)
 
     class Meta:
-        verbose_name = "empresa"
-        verbose_name_plural = "empresas"
+        verbose_name = "empresa gestora"
+        verbose_name_plural = "empresas gestoras"
         ordering = ["nombre"]
-        constraints = [
-            models.CheckConstraint(
-                condition=~Q(es_propia=True, es_competidor_seguido=True),
-                name="empresa_propia_no_es_competidor",
-                violation_error_message="Una empresa propia no puede ser competidor seguido.",
-            ),
-        ]
 
     def __str__(self):
         return self.nombre
@@ -99,8 +91,8 @@ class AliasEmpresa(ModeloConFechas):
         super().save(*args, **kwargs)
 
 
-class AcotacionCompetidor(ModeloConFechas):
-    """Límite del análisis de un competidor (RF-11). Es un dato editable, no código."""
+class AcotacionEmpresa(ModeloConFechas):
+    """Límite del análisis de una empresa gestora (RF-11). Es un dato editable, no código."""
 
     empresa = models.ForeignKey(
         Empresa, verbose_name="empresa", on_delete=models.CASCADE, related_name="acotaciones"
@@ -122,8 +114,8 @@ class AcotacionCompetidor(ModeloConFechas):
     )
 
     class Meta:
-        verbose_name = "acotación de competidor"
-        verbose_name_plural = "acotaciones de competidor"
+        verbose_name = "acotación de empresa gestora"
+        verbose_name_plural = "acotaciones de empresa gestora"
         ordering = ["empresa__nombre"]
 
     def __str__(self):

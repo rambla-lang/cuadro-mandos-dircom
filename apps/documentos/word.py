@@ -61,7 +61,7 @@ def es_cabecera(linea: str) -> bool:
 def empresa_de_cabecera(linea: str) -> Empresa | None:
     """Cabecera de empresa en mayúsculas («NEALIS /FACSA», «FACSA (NEALIS):», «COX»).
 
-    En una cabecera el contexto es explícito (es una lista de competidores), así que también
+    En una cabecera el contexto es explícito (es una lista de empresas gestoras), así que también
     valen los alias que requieren contexto, siempre con coincidencia exacta."""
     texto = linea.strip().rstrip(":").strip()
     if not texto or not texto.isupper() or len(texto) > 80:

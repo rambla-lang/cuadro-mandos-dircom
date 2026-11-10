@@ -80,9 +80,9 @@ Campos mínimos. Todos los modelos tienen además `creado`, `modificado` y, si p
 
 ### entidades
 - **GrupoEmpresarial**: `nombre`.
-- **Empresa**: `nombre`, `grupo`, `nif` (opcional, único si existe), `es_propia` (excluida del benchmarking), `es_competidor_seguido`, `notas`.
+- **Empresa**: `nombre`, `grupo`, `nif` (opcional, único si existe), `con_ficha` (empresa gestora con ficha; desde el 10/11/2026 sustituye a `es_competidor_seguido` y desaparece `es_propia`: Veolia e Hidraqua son una empresa gestora más, grupo Veolia, ADR-010), `notas`.
 - **AliasEmpresa**: `empresa`, `texto`, `tipo` (marca, razón social, abreviatura, marca local), `requiere_contexto` (para alias ambiguos, como "Cox", que también es un municipio).
-- **AcotacionCompetidor**: `empresa`, `servicios_incluidos`, `ambito_geografico`, `nota` (por ejemplo, "STV: solo jardines y zonas verdes de Elche"), `fuente` (documento o decisión de la que sale). `servicios_incluidos` vacío significa que la acotación no limita por servicio; la nota explica el límite (caso de STV, cuyo servicio no está en el catálogo).
+- **AcotacionEmpresa**: `empresa`, `servicios_incluidos`, `ambito_geografico`, `nota` (por ejemplo, "STV: solo jardines y zonas verdes de Elche"), `fuente` (documento o decisión de la que sale). `servicios_incluidos` vacío significa que la acotación no limita por servicio; la nota explica el límite (caso de STV, cuyo servicio no está en el catálogo).
 
 ### evidencias
 - **Fuente**: `tipo`, `nombre`, `dominio` o `url_base`.
@@ -90,6 +90,8 @@ Campos mínimos. Todos los modelos tienen además `creado`, `modificado` y, si p
 - **PrestacionServicio** (vista curada que alimenta el mapa): `municipio`, `servicio`, `alcance` (vacío = la fuente no lo concreta), `empresa` (o nulo si es gestión directa, no localizado o pendiente de resolver), `operador_texto` (literal de la fuente, sin reinterpretar; se muestra mientras la empresa está sin resolver), `gestion` (indirecta, directa municipal, empresa pública, consorcial, no localizada), `anio_referencia`, `vigencia_confirmada` (sí, no, desconocida), `nivel`, `evidencias`. Unicidad: (`municipio`, `servicio`, `alcance`, `empresa`) cuando hay empresa; (`municipio`, `servicio`, `alcance`, `operador_texto` normalizado) cuando no la hay, para que dos operadores sin catalogar distintos no se fundan. El nivel y el año se recalculan a partir de sus evidencias no rechazadas: manda el mejor nivel entre las validadas y, si no hay ninguna validada, entre los borradores (la prestación es entonces un borrador). Cambio de la Fase 2.
 
 ### contratacion
+
+**Retirado el 10/11/2026 (ADR-010).** El módulo y sus tablas se eliminaron; lo que sigue es el diseño que tuvo. Quién gestiona cada servicio en cada municipio se guarda en `Municipio`, `Empresa` (empresa gestora) y `PrestacionServicio` (la relación con el servicio y su nivel), siempre con sus evidencias.
 - **OrganoContratacion**: `id_plataforma` (`ID_PLATAFORMA` de PLACSP, único; vacío si el órgano solo viene de TED), `nif`, `dir3`, `ciudad`, `codigo_postal`, `jerarquia` (los `ParentLocatedParty`), `tipo_poder`, `nombre`, `municipio` (nulo si no está vinculado), `entidad_supramunicipal`, `estado_vinculacion` (`automatica`, `validada`, `pendiente`, `no_aplica`).
 - **Expediente**: `fuente` (placsp, ted, boe), `id_externo` (clave natural por fuente; ver `04`), `numero_expediente`, `organo`, `objeto`, `tipo_contrato`, `cpv` (lista), `estado`, `importe_licitacion`, `iva_incluido` (sí, no o desconocido), `fecha_publicacion`, `fecha_actualizacion_fuente`, `url_origen`, `servicio_clasificado`, `alcance_clasificado`, `metodo_clasificacion` (cpv, palabras clave, ia, manual, sin clasificar), `regla_clasificacion`, `entrada_atom_id` y `fichero_origen` para trazar de dónde salió; además `eliminado_en_fuente`, `importe_licitacion_con_iva`, `valor_estimado`, `nuts`, `criterio_territorial` y `datos_fuente` (por ejemplo, el valor de TED sin interpretar). Unicidad: (`fuente`, `id_externo`).
 - **Lote**: `expediente`, `numero`, `objeto`, `importe`.

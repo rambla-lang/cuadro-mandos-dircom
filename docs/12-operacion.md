@@ -11,7 +11,7 @@ Guía para el responsable técnico. Plataforma: Render (servicio web gratuito) y
    - `ALLOWED_HOSTS`: el dominio `….onrender.com` que asigne Render.
    - `CSRF_TRUSTED_ORIGINS`: `https://….onrender.com`.
    - `ANTHROPIC_API_KEY` e `IA_PRECIOS_JSON`: vacíos si no se usa la IA todavía. `IA_LIMITE_MENSUAL_EUR` está a 0: la IA queda bloqueada hasta subirlo.
-   `SECRET_KEY` la genera Render. Cada arranque ejecuta las migraciones y `preparar_piloto` (municipios, competidores y reglas; idempotente).
+   `SECRET_KEY` la genera Render. Cada arranque ejecuta las migraciones y `preparar_piloto` (municipios y empresas gestoras; idempotente).
 4. **Primer administrador:** como no hay consola, se crea desde tu ordenador contra Neon:
    ```bash
    DATABASE_URL='postgres://…neon…' uv run python manage.py createsuperuser
@@ -22,11 +22,6 @@ Guía para el responsable técnico. Plataforma: Render (servicio web gratuito) y
 ## Carga de datos
 
 - **Tablas municipales:** desde la web (Importar → Tabla municipal) o por comando contra Neon con las plantillas de `seed/plantillas_importacion/`.
-- **Contratación:** la carga histórica de PLACSP **solo por comando local** contra Neon (ADR-008):
-  ```bash
-  DATABASE_URL='postgres://…neon…' uv run python manage.py ingest_placsp --fichero licitacionesPerfilesContratanteCompleto3_2025.zip
-  ```
-  Desde la web: «Actualizar contratación» para TED y el ZIP del mes en curso o el anterior. **Pendiente (ADR-008, acción 2):** medir en la instancia real si el ZIP mensual (unos 200 MB) cabe en el disco temporal y en tiempo; si no, la actualización de PLACSP pasa a ser solo por comando.
 - **Medios:** Importar → Brandwatch (varios CSV a la vez) y Recortes.
 - **Documentos:** Importar → Documentos Word.
 - **Validación en bloque:** solo cuando una persona con permiso de validar da por buenos todos los borradores. Valida las evidencias en borrador a su nombre (con auditoría) y fija como «parcial» el nivel de las que lo tenían pendiente; nunca toca las propuestas de la IA. Probar antes con `--simular`:
@@ -73,6 +68,5 @@ La restauración desde el propio Neon (historial y ramas del plan gratuito) est�
 - [ ] Blueprint de Render creado con `render.yaml` y variables rellenas.
 - [ ] `/salud/` responde y el login funciona con HTTPS.
 - [ ] Primer administrador creado e invitaciones enviadas.
-- [ ] Datos cargados (tablas municipales, contratación, medios).
+- [ ] Datos cargados (tablas municipales, medios).
 - [ ] Copia de seguridad hecha **y restaurada** en local.
-- [ ] Medición de ADR-008 (ZIP mensual de PLACSP en Render) anotada.

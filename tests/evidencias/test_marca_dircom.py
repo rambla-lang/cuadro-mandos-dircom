@@ -11,7 +11,7 @@ from .test_tabla_municipal import FIXTURES, config_agua
 
 
 @pytest.fixture
-def importado(municipios_cv, competidores, administrador):
+def importado(municipios_cv, empresas_gestoras, administrador):
     importar_tabla(FIXTURES / "agua_sintetico.csv", config_agua(estado="borrador"), administrador)
     return administrador
 

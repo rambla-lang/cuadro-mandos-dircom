@@ -53,7 +53,7 @@ def ia_activa(settings):
 
 
 @pytest.fixture
-def mencion(competidores, municipios_cv):
+def mencion(empresas_gestoras, municipios_cv):
     return Mencion.objects.create(
         origen="brandwatch",
         titulo="Cox Energía y Aqualia en Alcoi",
@@ -187,7 +187,7 @@ def test_t2_lee_recorte_y_al_aceptar_completa_la_pieza(
     assert MencionEmpresa.objects.get(mencion=m).empresa == go
 
 
-def test_panel_ia(client, analista, lector, competidores):
+def test_panel_ia(client, analista, lector, empresas_gestoras):
     client.force_login(lector)
     assert client.get("/ia/").status_code == 403
     client.force_login(analista)

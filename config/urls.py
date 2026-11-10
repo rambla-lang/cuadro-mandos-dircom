@@ -2,7 +2,6 @@ from django.contrib import admin
 from django.contrib.auth import views as auth_views
 from django.urls import path
 
-from apps.contratacion import views as contratacion_views
 from apps.cuadro import views as cuadro_views
 from apps.digital import views as digital_views
 from apps.documentos import views as documentos_views
@@ -61,15 +60,8 @@ urlpatterns = [
         name="importar_tabla_confirmar",
     ),
     path("importar/lotes/<int:pk>/", views_importacion.lote, name="lote_importacion"),
-    path("contratacion/", contratacion_views.expedientes, name="expedientes"),
-    path("contratacion/<int:pk>/", contratacion_views.expediente, name="expediente"),
-    path(
-        "contratacion/actualizar/",
-        contratacion_views.actualizar,
-        name="actualizar_contratacion",
-    ),
-    path("trabajos/", contratacion_views.trabajos, name="trabajos"),
-    path("trabajos/<int:pk>/", contratacion_views.trabajo, name="trabajo"),
+    path("trabajos/", nucleo_views.trabajos, name="trabajos"),
+    path("trabajos/<int:pk>/", nucleo_views.trabajo, name="trabajo"),
     path("medios/", medios_views.visibilidad, name="visibilidad"),
     path("medios/piezas/", medios_views.piezas, name="piezas"),
     path("medios/menciones/", medios_views.menciones, name="menciones"),
@@ -82,8 +74,8 @@ urlpatterns = [
     path("importar/recortes/", medios_views.importar_recortes, name="importar_recortes"),
     path("ia/", ia_views.panel, name="ia_panel"),
     path("ia/lanzar/", ia_views.lanzar, name="ia_lanzar"),
-    path("competidores/", cuadro_views.competidores, name="competidores"),
-    path("competidores/<int:pk>/", cuadro_views.ficha_competidor, name="ficha"),
+    path("empresas-gestoras/", cuadro_views.empresas_gestoras, name="empresas_gestoras"),
+    path("empresas-gestoras/<int:pk>/", cuadro_views.ficha_empresa, name="ficha"),
     path("evidencias/", evidencias_views.lista, name="evidencias"),
     path("evidencias/nueva/", evidencias_views.editar, name="evidencia_nueva"),
     path("evidencias/<int:pk>/", evidencias_views.detalle, name="evidencia"),

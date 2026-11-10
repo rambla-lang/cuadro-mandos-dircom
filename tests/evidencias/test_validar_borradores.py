@@ -14,7 +14,7 @@ Tipo = ElementoRevision.Tipo
 
 
 @pytest.fixture
-def borradores(municipios_cv, competidores, administrador, tmp_path):
+def borradores(municipios_cv, empresas_gestoras, administrador, tmp_path):
     importar_tabla(FIXTURES / "agua_sintetico.csv", config_agua(estado="borrador"), administrador)
     ruta = _libro(
         tmp_path,

@@ -9,11 +9,10 @@ from django.shortcuts import redirect, render
 from django.utils import timezone
 from django.views.decorators.http import require_POST
 
-from apps.contratacion.models import Expediente
 from apps.documentos.models import Documento
 from apps.evidencias.enums import EstadoValidacion
 from apps.medios.models import Mencion
-from apps.nucleo.models import ElementoRevision, TrabajoIngesta
+from apps.nucleo.models import TrabajoIngesta
 from apps.nucleo.roles import Rol, rol_requerido
 from apps.nucleo.trabajos import lanzar_ejecutor
 
@@ -35,12 +34,7 @@ def candidatos():
     recortes = Documento.objects.filter(lectura=Documento.Lectura.PENDIENTE_IA).exclude(
         pk__in=PropuestaIA.objects.filter(llamada__tarea="T2").values("id_objetivo")
     )
-    expedientes = Expediente.objects.filter(
-        pk__in=ElementoRevision.objects.filter(
-            tipo=ElementoRevision.Tipo.CLASIFICACION_SERVICIO, estado="pendiente"
-        ).values("objeto_id")
-    ).exclude(pk__in=PropuestaIA.objects.filter(llamada__tarea="T3").values("id_objetivo"))
-    return {"T1": sin_atribuir, "T2": recortes, "T3": expedientes}
+    return {"T1": sin_atribuir, "T2": recortes}
 
 
 @rol_requerido(*ROLES)

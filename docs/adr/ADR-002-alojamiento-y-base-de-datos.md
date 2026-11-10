@@ -1,6 +1,7 @@
 # ADR-002: Alojamiento y base de datos del piloto
 
 **Estado:** Propuesta
+**Nota (10/11/2026):** con la retirada de la contratación (ADR-010) desaparece el volumen de PLACSP, que era el principal consumo previsto de Neon.
 **Fecha:** 05/11/2026
 **Decisores:** responsable de desarrollo; José Luis por el requisito de coste 0 en el piloto
 

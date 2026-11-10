@@ -20,7 +20,7 @@ DESDE, HASTA = date(2026, 1, 1), date(2026, 12, 31)
 
 
 @pytest.fixture
-def base(competidores, municipios_cv, administrador, settings, tmp_path):
+def base(empresas_gestoras, municipios_cv, administrador, settings, tmp_path):
     from apps.medios.analisis import limpiar_caches
     from apps.medios.importers.brandwatch import importar_brandwatch
 

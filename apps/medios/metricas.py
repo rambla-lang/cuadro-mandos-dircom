@@ -23,7 +23,6 @@ class Filtro:
     desde: date
     hasta: date
     solo_vinculo: bool = True
-    incluir_propias: bool = False
 
 
 def atribuciones(f: Filtro):
@@ -33,8 +32,6 @@ def atribuciones(f: Filtro):
         mencion__pieza__fecha_publicacion__gte=f.desde,
         mencion__pieza__fecha_publicacion__lte=f.hasta,
     )
-    if not f.incluir_propias:
-        qs = qs.filter(empresa__es_propia=False)
     return qs
 
 

@@ -8,8 +8,6 @@ from typing import Literal
 
 from pydantic import BaseModel, ConfigDict, Field
 
-from apps.evidencias.enums import Alcance
-
 
 def _objeto(propiedades: dict) -> dict:
     return {
@@ -91,23 +89,6 @@ class SalidaT2(_Estricto):
     resumen_breve: str
     empresas: list[EmpresaT2]
     es_publicidad_identificada: bool
-
-
-# --- T3 -------------------------------------------------------------------------------------
-ALCANCES = ["", *[str(a) for a in Alcance]]
-ESQUEMA_T3 = _objeto(
-    {
-        "servicio": {"type": "string", "enum": ["agua", "residuos", "energia", "ninguno"]},
-        "alcance": {"type": "string", "enum": ALCANCES},
-        "motivo": {"type": "string"},
-    }
-)
-
-
-class SalidaT3(_Estricto):
-    servicio: Literal["agua", "residuos", "energia", "ninguno"]
-    alcance: str
-    motivo: str
 
 
 # --- T4 -------------------------------------------------------------------------------------

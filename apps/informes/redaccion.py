@@ -20,9 +20,6 @@ METODO = (
     "validadas, y han pasado el validador de cifras y referencias antes de publicarse."
 )
 LIMITES = (
-    "TED solo publica contratos por encima de los umbrales europeos y la carga de PLACSP no incluye "
-    "contratos menores: la ausencia de un contrato no prueba que no exista.\n"
-    "«Resuelta» o «adjudicada» indica la fase del expediente, no la vigencia del servicio.\n"
     "Los recuentos de municipios reflejan municipios con alguna evidencia validada; el alcance real "
     "puede ser distinto.\n"
     "La fecha de las menciones de Brandwatch se interpreta en UTC hasta verificarlo.\n"
@@ -47,7 +44,7 @@ def _m(datos, ident):
     return next(m for m in datos["metricas"] if m["id"] == ident)["texto"]
 
 
-def texto_competidor(c: dict, datos: dict) -> str:
+def texto_empresa(c: dict, datos: dict) -> str:
     met = c["metricas"]
     lineas = [
         f"{c['nombre']} suma {_m(datos, met['piezas'])} piezas en el periodo [{met['piezas']}], una cuota "
@@ -60,14 +57,10 @@ def texto_competidor(c: dict, datos: dict) -> str:
         ]
         lineas.append(f"Con evidencia validada presta {', '.join(partes)}.")
     else:
-        ident = met["adjudicaciones"]
+        ident = met["municipios_total"]
         lineas.append(
             f"No tiene prestaciones municipales validadas en el cuadro (no localizado) [{ident}]."
         )
-    lineas.append(
-        f"Adjudicaciones resueltas en la contratación cargada: {_m(datos, met['adjudicaciones'])} "
-        f"[{met['adjudicaciones']}]."
-    )
     for e in c["evidencias"][:5]:
         lineas.append(f"{e['titulo']} ({e['fuente']}) [{e['codigo']}].")
     return "\n".join(lineas)
@@ -80,7 +73,7 @@ def secciones_codigo(datos: dict) -> list[dict]:
         f"y atribución validada [{total}]."
     ]
     for c in sorted(
-        datos["competidores"],
+        datos["empresas"],
         key=lambda x: -float(_m(datos, x["metricas"]["piezas"]).replace(",", ".")),
     ):
         met = c["metricas"]
@@ -89,9 +82,9 @@ def secciones_codigo(datos: dict) -> list[dict]:
         _seccion("resumen", "Resumen ejecutivo", "\n".join(resumen), datos),
         _seccion("metodo", "Alcance, fuentes y método", METODO, datos, validar=False),
     ]
-    for c in datos["competidores"]:
+    for c in datos["empresas"]:
         secciones.append(
-            _seccion(f"competidor:{c['id']}", c["nombre"], texto_competidor(c, datos), datos)
+            _seccion(f"empresa:{c['id']}", c["nombre"], texto_empresa(c, datos), datos)
         )
     secciones += [
         _seccion("transversal", "Lectura transversal", "\n".join(resumen[1:]) or resumen[0], datos),
@@ -112,7 +105,7 @@ def secciones_codigo(datos: dict) -> list[dict]:
 
 SECCIONES_IA = {
     "resumen": "Resumen ejecutivo: cinco o seis frases con lo esencial para la dirección.",
-    "transversal": "Lectura transversal: patrones comunes y diferencias entre los competidores.",
+    "transversal": "Lectura transversal: patrones comunes y diferencias entre las empresas gestoras.",
     "oportunidades": "Oportunidades: qué sugiere el análisis para la comunicación propia, sin cifras nuevas.",
 }
 
@@ -126,7 +119,7 @@ def redactar_con_ia(datos: dict, secciones: list[dict], usuario) -> tuple[list[d
         "metricas": [{k: m[k] for k in ("id", "texto", "definicion")} for m in datos["metricas"]],
         "evidencias": [
             {k: e[k] for k in ("codigo", "fecha", "fuente", "titulo", "extracto", "empresas")}
-            for c in datos["competidores"]
+            for c in datos["empresas"]
             for e in c["evidencias"]
         ],
     }

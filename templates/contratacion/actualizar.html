@@ -1,8 +1,0 @@
-{% extends "base.html" %}
-{% block titulo %}Actualizar contratación{% endblock %}
-{% block contenido %}
-<h1>Actualizar contratación</h1>
-{% if activos %}<p class="aviso">Hay {{ activos|length }} trabajos en marcha. <a href="{% url 'trabajos' %}">Ver progreso</a></p>{% endif %}
-<p>TED es rápido (una petición por segundo). PLACSP descarga el ZIP mensual completo: tarda entre 20 y 30 minutos y solo se ofrece el mes en curso o el anterior. La carga de años anteriores la hace el responsable técnico por comando (ADR-008).</p>
-<form method="post">{% csrf_token %}{{ form.as_p }}<button type="submit">Actualizar</button></form>
-{% endblock %}

@@ -24,8 +24,8 @@ class NuevoForm(forms.Form):
     desde = forms.DateField(label="Desde", widget=forms.DateInput(attrs={"type": "date"}))
     hasta = forms.DateField(label="Hasta", widget=forms.DateInput(attrs={"type": "date"}))
     empresas = forms.ModelMultipleChoiceField(
-        Empresa.objects.filter(activa=True, es_competidor_seguido=True),
-        label="Competidores",
+        Empresa.objects.filter(activa=True, con_ficha=True),
+        label="Empresas gestoras",
         widget=forms.CheckboxSelectMultiple,
     )
     usar_ia = forms.BooleanField(
@@ -56,7 +56,7 @@ def nuevo(request):
         initial={
             "desde": hoy - timedelta(days=365),
             "hasta": hoy,
-            "empresas": Empresa.objects.filter(activa=True, es_competidor_seguido=True),
+            "empresas": Empresa.objects.filter(activa=True, con_ficha=True),
         },
     )
     disponible, motivo = ia_estado("redactar")
@@ -108,7 +108,7 @@ def descargar(request, pk, formato):
     if formato not in ("docx", "pptx"):
         raise Http404
     ruta = {"docx": informe.archivo_docx, "pptx": informe.archivo_pptx}[formato]
-    nombre = f"informe-competencia-{informe.pk}.{formato}"
+    nombre = f"informe-empresas-gestoras-{informe.pk}.{formato}"
     if ruta and default_storage.exists(ruta):
         return FileResponse(default_storage.open(ruta, "rb"), as_attachment=True, filename=nombre)
     # En Render Free el disco es efímero: el informe se regenera desde lo guardado en la base de

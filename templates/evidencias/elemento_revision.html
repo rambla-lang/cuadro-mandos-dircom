@@ -21,14 +21,6 @@
 <p><strong>Evidencia:</strong> {{ objeto.codigo }} · {{ objeto.titulo }}</p>
 <pre style="white-space:pre-wrap">{{ objeto.extracto }}</pre>
 {% if objeto.url_origen %}<p><a href="{{ objeto.url_origen }}" target="_blank" rel="noopener noreferrer">{{ objeto.url_origen }}</a>{% if objeto.datos_extra.url_derivada_de %} <small>(enlace formado a partir de «{{ objeto.datos_extra.url_derivada_de }}»)</small>{% endif %}</p>{% endif %}
-{% elif objeto and el.tipo == "vinculo_organo" %}
-<p><strong>Órgano:</strong> {{ objeto.nombre }} · NIF {{ objeto.nif|default:"—" }} · {{ objeto.ciudad }} {{ objeto.codigo_postal }}</p>
-{% if objeto.jerarquia %}<p><small>Jerarquía en PLACSP: {{ objeto.jerarquia|join:" › " }}</small></p>{% endif %}
-{% elif objeto and el.tipo == "clasificacion_servicio" %}
-<p><strong>Expediente:</strong> <a href="{% url 'expediente' objeto.pk %}">{{ objeto }}</a> · CPV {{ objeto.cpv|join:", "|default:"—" }}</p>
-{% elif objeto and el.tipo == "adjudicatario_no_resuelto" %}
-<p><strong>Adjudicación:</strong> {{ objeto.adjudicatario_texto }} · NIF {{ objeto.adjudicatario_nif|default:"—" }} · <a href="{% url 'expediente' objeto.expediente_id %}">{{ objeto.expediente }}</a> ({{ objeto.expediente.get_servicio_clasificado_display }})</p>
-<p><small>Si la empresa no está en el catálogo, créala en la <a href="{% url 'admin:entidades_empresa_add' %}">administración</a> o rechaza el elemento (queda el nombre literal).</small></p>
 {% elif objeto and el.tipo == "atribucion_mencion" %}
 <p><strong>Empresa propuesta:</strong> {{ objeto.empresa }} (alias «{{ objeto.fragmento_detectado }}»)</p>
 <p><strong>Mención:</strong> <a href="{% url 'mencion' objeto.mencion_id %}">{{ objeto.mencion.titulo|default:objeto.mencion.url }}</a> · {{ objeto.mencion.medio|default:"" }} · {{ objeto.mencion.fecha_publicacion|date:"d/m/Y" }}</p>
@@ -51,7 +43,7 @@
     <button type="submit" name="resolver" value="1">Guardar</button></fieldset>
   </form>
   <form method="post">{% csrf_token %}
-    <fieldset><legend>Rechazar{% if el.tipo == "municipio_no_resuelto" %} (la fila no se importa){% elif el.tipo == "operador_no_resuelto" %} (queda como operador no catalogado){% elif el.tipo == "nivel_por_decidir" %} (la evidencia deja de contar){% elif el.tipo == "vinculo_organo" %} (el órgano queda sin municipio){% elif el.tipo == "clasificacion_servicio" %} (queda sin clasificar){% elif el.tipo == "atribucion_mencion" %} (la mención no habla de esa empresa){% elif el.tipo == "vinculo_territorial" %} (queda como dudoso){% else %} (queda el nombre literal, sin empresa){% endif %}</legend>
+    <fieldset><legend>Rechazar{% if el.tipo == "municipio_no_resuelto" %} (la fila no se importa){% elif el.tipo == "operador_no_resuelto" %} (queda como operador no catalogado){% elif el.tipo == "nivel_por_decidir" %} (la evidencia deja de contar){% elif el.tipo == "atribucion_mencion" %} (la mención no habla de esa empresa){% elif el.tipo == "vinculo_territorial" %} (queda como dudoso){% else %} (queda el nombre literal, sin empresa){% endif %}</legend>
     {{ rechazo.as_p }}
     {% if iguales and el.tipo != "nivel_por_decidir" %}<p><label><input type="checkbox" name="aplicar_a_iguales" value="1"> Rechazar también los {{ iguales }} iguales</label></p>{% endif %}
     <button type="submit" name="rechazar" value="1">Rechazar</button></fieldset>

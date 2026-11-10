@@ -1,4 +1,4 @@
-"""Carga inicial de competidores (docs/00) como datos editables (RF-10, RF-11, RF-12)."""
+"""Carga inicial de empresas gestoras (docs/00) como datos editables (RF-10, RF-11, RF-12)."""
 
 import json
 import re
@@ -9,7 +9,7 @@ from django.db import transaction
 
 from apps.nucleo.texto import normalizar_texto
 
-from .models import AcotacionCompetidor, AliasEmpresa, Empresa, GrupoEmpresarial
+from .models import AcotacionEmpresa, AliasEmpresa, Empresa, GrupoEmpresarial
 
 
 @dataclass
@@ -21,7 +21,7 @@ class ResultadoCarga:
 
 
 @transaction.atomic
-def cargar_competidores(ruta: Path) -> ResultadoCarga:
+def cargar_empresas_gestoras(ruta: Path) -> ResultadoCarga:
     """Idempotente. Crea lo que falta y no modifica lo existente (puede estar editado).
 
     Las acotaciones de una empresa solo se crean si la empresa aún no tiene ninguna.
@@ -36,8 +36,7 @@ def cargar_competidores(ruta: Path) -> ResultadoCarga:
             nombre=e["nombre"],
             defaults={
                 "grupo": grupos.get(e.get("grupo")),
-                "es_propia": e.get("propia", False),
-                "es_competidor_seguido": e.get("competidor", False),
+                "con_ficha": e.get("con_ficha", False),
                 "notas": f"Carga inicial. Fuente: {fuente}",
             },
         )
@@ -68,7 +67,7 @@ def cargar_competidores(ruta: Path) -> ResultadoCarga:
 
         if e.get("acotaciones") and not empresa.acotaciones.exists():
             for ac in e["acotaciones"]:
-                AcotacionCompetidor.objects.create(
+                AcotacionEmpresa.objects.create(
                     empresa=empresa,
                     servicios_incluidos=ac.get("servicios", []),
                     ambito_geografico=ac.get("ambito", ""),

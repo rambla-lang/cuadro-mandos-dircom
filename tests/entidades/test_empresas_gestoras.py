@@ -5,14 +5,14 @@ from django.core.management import call_command
 from django.db import IntegrityError, transaction
 from django.db.models import ProtectedError
 
-from apps.entidades.models import AcotacionCompetidor, AliasEmpresa, Empresa, GrupoEmpresarial
-from apps.entidades.services import cargar_competidores
+from apps.entidades.models import AcotacionEmpresa, AliasEmpresa, Empresa, GrupoEmpresarial
+from apps.entidades.services import cargar_empresas_gestoras
 from apps.evidencias.models import Evidencia, Fuente
 from tests.conftest import SEED
 
-FICHERO = SEED / "competidores_iniciales.json"
+FICHERO = SEED / "empresas_gestoras_iniciales.json"
 NIF_SINTETICO = "A12345678"  # pragma: allowlist secret
-COMPETIDORES = {
+CON_FICHA = {
     "FACSA",
     "Aqualia",
     "Hozono Global",
@@ -26,23 +26,20 @@ COMPETIDORES = {
     "ENGIE",
     "ACCIONA Energía",
     "Naturgy",
+    "Veolia",
+    "Hidraqua",
 }
 
 
 @pytest.fixture
 def cargados(db):
-    return cargar_competidores(FICHERO)
+    return cargar_empresas_gestoras(FICHERO)
 
 
-def test_carga_los_13_competidores_y_las_propias(cargados):
-    assert (
-        set(Empresa.objects.filter(es_competidor_seguido=True).values_list("nombre", flat=True))
-        == COMPETIDORES
-    )
-    assert set(Empresa.objects.filter(es_propia=True).values_list("nombre", flat=True)) == {
-        "Veolia",
-        "Hidraqua",
-    }
+def test_carga_las_15_empresas_gestoras_con_veolia_como_una_mas(cargados):
+    assert set(Empresa.objects.filter(con_ficha=True).values_list("nombre", flat=True)) == CON_FICHA
+    veolia = GrupoEmpresarial.objects.get(nombre="Veolia")
+    assert set(veolia.empresas.values_list("nombre", flat=True)) == {"Veolia", "Hidraqua"}
     assert cargados.empresas_nuevas == 15
 
 
@@ -56,14 +53,14 @@ def test_grupo_nealis_y_alias(cargados):
 
 def test_acotaciones(cargados):
     """RF-11 con las acotaciones del documento maestro."""
-    acciona = AcotacionCompetidor.objects.get(empresa__nombre="ACCIONA Energía")
+    acciona = AcotacionEmpresa.objects.get(empresa__nombre="ACCIONA Energía")
     assert acciona.servicios_incluidos == ["energia"]
-    fcc = AcotacionCompetidor.objects.get(empresa__nombre="FCC")
+    fcc = AcotacionEmpresa.objects.get(empresa__nombre="FCC")
     assert fcc.servicios_incluidos == ["residuos", "energia"]
-    stv = AcotacionCompetidor.objects.get(empresa__nombre="STV")
+    stv = AcotacionEmpresa.objects.get(empresa__nombre="STV")
     assert stv.ambito_geografico == "Elche" and "jardines" in stv.nota
-    assert AcotacionCompetidor.objects.filter(empresa__nombre="Aqualia").exists()
-    assert all(a.fuente for a in AcotacionCompetidor.objects.all())
+    assert AcotacionEmpresa.objects.filter(empresa__nombre="Aqualia").exists()
+    assert all(a.fuente for a in AcotacionEmpresa.objects.all())
 
 
 def test_sin_nif_inventados(cargados):
@@ -74,27 +71,22 @@ def test_idempotente_y_no_pisa_ediciones(cargados):
     facsa = Empresa.objects.get(nombre="FACSA")
     facsa.notas = "Editado a mano"
     facsa.save()
-    acot = AcotacionCompetidor.objects.get(empresa__nombre="ACCIONA Energía")
+    acot = AcotacionEmpresa.objects.get(empresa__nombre="ACCIONA Energía")
     acot.nota = "Nota editada"
     acot.save()
 
-    r = cargar_competidores(FICHERO)
+    r = cargar_empresas_gestoras(FICHERO)
 
     assert (r.empresas_nuevas, r.alias_nuevos, r.acotaciones_nuevas) == (0, 0, 0)
     assert Empresa.objects.count() == 15
     assert Empresa.objects.get(nombre="FACSA").notas == "Editado a mano"
-    assert AcotacionCompetidor.objects.get(empresa__nombre="ACCIONA Energía").nota == "Nota editada"
+    assert AcotacionEmpresa.objects.get(empresa__nombre="ACCIONA Energía").nota == "Nota editada"
 
 
 def test_comando(db):
     salida = StringIO()
-    call_command("cargar_competidores_iniciales", stdout=salida)
+    call_command("cargar_empresas_gestoras", stdout=salida)
     assert "Empresas nuevas 15" in salida.getvalue()
-
-
-def test_empresa_propia_no_puede_ser_competidor(db):
-    with pytest.raises(IntegrityError), transaction.atomic():
-        Empresa.objects.create(nombre="X", es_propia=True, es_competidor_seguido=True)
 
 
 def test_nif_vacio_no_choca_y_se_normaliza(db):
@@ -125,9 +117,9 @@ def test_empresa_con_evidencias_no_se_borra(db):
 
 
 def test_admin_edita_acotacion_con_casillas(client, administrador, cargados):
-    acot = AcotacionCompetidor.objects.get(empresa__nombre="FCC")
+    acot = AcotacionEmpresa.objects.get(empresa__nombre="FCC")
     client.force_login(administrador)
-    url = f"/admin/entidades/acotacioncompetidor/{acot.pk}/change/"
+    url = f"/admin/entidades/acotacionempresa/{acot.pk}/change/"
     assert 'type="checkbox"' in client.get(url).content.decode()
     r = client.post(
         url,

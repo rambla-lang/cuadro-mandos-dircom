@@ -7,7 +7,6 @@
   <div><label for="desde">Desde</label><input type="date" id="desde" name="desde" value="{{ f.desde|date:'Y-m-d' }}"></div>
   <div><label for="hasta">Hasta</label><input type="date" id="hasta" name="hasta" value="{{ f.hasta|date:'Y-m-d' }}"></div>
   <div><label for="vinculo">Vínculo territorial</label><select id="vinculo" name="vinculo"><option value="si" {% if f.solo_vinculo %}selected{% endif %}>Solo con vínculo con la CV</option><option value="todas" {% if not f.solo_vinculo %}selected{% endif %}>Todas las piezas</option></select></div>
-  <div><label><input type="checkbox" name="propias" value="1" {% if f.incluir_propias %}checked{% endif %}> Incluir Veolia e Hidraqua</label></div>
   <div><button type="submit">Aplicar</button></div>
 </form>
 <p><small>Unidad de recuento: la pieza (una URL periodística canónica o un recorte). Solo atribuciones validadas. Una pieza compartida cuenta para cada empresa: la suma por empresa ({{ d.suma_por_empresa }}) puede superar el total. No se calcula audiencia ni valor publicitario. Las fechas de Brandwatch se interpretan como UTC hasta verificarlo.{% if pendientes_lectura %} Hay {{ pendientes_lectura }} recortes sin capa de texto pendientes de lectura por IA.{% endif %}</small></p>
@@ -19,8 +18,8 @@
 </section>
 
 {% if d.empresas %}
-<h2>Piezas por competidor</h2>
-<div id="g-empresas" style="height:{{ d.empresas|length|add:2 }}rem;min-height:12rem" role="img" aria-label="Piezas por competidor: {% for e in d.empresas %}{{ e.nombre }} {{ e.piezas }}{% if not forloop.last %}, {% endif %}{% endfor %}"></div>
+<h2>Piezas por empresa gestora</h2>
+<div id="g-empresas" style="height:{{ d.empresas|length|add:2 }}rem;min-height:12rem" role="img" aria-label="Piezas por empresa gestora: {% for e in d.empresas %}{{ e.nombre }} {{ e.piezas }}{% if not forloop.last %}, {% endif %}{% endfor %}"></div>
 <table>
   <thead><tr><th>Empresa</th><th>Piezas</th><th>Cuota de piezas</th><th>Medios distintos</th><th>Tono según Brandwatch (positivo / neutral / negativo)</th></tr></thead>
   <tbody>{% for e in d.empresas %}<tr><td>{{ e.nombre }}</td><td><a href="{% url 'piezas' %}?{{ query }}&empresa={{ e.nombre|urlencode }}">{{ e.piezas }}</a></td><td>{{ e.cuota }} %</td><td>{{ e.medios }}</td><td>{{ e.tono.positive|default:0 }} / {{ e.tono.neutral|default:0 }} / {{ e.tono.negative|default:0 }}{% if e.tono|length > 3 %} <small>(+ sin dato)</small>{% endif %}</td></tr>{% endfor %}</tbody>

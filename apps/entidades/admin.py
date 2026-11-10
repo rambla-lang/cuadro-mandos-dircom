@@ -3,7 +3,7 @@ from django.contrib import admin
 
 from apps.evidencias.enums import Servicio
 
-from .models import AcotacionCompetidor, AliasEmpresa, Empresa, GrupoEmpresarial
+from .models import AcotacionEmpresa, AliasEmpresa, Empresa, GrupoEmpresarial
 
 
 class AliasInline(admin.TabularInline):
@@ -22,12 +22,12 @@ class AcotacionForm(forms.ModelForm):
     )
 
     class Meta:
-        model = AcotacionCompetidor
+        model = AcotacionEmpresa
         fields = ("empresa", "servicios_incluidos", "ambito_geografico", "nota", "fuente")
 
 
 class AcotacionInline(admin.StackedInline):
-    model = AcotacionCompetidor
+    model = AcotacionEmpresa
     form = AcotacionForm
     extra = 0
     fields = ("servicios_incluidos", "ambito_geografico", "nota", "fuente")
@@ -40,8 +40,8 @@ class GrupoEmpresarialAdmin(admin.ModelAdmin):
 
 @admin.register(Empresa)
 class EmpresaAdmin(admin.ModelAdmin):
-    list_display = ("nombre", "grupo", "es_competidor_seguido", "es_propia", "activa")
-    list_filter = ("es_competidor_seguido", "es_propia", "activa", "grupo")
+    list_display = ("nombre", "grupo", "con_ficha", "activa")
+    list_filter = ("con_ficha", "activa", "grupo")
     search_fields = ("nombre", "nif", "alias__texto")
     inlines = [AliasInline, AcotacionInline]
 
@@ -54,8 +54,8 @@ class AliasEmpresaAdmin(admin.ModelAdmin):
     autocomplete_fields = ("empresa",)
 
 
-@admin.register(AcotacionCompetidor)
-class AcotacionCompetidorAdmin(admin.ModelAdmin):
+@admin.register(AcotacionEmpresa)
+class AcotacionEmpresaAdmin(admin.ModelAdmin):
     form = AcotacionForm
     list_display = ("empresa", "servicios_incluidos", "ambito_geografico", "nota")
     search_fields = ("empresa__nombre", "nota")

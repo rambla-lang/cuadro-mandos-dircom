@@ -6,10 +6,11 @@ from django.views.decorators.http import require_POST
 
 from .acceso import enlace_invitacion, token_invitacion
 from .forms import InvitacionForm
-from .models import Usuario
+from .models import TrabajoIngesta, Usuario
 from .roles import Rol, rol_requerido
 from .services import registrar_auditoria
 from .services_usuarios import invitar_usuario, rol_de
+from .trabajos import lanzar_ejecutor
 
 
 def portada(request):
@@ -78,3 +79,23 @@ class InvitacionConfirmarView(auth_views.PasswordResetConfirmView):
 
 class InvitacionCompletadaView(auth_views.PasswordResetCompleteView):
     template_name = "registration/invitacion_completada.html"
+
+
+ROLES_TRABAJOS = (Rol.ADMINISTRADOR, Rol.ANALISTA)
+
+
+@rol_requerido(*ROLES_TRABAJOS)
+def trabajos(request):
+    lista = TrabajoIngesta.objects.select_related("usuario")[:30]
+    if any(t.activo for t in lista):
+        lanzar_ejecutor()  # si el proceso se reinició, retoma el trabajo (ADR-007)
+    plantilla = "nucleo/_trabajos.html" if request.htmx else "nucleo/trabajos.html"
+    return render(
+        request, plantilla, {"trabajos": lista, "hay_activos": any(t.activo for t in lista)}
+    )
+
+
+@rol_requerido(*ROLES_TRABAJOS)
+def trabajo(request, pk):
+    t = get_object_or_404(TrabajoIngesta, pk=pk)
+    return render(request, "nucleo/trabajo.html", {"t": t})

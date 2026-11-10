@@ -10,7 +10,7 @@ from tests.evidencias.test_tabla_municipal import FIXTURES
 
 
 @pytest.fixture
-def cliente_analista(client, analista, municipios_cv, competidores):
+def cliente_analista(client, analista, municipios_cv, empresas_gestoras):
     client.force_login(analista)
     return client
 

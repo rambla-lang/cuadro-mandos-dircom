@@ -47,7 +47,7 @@ def municipios_cv(db):
 
 
 @pytest.fixture
-def competidores(db):
-    from apps.entidades.services import cargar_competidores
+def empresas_gestoras(db):
+    from apps.entidades.services import cargar_empresas_gestoras
 
-    return cargar_competidores(SEED / "competidores_iniciales.json")
+    return cargar_empresas_gestoras(SEED / "empresas_gestoras_iniciales.json")

@@ -8,7 +8,7 @@ El reparto de quién decide está explicado en `ENTREGA.md`. José Luis es el pr
 |---|---|---|---|
 | P-05 | Redes y webs: ¿basta con introducir a mano los datos públicos básicos o se quiere captura automática de las webs corporativas? | Fase 6 | Hay que revisar los términos de uso de cada red antes de automatizar nada |
 | P-06 | ¿Qué datos de autores de Brandwatch se pueden guardar? (Particulares en redes frente a medios y cuentas corporativas) | Fase 4 | Propuesta: no guardar autores particulares. **Mientras no se decida, no se guarda ningún autor** (Fase 4) |
-| P-07 | ¿Incluir contratos menores de PLACSP? | Fase 3 | Más volumen y ruido; muchos servicios municipales pequeños solo aparecen así |
+| P-07 | ¿Incluir contratos menores de PLACSP? | Fase 3 | Más volumen y ruido; muchos servicios municipales pequeños solo aparecen así Cerrada: contratación retirada (ADR-010). |
 | P-09 | ¿El lector del CEO necesita algo distinto (vista resumida, solo informes)? | Fase 7 | Rol lector actual o vista ejecutiva |
 | P-10 | ¿Qué periodo por defecto usan los análisis? (El documento maestro usó 12 meses: del 14/10/2025 al 14/10/2026) | Fase 4 | 12 meses móviles |
 | P-12 | ¿Cuándo se anota el juego de evaluación de la IA (50 menciones)? Lo anota José Luis | Fase 5 | — |
@@ -31,7 +31,7 @@ El reparto de quién decide está explicado en `ENTREGA.md`. José Luis es el pr
 | P-01 | Stack | Fase 0 | ADR-001: Django + HTMX + ECharts |
 | P-02 | Alojamiento y base de datos del piloto (requisito de José Luis: gratuito durante el piloto) | Fase 8 | ADR-002: Render Free + Neon Free |
 | P-03 | Almacenamiento de los archivos originales (PDF y Word) | Fase 4 | ADR-003: tres opciones |
-| P-15 | Dónde se ejecuta la carga histórica de PLACSP | Fase 3 | ADR-008 (aceptada): solo por comando local; desde la web, solo el mes en curso si cabe en Render Free |
+| P-15 | Dónde se ejecuta la carga histórica de PLACSP | Fase 3 | ADR-008 (aceptada): solo por comando local; desde la web, solo el mes en curso si cabe en Render Free Cerrada: contratación retirada (ADR-010). |
 | P-04 | Correo (SMTP) para invitaciones y recuperación de contraseñas | No bloquea: el enlace manual está implementado (Fase 1) | Correo corporativo, servicio transaccional o enlace manual |
 | P-16 | Bloqueo tras intentos fallidos de login | Fase 1 (implementado) | ADR-009 (aceptada, 06/11/2026): django-axes, por usuario, 5 fallos → 15 min |
 | P-19 | Límites municipales del mapa | Fase 2 (implementado) | ADR-006 (propuesta), verificado: WFS de unidades administrativas del IGN, CC BY 4.0 ign.es; código INE en `nationalCode` (docs/04 §11) |

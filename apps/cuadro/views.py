@@ -5,7 +5,6 @@ from django.http import Http404, HttpResponse
 from django.shortcuts import get_object_or_404, render
 from django.utils import timezone
 
-from apps.contratacion.models import Expediente
 from apps.entidades.models import Empresa
 from apps.evidencias.enums import ALCANCES_POR_SERVICIO, EstadoValidacion, Servicio
 from apps.evidencias.models import PrestacionServicio
@@ -69,13 +68,6 @@ def municipio_panel(request, codigo):
                 ),
             }
         )
-    expedientes = (
-        Expediente.objects.filter(organo__municipio=municipio)
-        .exclude(servicio_clasificado="")
-        .prefetch_related("adjudicaciones__empresa")
-        .order_by("-fecha_publicacion", "-pk")[:15]
-    )
-    total_expedientes = Expediente.objects.filter(organo__municipio=municipio).count()
     plantilla = "cuadro/_panel_municipio.html" if request.htmx else "cuadro/municipio.html"
     return render(
         request,
@@ -83,8 +75,6 @@ def municipio_panel(request, codigo):
         {
             "municipio": municipio,
             "filas": filas,
-            "expedientes": expedientes,
-            "total_expedientes": total_expedientes,
         },
     )
 
@@ -140,7 +130,7 @@ def exportar_tabla(request, formato):
     return respuesta
 
 
-def competidores(request):
+def empresas_gestoras(request):
     from django.db.models import Count, Q
 
     from apps.evidencias.enums import EstadoValidacion
@@ -158,14 +148,13 @@ def competidores(request):
                 filter=Q(menciones__estado_validacion=EstadoValidacion.VALIDADA),
                 distinct=True,
             ),
-            n_adjudicaciones=Count("adjudicaciones", distinct=True),
         )
-        .order_by("-es_competidor_seguido", "es_propia", "nombre")
+        .order_by("-con_ficha", "nombre")
     )
-    return render(request, "cuadro/competidores.html", {"empresas": lista})
+    return render(request, "cuadro/empresas_gestoras.html", {"empresas": lista})
 
 
-def ficha_competidor(request, pk):
+def ficha_empresa(request, pk):
     from datetime import date
 
     from . import fichas

@@ -1,5 +1,5 @@
-"""Datos de partida idempotentes del piloto: municipios del INE, competidores y reglas de
-clasificación. Se ejecuta en cada arranque en Render (no hay comando previo al despliegue en el
+"""Datos de partida idempotentes del piloto: municipios del INE y empresas
+gestoras. Se ejecuta en cada arranque en Render (no hay comando previo al despliegue en el
 plan gratuito) y no modifica lo que ya exista."""
 
 from django.core.management import call_command
@@ -9,7 +9,7 @@ from apps.territorio.models import Municipio
 
 
 class Command(BaseCommand):
-    help = "Carga (si faltan) municipios, competidores y reglas de clasificación."
+    help = "Carga (si faltan) municipios y empresas gestoras."
 
     def handle(self, *args, **opts):
         if Municipio.objects.count() < 542:
@@ -23,5 +23,4 @@ class Command(BaseCommand):
                 "Comunitat Valenciana",
                 stdout=self.stdout,
             )
-        call_command("cargar_competidores_iniciales", stdout=self.stdout)
-        call_command("cargar_reglas_clasificacion", stdout=self.stdout)
+        call_command("cargar_empresas_gestoras", stdout=self.stdout)

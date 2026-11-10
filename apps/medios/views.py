@@ -44,7 +44,6 @@ def visibilidad(request):
         desde=desde,
         hasta=hasta,
         solo_vinculo=request.GET.get("vinculo", "si") == "si",
-        incluir_propias=request.GET.get("propias") == "1",
     )
     datos = metricas.calcular(f)
     return render(

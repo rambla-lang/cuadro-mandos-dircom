@@ -42,6 +42,8 @@ Cada fase termina con algo que funciona y se puede enseñar. Las fases son orien
 
 ## Fase 3. Contratación pública (PLACSP y TED)
 
+**Retirado el 10/11/2026 (ADR-010).** Se construyó el 06/11/2026 y se retiró a petición de la DIRCOM.
+
 **Prompt:**
 > Implementa TrabajoIngesta (ADR-007) y los importadores de PLACSP (datos abiertos) y TED según ADR-004 y docs/04 §1-2, con clasificación por CPV (tabla editable) y vinculación órgano-municipio con bandeja de revisión. Botón "Actualizar contratación" con progreso por HTMX y comandos manage.py equivalentes. Tests: CP-03, CP-04, CP-06, CP-14, CP-16 y la idempotencia.
 
@@ -52,7 +54,7 @@ Cada fase termina con algo que funciona y se puede enseñar. Las fases son orien
 **Prompt:**
 > Implementa el importador de Brandwatch (docs/04 §4) con deduplicación, medios, menciones, piezas e hitos (docs/03), y la atribución por alias con bandeja de revisión. Implementa la subida de recortes PDF (docs/04 §5) sin IA todavía: extracción de texto y metadatos del nombre de archivo. Pantalla de visibilidad en medios (docs/05 §3) con las reglas de recuento. Tests: CP-01, CP-02, CP-08.
 
-**Aceptación:** subo los tres exports reales y el total de menciones únicas es coherente (lo compruebo con una tabla dinámica en Excel); veo las piezas por competidor y medio con enlace a cada pieza.
+**Aceptación:** subo los tres exports reales y el total de menciones únicas es coherente (lo compruebo con una tabla dinámica en Excel); veo las piezas por empresa gestora y medio con enlace a cada pieza.
 
 ## Fase 5. IA
 
@@ -64,7 +66,7 @@ Cada fase termina con algo que funciona y se puede enseñar. Las fases son orien
 ## Fase 6. Fichas, documentos cualitativos y digital
 
 **Prompt:**
-> Implementa la importación de Word (docs/04 §6), incluida la importación única del anexo de evidencias del documento maestro como borradores, PercepcionInterna, ObservacionDigital y AuditoriaWeb (docs/04 §8) y la ficha de competidor completa (docs/05 §2). Tests: CP-12.
+> Implementa la importación de Word (docs/04 §6), incluida la importación única del anexo de evidencias del documento maestro como borradores, PercepcionInterna, ObservacionDigital y AuditoriaWeb (docs/04 §8) y la ficha de empresa gestora completa (docs/05 §2). Tests: CP-12.
 
 **Aceptación:** la ficha de FACSA muestra los tres bloques con datos reales validados y la percepción interna separada.
 

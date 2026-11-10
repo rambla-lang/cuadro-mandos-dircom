@@ -29,7 +29,6 @@ INSTALLED_APPS = [
     "apps.territorio",
     "apps.entidades",
     "apps.evidencias",
-    "apps.contratacion",
     "apps.medios",
     "apps.documentos",
     "apps.digital",
