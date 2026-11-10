@@ -29,6 +29,11 @@ Guía para el responsable técnico. Plataforma: Render (servicio web gratuito) y
   Desde la web: «Actualizar contratación» para TED y el ZIP del mes en curso o el anterior. **Pendiente (ADR-008, acción 2):** medir en la instancia real si el ZIP mensual (unos 200 MB) cabe en el disco temporal y en tiempo; si no, la actualización de PLACSP pasa a ser solo por comando.
 - **Medios:** Importar → Brandwatch (varios CSV a la vez) y Recortes.
 - **Documentos:** Importar → Documentos Word.
+- **Validación en bloque:** solo cuando una persona con permiso de validar da por buenos todos los borradores. Valida las evidencias en borrador a su nombre (con auditoría) y fija como «parcial» el nivel de las que lo tenían pendiente; nunca toca las propuestas de la IA. Probar antes con `--simular`:
+  ```bash
+  uv run python manage.py validar_borradores --usuario EMAIL --comentario "Motivo y fecha" --simular
+  ```
+  Usado el 10/11/2026 en local: el usuario dio por buenos los datos de base (185 validadas; 25 con nivel «parcial»).
 
 ## Archivos originales (ADR-003, abierta)
 

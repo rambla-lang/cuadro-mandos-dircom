@@ -34,6 +34,7 @@ uv run scripts/geo/preparar_municipios.py au_03.geojson au_12.geojson au_46.geoj
   --salida static/geo/municipios_cv.json --fecha-descarga AAAA-MM-DD   # docs/04 §11
 python3 scripts/validar_paleta.py "#hex,#hex" --mode light [--pairs all] [--ordinal]
 uv run python manage.py preparar_piloto         # municipios, competidores y reglas (idempotente)
+uv run python manage.py validar_borradores --usuario EMAIL [--simular]  # validación en bloque autorizada
 uv run python manage.py preparar_eval_menciones # plantilla del juego de evaluación de T1
 uv run python manage.py runserver
 uv run pytest                             # todos los tests
